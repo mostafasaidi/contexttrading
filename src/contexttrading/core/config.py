@@ -27,7 +27,11 @@ from contexttrading.core.errors import ConfigurationError
 
 
 class EngineConfig(BaseModel):
-    """Engine-wide numeric behavior."""
+    """Engine-wide numeric behavior.
+
+    All analysis thresholds live here so every module is config-driven and
+    deterministic. Defaults follow common SMC practice; tune per market.
+    """
 
     model_config = ConfigDict(extra="forbid")
 
@@ -36,6 +40,76 @@ class EngineConfig(BaseModel):
     swing_lookback: int = Field(default=5, ge=1, description="Default bars each side for swings.")
     min_candles: int = Field(
         default=50, ge=1, description="Minimum series length most modules require."
+    )
+
+    # -- swings ---------------------------------------------------------------
+    internal_swing_lookback: int = Field(
+        default=2, ge=1, description="Lookback for internal (noise-level) swings."
+    )
+    external_swing_lookback: int = Field(
+        default=5, ge=1, description="Lookback for external (leg-level) swings."
+    )
+
+    # -- volatility / volume ----------------------------------------------------
+    atr_period: int = Field(default=14, ge=1, description="Wilder ATR period.")
+    volume_lookback: int = Field(
+        default=20, ge=2, description="Rolling window for relative volume / z-scores."
+    )
+    volume_zscore_threshold: float = Field(
+        default=2.0, gt=0, description="|z| above which a candle is volume-imbalanced."
+    )
+
+    # -- structure breaks ---------------------------------------------------------
+    strength_atr_fraction: float = Field(
+        default=0.25,
+        ge=0,
+        description="Close margin beyond the level (in ATRs) for a STRONG break.",
+    )
+
+    # -- liquidity ------------------------------------------------------------------
+    equal_level_atr_fraction: float = Field(
+        default=0.1,
+        ge=0,
+        description="Max price spread (in ATRs) for swings to count as equal levels.",
+    )
+    equal_level_min_separation: int = Field(
+        default=3, ge=1, description="Min candles between members of an equal level."
+    )
+    sweep_grab_atr_fraction: float = Field(
+        default=0.5,
+        ge=0,
+        description="Wick penetration (in ATRs) at which a sweep becomes a GRAB.",
+    )
+
+    # -- dealing range ---------------------------------------------------------------
+    ote_fib_lower: float = Field(
+        default=0.62, gt=0, lt=1, description="OTE zone near fib retracement."
+    )
+    ote_fib_upper: float = Field(
+        default=0.79, gt=0, lt=1, description="OTE zone far fib retracement."
+    )
+
+    # -- trend / market phase -----------------------------------------------------------
+    phase_lookback: int = Field(
+        default=20, ge=2, description="Bars inspected for market-phase heuristics."
+    )
+    consolidation_range_atr_multiple: float = Field(
+        default=3.0,
+        gt=0,
+        description="High-low range over phase_lookback below this ATR multiple "
+        "implies CONSOLIDATION.",
+    )
+    strong_impulse_ratio: float = Field(
+        default=1.5,
+        gt=0,
+        description="Impulse:correction ATR-magnitude ratio for a STRONG trend.",
+    )
+    swing_overlap_fraction: float = Field(
+        default=0.5,
+        gt=0,
+        le=1,
+        description="Leg overlap fraction above which swings count as overlapping "
+        "(accumulation/distribution heuristic).",
     )
 
 

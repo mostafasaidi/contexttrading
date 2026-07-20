@@ -14,6 +14,11 @@ SCHEMA_VERSION_GAP_WINDOW: str = "1.0.0"
 SCHEMA_VERSION_VISUAL_STYLE: str = "1.0.0"
 SCHEMA_VERSION_ANALYSIS_OBJECT: str = "1.0.0"
 
+# Phase-3 model schema versions.
+SCHEMA_VERSION_STRUCTURE: str = "1.0.0"
+SCHEMA_VERSION_LIQUIDITY: str = "1.0.0"
+SCHEMA_VERSION_RANGE: str = "1.0.0"
+
 #: Registry of all current schema versions, keyed by logical model name.
 CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "AnalysisResult": SCHEMA_VERSION_ENVELOPE,
@@ -22,6 +27,18 @@ CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "GapWindow": SCHEMA_VERSION_GAP_WINDOW,
     "VisualStyle": SCHEMA_VERSION_VISUAL_STYLE,
     "AnalysisObject": SCHEMA_VERSION_ANALYSIS_OBJECT,
+    "SwingPoint": SCHEMA_VERSION_STRUCTURE,
+    "Leg": SCHEMA_VERSION_STRUCTURE,
+    "StructureBreak": SCHEMA_VERSION_STRUCTURE,
+    "TrendState": SCHEMA_VERSION_STRUCTURE,
+    "MarketStructureResult": SCHEMA_VERSION_STRUCTURE,
+    "TrendResult": SCHEMA_VERSION_STRUCTURE,
+    "EqualLevel": SCHEMA_VERSION_LIQUIDITY,
+    "LiquidityPool": SCHEMA_VERSION_LIQUIDITY,
+    "LiquiditySweep": SCHEMA_VERSION_LIQUIDITY,
+    "LiquidityResult": SCHEMA_VERSION_LIQUIDITY,
+    "DealingRange": SCHEMA_VERSION_RANGE,
+    "DealingRangeResult": SCHEMA_VERSION_RANGE,
 }
 
 

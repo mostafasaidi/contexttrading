@@ -264,3 +264,86 @@ class LiquidityPoolKind(StrEnum):
     SESSION_LOW = "session_low"
     PREVIOUS_DAY_HIGH = "previous_day_high"
     PREVIOUS_DAY_LOW = "previous_day_low"
+
+
+# ---------------------------------------------------------------------------
+# Phase 3: structure, trend, liquidity, ranges
+# ---------------------------------------------------------------------------
+
+
+class SwingClass(StrEnum):
+    """Internal (short lookback, noise-level) vs external (leg-level) swings."""
+
+    INTERNAL = "internal"
+    EXTERNAL = "external"
+
+
+class BreakStrength(StrEnum):
+    """Confirmation quality of a structure break.
+
+    - ``STRONG``: close beyond the level by >= ``strength_atr_fraction * ATR``.
+    - ``WEAK``: close beyond the level, but by less than the strong threshold.
+    - ``FALSE``: wick-only breach without close confirmation (sweep candidate).
+    """
+
+    STRONG = "strong"
+    WEAK = "weak"
+    FALSE = "false"
+
+
+class TrendStrength(StrEnum):
+    """Qualitative trend strength from leg statistics and follow-through."""
+
+    STRONG = "strong"
+    MODERATE = "moderate"
+    WEAK = "weak"
+
+
+class MarketPhase(StrEnum):
+    """Wyckoff-style market phase from range/overlap heuristics."""
+
+    ACCUMULATION = "accumulation"
+    DISTRIBUTION = "distribution"
+    EXPANSION = "expansion"
+    CONSOLIDATION = "consolidation"
+
+
+class LegKind(StrEnum):
+    """Impulse (makes a new same-side extreme) vs correction (retraces)."""
+
+    IMPULSE = "impulse"
+    CORRECTION = "correction"
+
+
+class PoolStatus(StrEnum):
+    """Lifecycle of a liquidity pool.
+
+    ``UNTAPPED`` → ``SWEPT`` (wicked through, closed back inside) or
+    ``BROKEN`` (closed through = true break). Status transitions are
+    monotonic in scan order.
+    """
+
+    UNTAPPED = "untapped"
+    SWEPT = "swept"
+    BROKEN = "broken"
+
+
+class SweepClassification(StrEnum):
+    """Stop-run taxonomy.
+
+    - ``SWEEP``: wick through the pool, close back inside, shallow penetration.
+    - ``GRAB``: same shape but penetration >= ``sweep_grab_atr_fraction * ATR``.
+    - ``STOP_HUNT``: sweep coinciding with a false structure break at the pool.
+    """
+
+    SWEEP = "sweep"
+    GRAB = "grab"
+    STOP_HUNT = "stop_hunt"
+
+
+class PriceLocation(StrEnum):
+    """Where a reference price sits inside a dealing range."""
+
+    PREMIUM = "premium"
+    DISCOUNT = "discount"
+    EQUILIBRIUM = "equilibrium"
