@@ -34,9 +34,11 @@ LLM in front of.
 | --- | --- | --- |
 | Core foundation | ✅ Phase 2 | Strict typed config, structured logging, error taxonomy, deterministic IDs, schema versioning |
 | Data models | ✅ Phase 2 | Validated `Candle`, immutable `CandleSeries`, versioned output envelopes |
-| Market structure | 🔜 Phase 3 | Swings, BOS/CHoCH (internal/external, major/minor) |
-| Liquidity / FVG / OB | 🔜 Phases 4–5 | Liquidity pools, fair value gaps, order blocks, mitigation |
-| Sessions & trend | 🔜 Phase 6 | Killzones, premium/discount, multi-timeframe trend |
+| Market structure | ✅ Phase 3 | Swings, legs, BOS/CHoCH (internal/external, major/minor, strong/weak/false), protected levels, TrendEngine |
+| Liquidity | ✅ Phase 3 | Equal highs/lows, pools, sweep/grab/stop-hunt with monotonic pool status |
+| FVG / OB | 🔜 Phases 4–5 | Fair value gaps, order blocks, mitigation |
+| Premium/discount | ✅ Phase 3 | Dealing range, equilibrium, OTE zone, price location |
+| Sessions & MTF | 🔜 Phase 6 | Killzones, multi-timeframe trend |
 | Confluence | 🔜 Phase 7 | Weighted, deterministic confluence scoring |
 | Visualization | 🔜 Phase 8 | Plotly + TradingView Lightweight Charts styles |
 | AI narrative | 🔜 Phase 9 | Explain-only AI layer over versioned JSON |

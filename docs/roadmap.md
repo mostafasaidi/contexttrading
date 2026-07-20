@@ -4,10 +4,10 @@
 |---|---|---|---|
 | 1 | Repository & documentation foundation | Packaging, CI, docs skeleton, architecture docs | ✅ Done |
 | 2 | Core foundation | Config, logging, errors, IDs, versioning, constants, candle models, output envelopes, schema export | ✅ Done |
-| 3 | Market structure engine | Swing detection, BOS/CHoCH (internal/external, major/minor), trend state, golden regression fixtures | ⬜ Next |
-| 4 | Liquidity & FVG | Equal highs/lows, pools, sweeps; fair value gaps, imbalance, inversion | ⬜ |
+| 3 | Market structure engine + liquidity + premium/discount | Swings, legs, BOS/CHoCH state machine, TrendEngine, equal levels/pools/sweeps, dealing range/OTE, ATR/volume primitives, goldens | ✅ Done |
+| 4 | FVG engine | Fair value gaps, imbalance, inversion FVG (liquidity landed in Phase 3) | ⬜ Next |
 | 5 | Order blocks & supply/demand | OB detection, breaker blocks, mitigation status, zone strength | ⬜ |
-| 6 | Sessions, premium/discount, MTF | Killzones, session high/low, equilibrium/OTE bands, multi-timeframe trend alignment | ⬜ |
+| 6 | Sessions & MTF | Killzones, session high/low, multi-timeframe trend alignment (premium/discount landed in Phase 3) | ⬜ |
 | 7 | Confluence engine | Weighted deterministic scoring, signal composition (trading logic) | ⬜ |
 | 8 | Visualization & storage | Plotly renderer, Lightweight-Charts payloads, SQLite/PostgreSQL/Redis result store | ⬜ |
 | 9 | AI layer & API | Provider adapters, structured narrative/risk outputs, FastAPI service, schema endpoints, `docs/api/` | ⬜ |

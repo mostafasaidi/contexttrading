@@ -24,7 +24,22 @@ from contexttrading import __version__ as ENGINE_VERSION
 from contexttrading.core.versioning import major_of
 from contexttrading.models.base import VersionedModel
 from contexttrading.models.candle import Candle, GapWindow
+from contexttrading.models.liquidity import (
+    EqualLevel,
+    LiquidityPool,
+    LiquidityResult,
+    LiquiditySweep,
+)
 from contexttrading.models.outputs import AnalysisResult, DataWindow
+from contexttrading.models.range import DealingRange, DealingRangeResult
+from contexttrading.models.structure import (
+    Leg,
+    MarketStructureResult,
+    StructureBreak,
+    SwingPoint,
+    TrendResult,
+    TrendState,
+)
 from contexttrading.models.visualization import VisualStyle
 
 #: Every model whose schema is part of the public contract.
@@ -34,6 +49,18 @@ EXPORTED_MODELS: tuple[type[BaseModel], ...] = (
     DataWindow,
     AnalysisResult,
     VisualStyle,
+    SwingPoint,
+    Leg,
+    StructureBreak,
+    TrendState,
+    MarketStructureResult,
+    TrendResult,
+    EqualLevel,
+    LiquidityPool,
+    LiquiditySweep,
+    LiquidityResult,
+    DealingRange,
+    DealingRangeResult,
 )
 
 

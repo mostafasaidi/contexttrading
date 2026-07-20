@@ -1,0 +1,255 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "LiquiditySide": {
+        "description": "Side of the book where resting liquidity sits.",
+        "enum": [
+          "buyside",
+          "sellside"
+        ],
+        "title": "LiquiditySide",
+        "type": "string"
+      },
+      "RenderType": {
+        "description": "Render primitives an analysis object can map to.",
+        "enum": [
+          "line",
+          "area",
+          "box",
+          "marker",
+          "label",
+          "histogram",
+          "candles"
+        ],
+        "title": "RenderType",
+        "type": "string"
+      },
+      "SweepClassification": {
+        "description": "Stop-run taxonomy.\n\n- ``SWEEP``: wick through the pool, close back inside, shallow penetration.\n- ``GRAB``: same shape but penetration >= ``sweep_grab_atr_fraction * ATR``.\n- ``STOP_HUNT``: sweep coinciding with a false structure break at the pool.",
+        "enum": [
+          "sweep",
+          "grab",
+          "stop_hunt"
+        ],
+        "title": "SweepClassification",
+        "type": "string"
+      },
+      "VisualStyle": {
+        "additionalProperties": false,
+        "description": "Renderer-agnostic drawing style for one analysis object.",
+        "properties": {
+          "color": {
+            "description": "Primary color as '#rgb', '#rrggbb', or '#rrggbbaa'.",
+            "title": "Color",
+            "type": "string"
+          },
+          "fill": {
+            "default": false,
+            "description": "Fill the shape (boxes/areas).",
+            "title": "Fill",
+            "type": "boolean"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Named layer for grouping/toggling.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "description": "Stroke width in pixels.",
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "opacity": {
+            "default": 1.0,
+            "description": "Fill/line opacity.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Z-order/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "render_type": {
+            "$ref": "#/$defs/RenderType",
+            "default": "box"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "tooltip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hover text (renderer-formatted).",
+            "title": "Tooltip"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "color"
+        ],
+        "title": "VisualStyle",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "A stop-run event against a liquidity pool.",
+    "properties": {
+      "candle_index": {
+        "description": "Index of the sweeping candle.",
+        "minimum": 0,
+        "title": "Candle Index",
+        "type": "integer"
+      },
+      "classification": {
+        "$ref": "#/$defs/SweepClassification"
+      },
+      "close_back_inside": {
+        "description": "True when the candle closed back inside.",
+        "title": "Close Back Inside",
+        "type": "boolean"
+      },
+      "id": {
+        "default": "",
+        "description": "Deterministic content-hash ID.",
+        "title": "Id",
+        "type": "string"
+      },
+      "label": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Optional human-facing label.",
+        "title": "Label"
+      },
+      "layer": {
+        "default": "default",
+        "description": "Render/grouping layer.",
+        "title": "Layer",
+        "type": "string"
+      },
+      "linked_break_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "False structure break linked to a STOP_HUNT, if any.",
+        "title": "Linked Break Id"
+      },
+      "penetration_atr": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Wick penetration beyond the pool, in ATRs.",
+        "title": "Penetration Atr"
+      },
+      "pool_id": {
+        "description": "ID of the swept pool.",
+        "minLength": 1,
+        "title": "Pool Id",
+        "type": "string"
+      },
+      "pool_price": {
+        "exclusiveMinimum": 0,
+        "title": "Pool Price",
+        "type": "number"
+      },
+      "priority": {
+        "default": 0,
+        "description": "Render/selection priority (higher wins).",
+        "title": "Priority",
+        "type": "integer"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "side": {
+        "$ref": "#/$defs/LiquiditySide"
+      },
+      "style": {
+        "$ref": "#/$defs/VisualStyle"
+      },
+      "timestamp": {
+        "description": "Sweeping candle timestamp (UTC).",
+        "format": "date-time",
+        "title": "Timestamp",
+        "type": "string"
+      },
+      "wick_extreme": {
+        "description": "Deepest wick price beyond the pool.",
+        "exclusiveMinimum": 0,
+        "title": "Wick Extreme",
+        "type": "number"
+      }
+    },
+    "required": [
+      "pool_id",
+      "pool_price",
+      "side",
+      "candle_index",
+      "timestamp",
+      "wick_extreme",
+      "close_back_inside",
+      "classification"
+    ],
+    "title": "LiquiditySweep",
+    "type": "object"
+  },
+  "name": "LiquiditySweep",
+  "schema_version": "1.0.0"
+}

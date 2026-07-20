@@ -1,0 +1,247 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "LiquidityPoolKind": {
+        "description": "Formation that creates a liquidity pool.",
+        "enum": [
+          "equal_highs",
+          "equal_lows",
+          "swing_high",
+          "swing_low",
+          "session_high",
+          "session_low",
+          "previous_day_high",
+          "previous_day_low"
+        ],
+        "title": "LiquidityPoolKind",
+        "type": "string"
+      },
+      "LiquiditySide": {
+        "description": "Side of the book where resting liquidity sits.",
+        "enum": [
+          "buyside",
+          "sellside"
+        ],
+        "title": "LiquiditySide",
+        "type": "string"
+      },
+      "PoolStatus": {
+        "description": "Lifecycle of a liquidity pool.\n\n``UNTAPPED`` → ``SWEPT`` (wicked through, closed back inside) or\n``BROKEN`` (closed through = true break). Status transitions are\nmonotonic in scan order.",
+        "enum": [
+          "untapped",
+          "swept",
+          "broken"
+        ],
+        "title": "PoolStatus",
+        "type": "string"
+      },
+      "RenderType": {
+        "description": "Render primitives an analysis object can map to.",
+        "enum": [
+          "line",
+          "area",
+          "box",
+          "marker",
+          "label",
+          "histogram",
+          "candles"
+        ],
+        "title": "RenderType",
+        "type": "string"
+      },
+      "SwingClass": {
+        "description": "Internal (short lookback, noise-level) vs external (leg-level) swings.",
+        "enum": [
+          "internal",
+          "external"
+        ],
+        "title": "SwingClass",
+        "type": "string"
+      },
+      "VisualStyle": {
+        "additionalProperties": false,
+        "description": "Renderer-agnostic drawing style for one analysis object.",
+        "properties": {
+          "color": {
+            "description": "Primary color as '#rgb', '#rrggbb', or '#rrggbbaa'.",
+            "title": "Color",
+            "type": "string"
+          },
+          "fill": {
+            "default": false,
+            "description": "Fill the shape (boxes/areas).",
+            "title": "Fill",
+            "type": "boolean"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Named layer for grouping/toggling.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "description": "Stroke width in pixels.",
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "opacity": {
+            "default": 1.0,
+            "description": "Fill/line opacity.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Z-order/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "render_type": {
+            "$ref": "#/$defs/RenderType",
+            "default": "box"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "tooltip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hover text (renderer-formatted).",
+            "title": "Tooltip"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "color"
+        ],
+        "title": "VisualStyle",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Resting liquidity above highs / below lows.",
+    "properties": {
+      "formed_at_index": {
+        "description": "Candle index where the pool became known.",
+        "minimum": 0,
+        "title": "Formed At Index",
+        "type": "integer"
+      },
+      "id": {
+        "default": "",
+        "description": "Deterministic content-hash ID.",
+        "title": "Id",
+        "type": "string"
+      },
+      "kind": {
+        "$ref": "#/$defs/LiquidityPoolKind",
+        "description": "Formation creating the pool."
+      },
+      "label": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Optional human-facing label.",
+        "title": "Label"
+      },
+      "layer": {
+        "default": "default",
+        "description": "Render/grouping layer.",
+        "title": "Layer",
+        "type": "string"
+      },
+      "pool_class": {
+        "$ref": "#/$defs/SwingClass",
+        "description": "INTERNAL or EXTERNAL liquidity."
+      },
+      "price": {
+        "description": "Level where liquidity rests.",
+        "exclusiveMinimum": 0,
+        "title": "Price",
+        "type": "number"
+      },
+      "priority": {
+        "default": 0,
+        "description": "Render/selection priority (higher wins).",
+        "title": "Priority",
+        "type": "integer"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "side": {
+        "$ref": "#/$defs/LiquiditySide"
+      },
+      "source_ids": {
+        "description": "Swing/equal-level IDs backing this pool.",
+        "items": {
+          "type": "string"
+        },
+        "minItems": 1,
+        "title": "Source Ids",
+        "type": "array"
+      },
+      "status": {
+        "$ref": "#/$defs/PoolStatus",
+        "default": "untapped"
+      },
+      "style": {
+        "$ref": "#/$defs/VisualStyle"
+      }
+    },
+    "required": [
+      "price",
+      "side",
+      "kind",
+      "pool_class",
+      "source_ids",
+      "formed_at_index"
+    ],
+    "title": "LiquidityPool",
+    "type": "object"
+  },
+  "name": "LiquidityPool",
+  "schema_version": "1.0.0"
+}

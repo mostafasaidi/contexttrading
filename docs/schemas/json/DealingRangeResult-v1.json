@@ -1,0 +1,267 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "DealingRange": {
+        "additionalProperties": false,
+        "description": "The active dealing range with equilibrium, OTE, and price location.\n\nFor a BULLISH range the dealing range spans the last external swing low\n→ swing high of the active leg; OTE is the ``ote_fib_lower..ote_fib_upper``\nretracement *below* the high (buy zone in discount). For BEARISH it is\nmirrored above the low (sell zone in premium).",
+        "properties": {
+          "direction": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "Trend the range serves (BULLISH or BEARISH)."
+          },
+          "discount_style": {
+            "$ref": "#/$defs/VisualStyle"
+          },
+          "equilibrium": {
+            "description": "50% of the range.",
+            "exclusiveMinimum": 0,
+            "title": "Equilibrium",
+            "type": "number"
+          },
+          "equilibrium_style": {
+            "$ref": "#/$defs/VisualStyle"
+          },
+          "high": {
+            "description": "Range upper bound (external swing high).",
+            "exclusiveMinimum": 0,
+            "title": "High",
+            "type": "number"
+          },
+          "high_swing_id": {
+            "minLength": 1,
+            "title": "High Swing Id",
+            "type": "string"
+          },
+          "low": {
+            "description": "Range lower bound (external swing low).",
+            "exclusiveMinimum": 0,
+            "title": "Low",
+            "type": "number"
+          },
+          "low_swing_id": {
+            "minLength": 1,
+            "title": "Low Swing Id",
+            "type": "string"
+          },
+          "ote_fibs": {
+            "description": "Fib retracements used for the OTE zone.",
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Ote Fibs",
+            "type": "array"
+          },
+          "ote_high": {
+            "description": "OTE zone upper price bound.",
+            "exclusiveMinimum": 0,
+            "title": "Ote High",
+            "type": "number"
+          },
+          "ote_low": {
+            "description": "OTE zone lower price bound.",
+            "exclusiveMinimum": 0,
+            "title": "Ote Low",
+            "type": "number"
+          },
+          "ote_style": {
+            "$ref": "#/$defs/VisualStyle"
+          },
+          "premium_style": {
+            "$ref": "#/$defs/VisualStyle"
+          },
+          "price_location": {
+            "$ref": "#/$defs/PriceLocation",
+            "description": "PREMIUM / DISCOUNT / EQUILIBRIUM."
+          },
+          "reference_price": {
+            "description": "Price being located (last close).",
+            "exclusiveMinimum": 0,
+            "title": "Reference Price",
+            "type": "number"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "high",
+          "low",
+          "high_swing_id",
+          "low_swing_id",
+          "direction",
+          "equilibrium",
+          "ote_low",
+          "ote_high",
+          "ote_fibs",
+          "reference_price",
+          "price_location"
+        ],
+        "title": "DealingRange",
+        "type": "object"
+      },
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "PriceLocation": {
+        "description": "Where a reference price sits inside a dealing range.",
+        "enum": [
+          "premium",
+          "discount",
+          "equilibrium"
+        ],
+        "title": "PriceLocation",
+        "type": "string"
+      },
+      "RenderType": {
+        "description": "Render primitives an analysis object can map to.",
+        "enum": [
+          "line",
+          "area",
+          "box",
+          "marker",
+          "label",
+          "histogram",
+          "candles"
+        ],
+        "title": "RenderType",
+        "type": "string"
+      },
+      "TrendDirection": {
+        "description": "Directional state of price, a candle, or a structure leg.",
+        "enum": [
+          "bullish",
+          "bearish",
+          "ranging",
+          "unknown"
+        ],
+        "title": "TrendDirection",
+        "type": "string"
+      },
+      "VisualStyle": {
+        "additionalProperties": false,
+        "description": "Renderer-agnostic drawing style for one analysis object.",
+        "properties": {
+          "color": {
+            "description": "Primary color as '#rgb', '#rrggbb', or '#rrggbbaa'.",
+            "title": "Color",
+            "type": "string"
+          },
+          "fill": {
+            "default": false,
+            "description": "Fill the shape (boxes/areas).",
+            "title": "Fill",
+            "type": "boolean"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Named layer for grouping/toggling.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "description": "Stroke width in pixels.",
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "opacity": {
+            "default": 1.0,
+            "description": "Fill/line opacity.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Z-order/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "render_type": {
+            "$ref": "#/$defs/RenderType",
+            "default": "box"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "tooltip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hover text (renderer-formatted).",
+            "title": "Tooltip"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "color"
+        ],
+        "title": "VisualStyle",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Payload of the premium/discount module.",
+    "properties": {
+      "dealing_range": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/DealingRange"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "None when no valid external swing pair exists yet."
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      }
+    },
+    "title": "DealingRangeResult",
+    "type": "object"
+  },
+  "name": "DealingRangeResult",
+  "schema_version": "1.0.0"
+}

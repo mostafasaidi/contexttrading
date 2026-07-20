@@ -85,10 +85,11 @@ def detect_equal_levels(
             ``equal_level_min_separation``).
 
     Returns:
-        Equal levels sorted by member start index.
+        Equal levels: equal highs (index-ordered) followed by equal lows
+        (index-ordered) — a deterministic order.
     """
     highs = [s for s in swings if s.swing_type is SwingType.HIGH]
     lows = [s for s in swings if s.swing_type is SwingType.LOW]
     levels = _detect_side(highs, atr_values, LiquiditySide.BUYSIDE, config)
     levels += _detect_side(lows, atr_values, LiquiditySide.SELLSIDE, config)
-    return sorted(levels, key=lambda level: level.member_swing_ids[0])
+    return levels

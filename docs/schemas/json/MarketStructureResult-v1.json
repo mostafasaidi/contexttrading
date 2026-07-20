@@ -1,0 +1,591 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "BreakStrength": {
+        "description": "Confirmation quality of a structure break.\n\n- ``STRONG``: close beyond the level by >= ``strength_atr_fraction * ATR``.\n- ``WEAK``: close beyond the level, but by less than the strong threshold.\n- ``FALSE``: wick-only breach without close confirmation (sweep candidate).",
+        "enum": [
+          "strong",
+          "weak",
+          "false"
+        ],
+        "title": "BreakStrength",
+        "type": "string"
+      },
+      "Leg": {
+        "additionalProperties": false,
+        "description": "A directional leg between two consecutive external swings.",
+        "properties": {
+          "atr_multiple": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Magnitude in ATRs at the leg end (None if ATR unavailable).",
+            "title": "Atr Multiple"
+          },
+          "direction": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "BULLISH or BEARISH (never RANGING here)."
+          },
+          "duration": {
+            "description": "Length in candles.",
+            "minimum": 1,
+            "title": "Duration",
+            "type": "integer"
+          },
+          "end_index": {
+            "minimum": 0,
+            "title": "End Index",
+            "type": "integer"
+          },
+          "end_price": {
+            "exclusiveMinimum": 0,
+            "title": "End Price",
+            "type": "number"
+          },
+          "id": {
+            "default": "",
+            "description": "Deterministic content-hash ID.",
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "$ref": "#/$defs/LegKind",
+            "description": "IMPULSE if a new same-side extreme was made."
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional human-facing label.",
+            "title": "Label"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Render/grouping layer.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "magnitude": {
+            "description": "Absolute price distance.",
+            "exclusiveMinimum": 0,
+            "title": "Magnitude",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Render/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "retracement_ratio": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "This leg's magnitude as a fraction of the previous leg's (None for leg 0).",
+            "title": "Retracement Ratio"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "start_index": {
+            "minimum": 0,
+            "title": "Start Index",
+            "type": "integer"
+          },
+          "start_price": {
+            "exclusiveMinimum": 0,
+            "title": "Start Price",
+            "type": "number"
+          }
+        },
+        "required": [
+          "start_index",
+          "end_index",
+          "start_price",
+          "end_price",
+          "direction",
+          "kind",
+          "magnitude",
+          "duration"
+        ],
+        "title": "Leg",
+        "type": "object"
+      },
+      "LegKind": {
+        "description": "Impulse (makes a new same-side extreme) vs correction (retraces).",
+        "enum": [
+          "impulse",
+          "correction"
+        ],
+        "title": "LegKind",
+        "type": "string"
+      },
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "RenderType": {
+        "description": "Render primitives an analysis object can map to.",
+        "enum": [
+          "line",
+          "area",
+          "box",
+          "marker",
+          "label",
+          "histogram",
+          "candles"
+        ],
+        "title": "RenderType",
+        "type": "string"
+      },
+      "StructureBreak": {
+        "additionalProperties": false,
+        "description": "A BOS/CHoCH event (or a false, wick-only attempt).",
+        "properties": {
+          "break_class": {
+            "$ref": "#/$defs/StructureBreakClass",
+            "description": "INTERNAL or EXTERNAL swing breached."
+          },
+          "break_index": {
+            "description": "Candle index of the breaking bar.",
+            "minimum": 0,
+            "title": "Break Index",
+            "type": "integer"
+          },
+          "break_price": {
+            "description": "Confirmation price: close for confirmed breaks, wick extreme for FALSE.",
+            "exclusiveMinimum": 0,
+            "title": "Break Price",
+            "type": "number"
+          },
+          "break_timestamp": {
+            "description": "Breaking bar timestamp (UTC).",
+            "format": "date-time",
+            "title": "Break Timestamp",
+            "type": "string"
+          },
+          "break_type": {
+            "$ref": "#/$defs/StructureBreakType",
+            "description": "BOS (with trend) or CHoCH (against trend)."
+          },
+          "broken_swing_class": {
+            "$ref": "#/$defs/SwingClass",
+            "description": "Class of the breached swing."
+          },
+          "broken_swing_id": {
+            "description": "ID of the swing that was breached.",
+            "minLength": 1,
+            "title": "Broken Swing Id",
+            "type": "string"
+          },
+          "broken_swing_price": {
+            "description": "Price level that was breached.",
+            "exclusiveMinimum": 0,
+            "title": "Broken Swing Price",
+            "type": "number"
+          },
+          "direction": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "Direction of the break (BULLISH up / BEARISH down)."
+          },
+          "id": {
+            "default": "",
+            "description": "Deterministic content-hash ID.",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_sweep_candidate": {
+            "default": false,
+            "description": "True for FALSE breaks — liquidity sweep candidates.",
+            "title": "Is Sweep Candidate",
+            "type": "boolean"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional human-facing label.",
+            "title": "Label"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Render/grouping layer.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "margin_atr": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Close margin beyond the level, in ATRs (None for FALSE).",
+            "title": "Margin Atr"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Render/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "significance": {
+            "$ref": "#/$defs/StructureBreakSignificance",
+            "description": "MAJOR for external breaks, MINOR for internal."
+          },
+          "strength": {
+            "$ref": "#/$defs/BreakStrength",
+            "description": "STRONG / WEAK / FALSE classification."
+          },
+          "style": {
+            "$ref": "#/$defs/VisualStyle",
+            "description": "Render style; engines set it via break_style()."
+          }
+        },
+        "required": [
+          "broken_swing_id",
+          "broken_swing_price",
+          "broken_swing_class",
+          "break_index",
+          "break_timestamp",
+          "break_price",
+          "direction",
+          "break_type",
+          "break_class",
+          "significance",
+          "strength"
+        ],
+        "title": "StructureBreak",
+        "type": "object"
+      },
+      "StructureBreakClass": {
+        "description": "Internal (short-range) vs external (leg-level) structure.",
+        "enum": [
+          "internal",
+          "external"
+        ],
+        "title": "StructureBreakClass",
+        "type": "string"
+      },
+      "StructureBreakSignificance": {
+        "description": "Minor vs major breaks (major = confirmed by displacement/close).",
+        "enum": [
+          "minor",
+          "major"
+        ],
+        "title": "StructureBreakSignificance",
+        "type": "string"
+      },
+      "StructureBreakType": {
+        "description": "Break of Structure (trend continuation) vs Change of Character (reversal).",
+        "enum": [
+          "bos",
+          "choch"
+        ],
+        "title": "StructureBreakType",
+        "type": "string"
+      },
+      "SwingClass": {
+        "description": "Internal (short lookback, noise-level) vs external (leg-level) swings.",
+        "enum": [
+          "internal",
+          "external"
+        ],
+        "title": "SwingClass",
+        "type": "string"
+      },
+      "SwingPoint": {
+        "additionalProperties": false,
+        "description": "A fractal swing high/low.\n\nIdentity hashes every field except ``id``/``label`` — identical\ndetections (same index, price, class) get identical IDs across runs.",
+        "properties": {
+          "id": {
+            "default": "",
+            "description": "Deterministic content-hash ID.",
+            "title": "Id",
+            "type": "string"
+          },
+          "index": {
+            "description": "Candle index of the swing bar.",
+            "minimum": 0,
+            "title": "Index",
+            "type": "integer"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional human-facing label.",
+            "title": "Label"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Render/grouping layer.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "lookback": {
+            "description": "Neighbor bars required each side.",
+            "minimum": 1,
+            "title": "Lookback",
+            "type": "integer"
+          },
+          "price": {
+            "description": "High (swing high) or low (swing low) price.",
+            "exclusiveMinimum": 0,
+            "title": "Price",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Render/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "style": {
+            "$ref": "#/$defs/VisualStyle",
+            "description": "Render style; engines set it via swing_style()."
+          },
+          "swing_class": {
+            "$ref": "#/$defs/SwingClass",
+            "description": "Internal (noise) vs external (leg-level)."
+          },
+          "swing_type": {
+            "$ref": "#/$defs/SwingType"
+          },
+          "timestamp": {
+            "description": "Swing bar timestamp (UTC).",
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          }
+        },
+        "required": [
+          "index",
+          "timestamp",
+          "price",
+          "swing_type",
+          "swing_class",
+          "lookback"
+        ],
+        "title": "SwingPoint",
+        "type": "object"
+      },
+      "SwingType": {
+        "description": "Kind of a detected swing point.",
+        "enum": [
+          "high",
+          "low"
+        ],
+        "title": "SwingType",
+        "type": "string"
+      },
+      "TrendDirection": {
+        "description": "Directional state of price, a candle, or a structure leg.",
+        "enum": [
+          "bullish",
+          "bearish",
+          "ranging",
+          "unknown"
+        ],
+        "title": "TrendDirection",
+        "type": "string"
+      },
+      "VisualStyle": {
+        "additionalProperties": false,
+        "description": "Renderer-agnostic drawing style for one analysis object.",
+        "properties": {
+          "color": {
+            "description": "Primary color as '#rgb', '#rrggbb', or '#rrggbbaa'.",
+            "title": "Color",
+            "type": "string"
+          },
+          "fill": {
+            "default": false,
+            "description": "Fill the shape (boxes/areas).",
+            "title": "Fill",
+            "type": "boolean"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Named layer for grouping/toggling.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "description": "Stroke width in pixels.",
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "opacity": {
+            "default": 1.0,
+            "description": "Fill/line opacity.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Z-order/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "render_type": {
+            "$ref": "#/$defs/RenderType",
+            "default": "box"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "tooltip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hover text (renderer-formatted).",
+            "title": "Tooltip"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "color"
+        ],
+        "title": "VisualStyle",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Payload of the structure module: swings, breaks, legs, protection.",
+    "properties": {
+      "breaks": {
+        "items": {
+          "$ref": "#/$defs/StructureBreak"
+        },
+        "title": "Breaks",
+        "type": "array"
+      },
+      "legs": {
+        "items": {
+          "$ref": "#/$defs/Leg"
+        },
+        "title": "Legs",
+        "type": "array"
+      },
+      "protected_high": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/SwingPoint"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Bearish-context protected swing high (None if none yet)."
+      },
+      "protected_low": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/SwingPoint"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Bullish-context protected swing low (None if none yet)."
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "swings": {
+        "items": {
+          "$ref": "#/$defs/SwingPoint"
+        },
+        "title": "Swings",
+        "type": "array"
+      }
+    },
+    "title": "MarketStructureResult",
+    "type": "object"
+  },
+  "name": "MarketStructureResult",
+  "schema_version": "1.0.0"
+}

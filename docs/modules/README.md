@@ -10,7 +10,10 @@ notes, determinism notes, and migration history.
 | core.constants | [constants.md](constants.md) | 2 ✅ |
 | models.candle | [candle.md](candle.md) | 2 ✅ |
 | models.outputs | [outputs.md](outputs.md) | 2 ✅ |
-| analysis.structure | _planned_ | 3 |
+| analysis.indicators | [indicators.md](indicators.md) | 3 ✅ |
+| analysis.structure | [structure.md](structure.md) | 3 ✅ |
+| analysis.liquidity | [liquidity.md](liquidity.md) | 3 ✅ |
+| analysis.premium_discount | [premium-discount.md](premium-discount.md) | 3 ✅ |
 | analysis.liquidity | _planned_ | 4 |
 | analysis.fvg | _planned_ | 4 |
 | analysis.orderblocks | _planned_ | 5 |

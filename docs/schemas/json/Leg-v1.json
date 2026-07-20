@@ -1,0 +1,149 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "LegKind": {
+        "description": "Impulse (makes a new same-side extreme) vs correction (retraces).",
+        "enum": [
+          "impulse",
+          "correction"
+        ],
+        "title": "LegKind",
+        "type": "string"
+      },
+      "TrendDirection": {
+        "description": "Directional state of price, a candle, or a structure leg.",
+        "enum": [
+          "bullish",
+          "bearish",
+          "ranging",
+          "unknown"
+        ],
+        "title": "TrendDirection",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "description": "A directional leg between two consecutive external swings.",
+    "properties": {
+      "atr_multiple": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Magnitude in ATRs at the leg end (None if ATR unavailable).",
+        "title": "Atr Multiple"
+      },
+      "direction": {
+        "$ref": "#/$defs/TrendDirection",
+        "description": "BULLISH or BEARISH (never RANGING here)."
+      },
+      "duration": {
+        "description": "Length in candles.",
+        "minimum": 1,
+        "title": "Duration",
+        "type": "integer"
+      },
+      "end_index": {
+        "minimum": 0,
+        "title": "End Index",
+        "type": "integer"
+      },
+      "end_price": {
+        "exclusiveMinimum": 0,
+        "title": "End Price",
+        "type": "number"
+      },
+      "id": {
+        "default": "",
+        "description": "Deterministic content-hash ID.",
+        "title": "Id",
+        "type": "string"
+      },
+      "kind": {
+        "$ref": "#/$defs/LegKind",
+        "description": "IMPULSE if a new same-side extreme was made."
+      },
+      "label": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Optional human-facing label.",
+        "title": "Label"
+      },
+      "layer": {
+        "default": "default",
+        "description": "Render/grouping layer.",
+        "title": "Layer",
+        "type": "string"
+      },
+      "magnitude": {
+        "description": "Absolute price distance.",
+        "exclusiveMinimum": 0,
+        "title": "Magnitude",
+        "type": "number"
+      },
+      "priority": {
+        "default": 0,
+        "description": "Render/selection priority (higher wins).",
+        "title": "Priority",
+        "type": "integer"
+      },
+      "retracement_ratio": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "This leg's magnitude as a fraction of the previous leg's (None for leg 0).",
+        "title": "Retracement Ratio"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "start_index": {
+        "minimum": 0,
+        "title": "Start Index",
+        "type": "integer"
+      },
+      "start_price": {
+        "exclusiveMinimum": 0,
+        "title": "Start Price",
+        "type": "number"
+      }
+    },
+    "required": [
+      "start_index",
+      "end_index",
+      "start_price",
+      "end_price",
+      "direction",
+      "kind",
+      "magnitude",
+      "duration"
+    ],
+    "title": "Leg",
+    "type": "object"
+  },
+  "name": "Leg",
+  "schema_version": "1.0.0"
+}
