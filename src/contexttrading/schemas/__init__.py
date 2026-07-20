@@ -1,5 +1,6 @@
-"""Schema export package."""
+"""Schema export package.
 
-from contexttrading.schemas.export import EXPORTED_MODELS, export_schemas, model_schema_document
-
-__all__ = ["EXPORTED_MODELS", "export_schemas", "model_schema_document"]
+Kept import-light so ``python -m contexttrading.schemas.export`` runs without
+double-import warnings. Import from ``contexttrading.schemas.export``
+directly.
+"""

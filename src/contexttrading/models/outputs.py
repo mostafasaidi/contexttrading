@@ -7,7 +7,7 @@ returns free text or raw dicts. See ``docs/architecture/data-flow.md``.
 
 from __future__ import annotations
 
-from typing import ClassVar, Generic, TypeVar
+from typing import ClassVar
 
 from pydantic import AwareDatetime, Field, model_validator
 
@@ -15,8 +15,6 @@ from contexttrading import __version__ as _ENGINE_VERSION
 from contexttrading.core.constants import Timeframe
 from contexttrading.core.versioning import SCHEMA_VERSION_ENVELOPE
 from contexttrading.models.base import VersionedModel
-
-PayloadT = TypeVar("PayloadT", bound=VersionedModel)
 
 
 class DataWindow(VersionedModel, frozen=True):
@@ -39,7 +37,7 @@ class DataWindow(VersionedModel, frozen=True):
         return self
 
 
-class AnalysisResult(VersionedModel, Generic[PayloadT]):
+class AnalysisResult[PayloadT: VersionedModel](VersionedModel):
     """Envelope wrapping every module's payload.
 
     Consumers must check both ``schema_version`` (envelope/payload contract)

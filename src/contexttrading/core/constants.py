@@ -7,8 +7,7 @@ import it. See ``docs/modules/constants.md`` for the design contract.
 from __future__ import annotations
 
 from datetime import timedelta
-from enum import Enum
-from functools import total_ordering
+from enum import StrEnum
 
 # ---------------------------------------------------------------------------
 # Floating-point policy (docs/architecture/determinism.md §3)
@@ -33,8 +32,7 @@ DAY_SECONDS: int = 86_400
 # ---------------------------------------------------------------------------
 
 
-@total_ordering
-class Timeframe(str, Enum):
+class Timeframe(StrEnum):
     """Supported candle timeframes.
 
     Values are the canonical string codes (``"1m"`` … ``"1M"``). Ordering is
@@ -102,6 +100,21 @@ class Timeframe(str, Enum):
             return self.seconds < other.seconds
         return NotImplemented
 
+    def __le__(self, other: object) -> bool:
+        if isinstance(other, Timeframe):
+            return self.seconds <= other.seconds
+        return NotImplemented
+
+    def __gt__(self, other: object) -> bool:
+        if isinstance(other, Timeframe):
+            return self.seconds > other.seconds
+        return NotImplemented
+
+    def __ge__(self, other: object) -> bool:
+        if isinstance(other, Timeframe):
+            return self.seconds >= other.seconds
+        return NotImplemented
+
     def __str__(self) -> str:  # canonical code, e.g. "15m"
         return self.value
 
@@ -140,7 +153,7 @@ _TIMEFRAME_ALIASES: dict[str, Timeframe] = {
 # ---------------------------------------------------------------------------
 
 
-class SessionName(str, Enum):
+class SessionName(StrEnum):
     """Named trading sessions / killzones (windows defined in SessionConfig)."""
 
     ASIA = "asia"
@@ -158,7 +171,7 @@ class SessionName(str, Enum):
 # ---------------------------------------------------------------------------
 
 
-class TrendDirection(str, Enum):
+class TrendDirection(StrEnum):
     """Directional state of price, a candle, or a structure leg."""
 
     BULLISH = "bullish"
@@ -176,28 +189,28 @@ class TrendDirection(str, Enum):
         return 0
 
 
-class SwingType(str, Enum):
+class SwingType(StrEnum):
     """Kind of a detected swing point."""
 
     HIGH = "high"
     LOW = "low"
 
 
-class StructureBreakType(str, Enum):
+class StructureBreakType(StrEnum):
     """Break of Structure (trend continuation) vs Change of Character (reversal)."""
 
     BOS = "bos"
     CHOCH = "choch"
 
 
-class StructureBreakClass(str, Enum):
+class StructureBreakClass(StrEnum):
     """Internal (short-range) vs external (leg-level) structure."""
 
     INTERNAL = "internal"
     EXTERNAL = "external"
 
 
-class StructureBreakSignificance(str, Enum):
+class StructureBreakSignificance(StrEnum):
     """Minor vs major breaks (major = confirmed by displacement/close)."""
 
     MINOR = "minor"
@@ -209,7 +222,7 @@ class StructureBreakSignificance(str, Enum):
 # ---------------------------------------------------------------------------
 
 
-class ZoneType(str, Enum):
+class ZoneType(StrEnum):
     """Kinds of price zones the engine can emit."""
 
     ORDER_BLOCK = "order_block"
@@ -224,7 +237,7 @@ class ZoneType(str, Enum):
     EQUILIBRIUM = "equilibrium"
 
 
-class MitigationStatus(str, Enum):
+class MitigationStatus(StrEnum):
     """Lifecycle of a zone with respect to price revisits."""
 
     UNMITIGATED = "unmitigated"
@@ -233,14 +246,14 @@ class MitigationStatus(str, Enum):
     VIOLATED = "violated"
 
 
-class LiquiditySide(str, Enum):
+class LiquiditySide(StrEnum):
     """Side of the book where resting liquidity sits."""
 
     BUYSIDE = "buyside"
     SELLSIDE = "sellside"
 
 
-class LiquidityPoolKind(str, Enum):
+class LiquidityPoolKind(StrEnum):
     """Formation that creates a liquidity pool."""
 
     EQUAL_HIGHS = "equal_highs"

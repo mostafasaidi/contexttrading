@@ -10,7 +10,7 @@ invents presentation or recomputes data.
 from __future__ import annotations
 
 import re
-from enum import Enum
+from enum import StrEnum
 from typing import ClassVar
 
 from pydantic import Field, field_validator
@@ -21,7 +21,7 @@ from contexttrading.models.base import VersionedModel
 _HEX_COLOR_RE = re.compile(r"^#(?:[0-9a-fA-F]{3}|[0-9a-fA-F]{6}|[0-9a-fA-F]{8})$")
 
 
-class LineStyle(str, Enum):
+class LineStyle(StrEnum):
     """Stroke styles understood by both Plotly and Lightweight Charts."""
 
     SOLID = "solid"
@@ -29,7 +29,7 @@ class LineStyle(str, Enum):
     DOTTED = "dotted"
 
 
-class RenderType(str, Enum):
+class RenderType(StrEnum):
     """Render primitives an analysis object can map to."""
 
     LINE = "line"
@@ -61,7 +61,5 @@ class VisualStyle(VersionedModel, frozen=True):
     @classmethod
     def _validate_color(cls, value: str) -> str:
         if not _HEX_COLOR_RE.match(value):
-            raise ValueError(
-                f"color must be '#rgb', '#rrggbb', or '#rrggbbaa', got {value!r}"
-            )
+            raise ValueError(f"color must be '#rgb', '#rrggbb', or '#rrggbbaa', got {value!r}")
         return value.lower()

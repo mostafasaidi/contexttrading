@@ -11,7 +11,7 @@
 from __future__ import annotations
 
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any, TextIO
 
 _DEFAULT_FORMAT = "%(asctime)s %(levelname)s %(name)s: %(message)s"
@@ -30,7 +30,7 @@ class JsonFormatter(logging.Formatter):
         import json
 
         payload: dict[str, Any] = {
-            "ts": datetime.fromtimestamp(record.created, tz=timezone.utc).isoformat(),
+            "ts": datetime.fromtimestamp(record.created, tz=UTC).isoformat(),
             "level": record.levelname,
             "logger": record.name,
             "message": record.getMessage(),
@@ -50,7 +50,7 @@ class BoundLogger:
     merged context — safe to share across layers.
     """
 
-    __slots__ = ("_logger", "_context")
+    __slots__ = ("_context", "_logger")
 
     def __init__(self, logger: logging.Logger, context: dict[str, Any] | None = None) -> None:
         self._logger = logger
@@ -142,7 +142,9 @@ def get_logger(name: str, **context: Any) -> BoundLogger:
     Returns:
         A :class:`BoundLogger`; silent unless :func:`configure_logging` ran.
     """
-    logger = logging.getLogger(name if name.startswith("contexttrading") else f"contexttrading.{name}")
-    if not _CONFIGURED and not logger.handlers and not logging.getLogger("contexttrading").handlers:
+    full_name = name if name.startswith("contexttrading") else f"contexttrading.{name}"
+    logger = logging.getLogger(full_name)
+    root = logging.getLogger("contexttrading")
+    if not _CONFIGURED and not logger.handlers and not root.handlers:
         logger.addHandler(logging.NullHandler())
     return BoundLogger(logger, context)

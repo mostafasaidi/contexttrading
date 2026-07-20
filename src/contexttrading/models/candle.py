@@ -9,7 +9,8 @@ Determinism notes:
 from __future__ import annotations
 
 from collections.abc import Iterator, Sequence
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from itertools import pairwise
 from typing import Any, ClassVar, Self
 
 from pydantic import AwareDatetime, Field, model_validator
@@ -58,7 +59,7 @@ class Candle(VersionedModel, frozen=True):
     @model_validator(mode="after")
     def _normalize_timestamp(self) -> Candle:
         # AwareDatetime guarantees tz-awareness; normalize to UTC.
-        object.__setattr__(self, "timestamp", self.timestamp.astimezone(timezone.utc))
+        object.__setattr__(self, "timestamp", self.timestamp.astimezone(UTC))
         return self
 
     # -- derived values -----------------------------------------------------
@@ -125,7 +126,7 @@ class CandleSeries:
             raise DataError("CandleSeries requires a non-empty symbol")
         tf = Timeframe.parse(timeframe) if isinstance(timeframe, str) else timeframe
         ordered = tuple(sorted(candles, key=lambda c: c.timestamp))
-        for prev, nxt in zip(ordered, ordered[1:], strict=False):
+        for prev, nxt in pairwise(ordered):
             if prev.timestamp == nxt.timestamp:
                 raise DataError(
                     "Duplicate candle timestamps in series",
@@ -254,7 +255,9 @@ class CandleSeries:
         lo = _as_utc(start) if start is not None else None
         hi = _as_utc(end) if end is not None else None
         selected = tuple(
-            c for c in self._candles if (lo is None or c.timestamp >= lo) and (hi is None or c.timestamp <= hi)
+            c
+            for c in self._candles
+            if (lo is None or c.timestamp >= lo) and (hi is None or c.timestamp <= hi)
         )
         return CandleSeries(
             selected,
@@ -283,10 +286,10 @@ class CandleSeries:
             raise ValueError("tolerance must be >= 1")
         expected = self._timeframe.seconds
         windows: list[GapWindow] = []
-        for prev, nxt in zip(self._candles, self._candles[1:], strict=False):
+        for prev, nxt in pairwise(self._candles):
             delta = (nxt.timestamp - prev.timestamp).total_seconds()
             if delta > expected * tolerance:
-                missing = int(round(delta / expected)) - 1
+                missing = round(delta / expected) - 1
                 if missing >= 1:
                     windows.append(
                         GapWindow(start=prev.timestamp, end=nxt.timestamp, missing_candles=missing)
@@ -334,5 +337,5 @@ class CandleSeries:
 
 def _as_utc(value: datetime) -> datetime:
     if value.tzinfo is None:
-        return value.replace(tzinfo=timezone.utc)
-    return value.astimezone(timezone.utc)
+        return value.replace(tzinfo=UTC)
+    return value.astimezone(UTC)
