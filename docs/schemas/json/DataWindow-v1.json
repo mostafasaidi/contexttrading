@@ -1,0 +1,42 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "additionalProperties": false,
+    "description": "The exact input-data window an analysis was generated from.\n\nTimestamps always derive from candle data (never wall-clock) per the\ndeterminism contract.",
+    "properties": {
+      "candle_count": {
+        "description": "Number of input candles.",
+        "minimum": 0,
+        "title": "Candle Count",
+        "type": "integer"
+      },
+      "end": {
+        "description": "Last input candle timestamp (UTC).",
+        "format": "date-time",
+        "title": "End",
+        "type": "string"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "start": {
+        "description": "First input candle timestamp (UTC).",
+        "format": "date-time",
+        "title": "Start",
+        "type": "string"
+      }
+    },
+    "required": [
+      "start",
+      "end",
+      "candle_count"
+    ],
+    "title": "DataWindow",
+    "type": "object"
+  },
+  "name": "DataWindow",
+  "schema_version": "1.0.0"
+}

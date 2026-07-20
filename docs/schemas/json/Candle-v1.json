@@ -1,0 +1,83 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "additionalProperties": false,
+    "description": "A single OHLCV candle.\n\nValidation guarantees: prices finite and > 0, ``volume >= 0``,\n``high >= max(open, close)``, ``low <= min(open, close)``, and a\ntimezone-aware timestamp normalized to UTC.",
+    "properties": {
+      "close": {
+        "description": "Close price.",
+        "exclusiveMinimum": 0,
+        "title": "Close",
+        "type": "number"
+      },
+      "high": {
+        "description": "High price.",
+        "exclusiveMinimum": 0,
+        "title": "High",
+        "type": "number"
+      },
+      "is_closed": {
+        "default": true,
+        "description": "False for a still-forming candle.",
+        "title": "Is Closed",
+        "type": "boolean"
+      },
+      "low": {
+        "description": "Low price.",
+        "exclusiveMinimum": 0,
+        "title": "Low",
+        "type": "number"
+      },
+      "open": {
+        "description": "Open price.",
+        "exclusiveMinimum": 0,
+        "title": "Open",
+        "type": "number"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "tick_count": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Optional tick metadata.",
+        "title": "Tick Count"
+      },
+      "timestamp": {
+        "description": "Candle open time (normalized to UTC).",
+        "format": "date-time",
+        "title": "Timestamp",
+        "type": "string"
+      },
+      "volume": {
+        "description": "Traded volume (0 allowed for illiquid feeds).",
+        "minimum": 0,
+        "title": "Volume",
+        "type": "number"
+      }
+    },
+    "required": [
+      "timestamp",
+      "open",
+      "high",
+      "low",
+      "close",
+      "volume"
+    ],
+    "title": "Candle",
+    "type": "object"
+  },
+  "name": "Candle",
+  "schema_version": "1.0.0"
+}

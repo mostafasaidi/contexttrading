@@ -1,0 +1,112 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "RenderType": {
+        "description": "Render primitives an analysis object can map to.",
+        "enum": [
+          "line",
+          "area",
+          "box",
+          "marker",
+          "label",
+          "histogram",
+          "candles"
+        ],
+        "title": "RenderType",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Renderer-agnostic drawing style for one analysis object.",
+    "properties": {
+      "color": {
+        "description": "Primary color as '#rgb', '#rrggbb', or '#rrggbbaa'.",
+        "title": "Color",
+        "type": "string"
+      },
+      "fill": {
+        "default": false,
+        "description": "Fill the shape (boxes/areas).",
+        "title": "Fill",
+        "type": "boolean"
+      },
+      "layer": {
+        "default": "default",
+        "description": "Named layer for grouping/toggling.",
+        "title": "Layer",
+        "type": "string"
+      },
+      "line_style": {
+        "$ref": "#/$defs/LineStyle",
+        "default": "solid"
+      },
+      "line_width": {
+        "default": 1.0,
+        "description": "Stroke width in pixels.",
+        "exclusiveMinimum": 0,
+        "title": "Line Width",
+        "type": "number"
+      },
+      "opacity": {
+        "default": 1.0,
+        "description": "Fill/line opacity.",
+        "maximum": 1.0,
+        "minimum": 0.0,
+        "title": "Opacity",
+        "type": "number"
+      },
+      "priority": {
+        "default": 0,
+        "description": "Z-order/selection priority (higher wins).",
+        "title": "Priority",
+        "type": "integer"
+      },
+      "render_type": {
+        "$ref": "#/$defs/RenderType",
+        "default": "box"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "tooltip": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Hover text (renderer-formatted).",
+        "title": "Tooltip"
+      },
+      "visible": {
+        "default": true,
+        "title": "Visible",
+        "type": "boolean"
+      }
+    },
+    "required": [
+      "color"
+    ],
+    "title": "VisualStyle",
+    "type": "object"
+  },
+  "name": "VisualStyle",
+  "schema_version": "1.0.0"
+}

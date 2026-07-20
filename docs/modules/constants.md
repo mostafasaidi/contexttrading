@@ -16,7 +16,9 @@ truth for cross-layer vocabulary.
 - **`SwingType`** — `HIGH, LOW`; **`ZoneType`** — `ORDER_BLOCK, BREAKER_BLOCK,
   FAIR_VALUE_GAP, SUPPLY, DEMAND, LIQUIDITY_POOL, PREMIUM, DISCOUNT, EQUILIBRIUM`.
 - **`MitigationStatus`** — `UNMITIGATED, PARTIALLY_MITIGATED, MITIGATED, VIOLATED`.
-- **`LiquiditySide`** — `BUYSIDE, SELLIDE` … see source for the full list.
+- **`LiquiditySide`** — `BUYSIDE, SELLSIDE`; **`LiquidityPoolKind`** —
+  `EQUAL_HIGHS, EQUAL_LOWS, SWING_HIGH/LOW, SESSION_HIGH/LOW,
+  PREVIOUS_DAY_HIGH/LOW`.
 - **Float tolerances:** `FLOAT_REL_TOL = 1e-9`, `FLOAT_ABS_TOL = 1e-12`.
 
 Migration history: v1.0.0 (Phase 2) — initial.
