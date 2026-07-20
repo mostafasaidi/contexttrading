@@ -37,7 +37,7 @@ class TestTrueRanges:
 
     def test_gaps_count(self) -> None:
         candles = [
-            make_candle(0, 10, 11, 9, 10),   # TR = 2
+            make_candle(0, 10, 11, 9, 10),  # TR = 2
             make_candle(1, 12, 13, 11.5, 12.5),  # max(1.5, 3, 1.5) = 3
             make_candle(2, 12, 12.5, 11, 11.5),  # max(1.5, 0.5, 1.5) = 1.5
         ]
