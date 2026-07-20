@@ -1,0 +1,33 @@
+{
+  "engine_version": "0.1.0",
+  "generated_from": {
+    "candle_count": 29,
+    "end": "2024-01-01T00:28:00Z",
+    "schema_version": "1.0.0",
+    "start": "2024-01-01T00:00:00Z"
+  },
+  "module": "trend",
+  "payload": {
+    "schema_version": "1.0.0",
+    "state": {
+      "bos_follow_through": 1.0,
+      "confidence_basis": [
+        "hh_hl_sequence",
+        "strong_bos:4/4",
+        "impulse_correction_ratio:1.14",
+        "recent_bos_in_trend:4"
+      ],
+      "direction": "bullish",
+      "external_trend": "bullish",
+      "impulse_correction_ratio": 1.1393296686244034,
+      "internal_trend": "bullish",
+      "market_phase": "expansion",
+      "schema_version": "1.0.0",
+      "strength": "moderate"
+    }
+  },
+  "run_id": null,
+  "schema_version": "1.0.0",
+  "symbol": "TEST",
+  "timeframe": "1m"
+}

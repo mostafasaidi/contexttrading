@@ -1,0 +1,168 @@
+{
+  "engine_version": "0.1.0",
+  "generated_from": {
+    "candle_count": 22,
+    "end": "2024-01-01T00:21:00Z",
+    "schema_version": "1.0.0",
+    "start": "2024-01-01T00:00:00Z"
+  },
+  "module": "liquidity",
+  "payload": {
+    "equal_levels": [],
+    "pools": [
+      {
+        "formed_at_index": 4,
+        "id": "pool_a68dfea2d5d3dfd3fbd9e499",
+        "kind": "swing_high",
+        "label": null,
+        "layer": "default",
+        "pool_class": "external",
+        "price": 15.05,
+        "priority": 0,
+        "schema_version": "1.0.0",
+        "side": "buyside",
+        "source_ids": [
+          "swing_52104c7c2c1b368562ef7e81"
+        ],
+        "status": "broken",
+        "style": {
+          "color": "#787b86",
+          "fill": false,
+          "layer": "liquidity.pools",
+          "line_style": "dotted",
+          "line_width": 1.0,
+          "opacity": 1.0,
+          "priority": 12,
+          "render_type": "line",
+          "schema_version": "1.0.0",
+          "tooltip": "buyside liquidity (broken)",
+          "visible": true
+        }
+      },
+      {
+        "formed_at_index": 8,
+        "id": "pool_eabcfe762168d75aa0a9eba4",
+        "kind": "swing_low",
+        "label": null,
+        "layer": "default",
+        "pool_class": "external",
+        "price": 11.95,
+        "priority": 0,
+        "schema_version": "1.0.0",
+        "side": "sellside",
+        "source_ids": [
+          "swing_328d7bc652acd70ac4a8cc3b"
+        ],
+        "status": "untapped",
+        "style": {
+          "color": "#ab47bc",
+          "fill": false,
+          "layer": "liquidity.pools",
+          "line_style": "solid",
+          "line_width": 1.0,
+          "opacity": 1.0,
+          "priority": 12,
+          "render_type": "line",
+          "schema_version": "1.0.0",
+          "tooltip": "sellside liquidity (untapped)",
+          "visible": true
+        }
+      },
+      {
+        "formed_at_index": 12,
+        "id": "pool_44bc49b91cb8663673045fe7",
+        "kind": "swing_high",
+        "label": null,
+        "layer": "default",
+        "pool_class": "external",
+        "price": 16.05,
+        "priority": 0,
+        "schema_version": "1.0.0",
+        "side": "buyside",
+        "source_ids": [
+          "swing_7314ffd5d2bc67dd2c31aca1"
+        ],
+        "status": "swept",
+        "style": {
+          "color": "#787b86",
+          "fill": false,
+          "layer": "liquidity.pools",
+          "line_style": "dotted",
+          "line_width": 1.0,
+          "opacity": 1.0,
+          "priority": 12,
+          "render_type": "line",
+          "schema_version": "1.0.0",
+          "tooltip": "buyside liquidity (swept)",
+          "visible": true
+        }
+      },
+      {
+        "formed_at_index": 16,
+        "id": "pool_2ccf968287b0799a1c4efe7b",
+        "kind": "swing_low",
+        "label": null,
+        "layer": "default",
+        "pool_class": "external",
+        "price": 13.95,
+        "priority": 0,
+        "schema_version": "1.0.0",
+        "side": "sellside",
+        "source_ids": [
+          "swing_448072222b67f341dd2a7a1b"
+        ],
+        "status": "untapped",
+        "style": {
+          "color": "#ab47bc",
+          "fill": false,
+          "layer": "liquidity.pools",
+          "line_style": "solid",
+          "line_width": 1.0,
+          "opacity": 1.0,
+          "priority": 12,
+          "render_type": "line",
+          "schema_version": "1.0.0",
+          "tooltip": "sellside liquidity (untapped)",
+          "visible": true
+        }
+      }
+    ],
+    "schema_version": "1.0.0",
+    "sweeps": [
+      {
+        "candle_index": 20,
+        "classification": "stop_hunt",
+        "close_back_inside": true,
+        "id": "sweep_5416e7bf262343f437631cf7",
+        "label": null,
+        "layer": "default",
+        "linked_break_id": "break_281ca5ac8b03f770a823d920",
+        "penetration_atr": 0.34510381420617303,
+        "pool_id": "pool_44bc49b91cb8663673045fe7",
+        "pool_price": 16.05,
+        "priority": 0,
+        "schema_version": "1.0.0",
+        "side": "buyside",
+        "style": {
+          "color": "#ff9800",
+          "fill": false,
+          "layer": "liquidity.sweeps",
+          "line_style": "solid",
+          "line_width": 1.0,
+          "opacity": 1.0,
+          "priority": 25,
+          "render_type": "marker",
+          "schema_version": "1.0.0",
+          "tooltip": "stop hunt",
+          "visible": true
+        },
+        "timestamp": "2024-01-01T00:20:00Z",
+        "wick_extreme": 16.3
+      }
+    ]
+  },
+  "run_id": null,
+  "schema_version": "1.0.0",
+  "symbol": "FAKE",
+  "timeframe": "1m"
+}

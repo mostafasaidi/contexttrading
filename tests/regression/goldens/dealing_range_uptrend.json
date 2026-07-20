@@ -1,0 +1,86 @@
+{
+  "engine_version": "0.1.0",
+  "generated_from": {
+    "candle_count": 29,
+    "end": "2024-01-01T00:28:00Z",
+    "schema_version": "1.0.0",
+    "start": "2024-01-01T00:00:00Z"
+  },
+  "module": "premium_discount",
+  "payload": {
+    "dealing_range": {
+      "direction": "bullish",
+      "discount_style": {
+        "color": "#22ab94",
+        "fill": true,
+        "layer": "range.discount",
+        "line_style": "solid",
+        "line_width": 1.0,
+        "opacity": 0.15,
+        "priority": 2,
+        "render_type": "box",
+        "schema_version": "1.0.0",
+        "tooltip": "discount zone",
+        "visible": true
+      },
+      "equilibrium": 17.5,
+      "equilibrium_style": {
+        "color": "#787b86",
+        "fill": false,
+        "layer": "range.equilibrium",
+        "line_style": "dashed",
+        "line_width": 1.0,
+        "opacity": 1.0,
+        "priority": 3,
+        "render_type": "line",
+        "schema_version": "1.0.0",
+        "tooltip": "equilibrium (50%)",
+        "visible": true
+      },
+      "high": 19.05,
+      "high_swing_id": "swing_03eab626e23f183231bc636a",
+      "low": 15.95,
+      "low_swing_id": "swing_371036999cc7b24d113ffabc",
+      "ote_fibs": [
+        0.62,
+        0.79
+      ],
+      "ote_high": 17.128,
+      "ote_low": 16.601,
+      "ote_style": {
+        "color": "#ff9800",
+        "fill": true,
+        "layer": "range.ote",
+        "line_style": "solid",
+        "line_width": 1.0,
+        "opacity": 0.15,
+        "priority": 2,
+        "render_type": "box",
+        "schema_version": "1.0.0",
+        "tooltip": "optimal trade entry",
+        "visible": true
+      },
+      "premium_style": {
+        "color": "#f23645",
+        "fill": true,
+        "layer": "range.premium",
+        "line_style": "solid",
+        "line_width": 1.0,
+        "opacity": 0.15,
+        "priority": 2,
+        "render_type": "box",
+        "schema_version": "1.0.0",
+        "tooltip": "premium zone",
+        "visible": true
+      },
+      "price_location": "premium",
+      "reference_price": 18.0,
+      "schema_version": "1.0.0"
+    },
+    "schema_version": "1.0.0"
+  },
+  "run_id": null,
+  "schema_version": "1.0.0",
+  "symbol": "TEST",
+  "timeframe": "1m"
+}
