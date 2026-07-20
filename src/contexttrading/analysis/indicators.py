@@ -19,6 +19,7 @@ Conventions
 from __future__ import annotations
 
 from collections.abc import Sequence
+from itertools import pairwise
 
 from contexttrading.core.errors import InsufficientDataError
 from contexttrading.models.candle import Candle
@@ -33,7 +34,7 @@ def true_ranges(candles: Sequence[Candle]) -> tuple[float, ...]:
     if not candles:
         return ()
     out = [candles[0].high - candles[0].low]
-    for prev, cur in zip(candles, candles[1:], strict=False):
+    for prev, cur in pairwise(candles):
         out.append(
             max(
                 cur.high - cur.low,
@@ -131,7 +132,7 @@ def prior_rolling_mean(values: Sequence[float], window: int) -> tuple[float | No
         if i >= window:
             out[i] = running / window
         running += v
-        if i >= window - 1:
+        if i >= window:
             running -= values[i - window + 1]
     return tuple(out)
 
