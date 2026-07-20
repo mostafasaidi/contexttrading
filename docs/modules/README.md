@@ -1,0 +1,18 @@
+# Module Reference Index
+
+One document per module, added as the module lands. Each module doc covers:
+purpose, config, input/output models (with schema versions), algorithm
+notes, determinism notes, and migration history.
+
+| Module | Doc | Phase |
+|---|---|---|
+| core.config | [config.md](config.md) | 2 ✅ |
+| core.constants | [constants.md](constants.md) | 2 ✅ |
+| models.candle | [candle.md](candle.md) | 2 ✅ |
+| models.outputs | [outputs.md](outputs.md) | 2 ✅ |
+| analysis.structure | _planned_ | 3 |
+| analysis.liquidity | _planned_ | 4 |
+| analysis.fvg | _planned_ | 4 |
+| analysis.orderblocks | _planned_ | 5 |
+| analysis.sessions | _planned_ | 6 |
+| analysis.confluence | _planned_ | 7 |
