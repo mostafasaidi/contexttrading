@@ -1,0 +1,63 @@
+"""Schema version constants and helpers.
+
+Every emitted model inherits :class:`~contexttrading.models.base.VersionedModel`
+and carries a ``schema_version`` string. Breaking field changes require a
+version bump here plus a migration note in ``docs/modules/<module>.md``.
+"""
+
+from __future__ import annotations
+
+# Envelope and Phase-2 model schema versions.
+SCHEMA_VERSION_ENVELOPE: str = "1.0.0"
+SCHEMA_VERSION_CANDLE: str = "1.0.0"
+SCHEMA_VERSION_GAP_WINDOW: str = "1.0.0"
+SCHEMA_VERSION_VISUAL_STYLE: str = "1.0.0"
+SCHEMA_VERSION_ANALYSIS_OBJECT: str = "1.0.0"
+
+#: Registry of all current schema versions, keyed by logical model name.
+CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
+    "AnalysisResult": SCHEMA_VERSION_ENVELOPE,
+    "DataWindow": SCHEMA_VERSION_ENVELOPE,
+    "Candle": SCHEMA_VERSION_CANDLE,
+    "GapWindow": SCHEMA_VERSION_GAP_WINDOW,
+    "VisualStyle": SCHEMA_VERSION_VISUAL_STYLE,
+    "AnalysisObject": SCHEMA_VERSION_ANALYSIS_OBJECT,
+}
+
+
+def parse_version(version: str) -> tuple[int, int, int]:
+    """Parse a ``"major.minor.patch"`` version string.
+
+    Args:
+        version: Semantic version string.
+
+    Returns:
+        ``(major, minor, patch)`` tuple.
+
+    Raises:
+        ValueError: If the string is not a three-part numeric version.
+    """
+    parts = version.strip().split(".")
+    if len(parts) != 3 or not all(p.isdigit() for p in parts):
+        raise ValueError(f"Invalid schema version: {version!r} (expected 'major.minor.patch')")
+    return int(parts[0]), int(parts[1]), int(parts[2])
+
+
+def major_of(version: str) -> int:
+    """Return the major component of a schema version."""
+    return parse_version(version)[0]
+
+
+def is_compatible(produced: str, consumed: str) -> bool:
+    """Compatibility rule: same major version and producer not newer in minor.
+
+    Args:
+        produced: Schema version of the artifact being read.
+        consumed: Schema version the consumer was built against.
+
+    Returns:
+        True when the consumer may safely interpret the artifact.
+    """
+    p_major, p_minor, _ = parse_version(produced)
+    c_major, c_minor, _ = parse_version(consumed)
+    return p_major == c_major and p_minor <= c_minor
