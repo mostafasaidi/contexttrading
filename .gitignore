@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Testing / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.benchmarks/
+
+# Lint / format caches
+.ruff_cache/
+.mypy_cache/
+
+# Tooling
+.idea/
+.vscode/
+*.swp
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Docs build artifacts
+site/
+
+# Generated schema exports (regenerate via `python -m contexttrading.schemas.export`)
+# Kept out of git by default; uncomment to version them:
+# docs/schemas/json/
+
+# OS
+.DS_Store
+Thumbs.db

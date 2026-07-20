@@ -1,0 +1,35 @@
+# Compose skeleton. Services are enabled progressively in later phases:
+#  - api:       FastAPI service (Phase 9)
+#  - postgres:  durable storage (Phase 8)
+#  - redis:     cache / pub-sub (Phase 8)
+# Keep everything disabled-by-default until the corresponding phase lands.
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    profiles: ["later"]
+    ports:
+      - "8000:8000"
+    environment:
+      CT_API__HOST: 0.0.0.0
+      CT_API__PORT: "8000"
+    depends_on: []
+
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["later"]
+    environment:
+      POSTGRES_USER: contexttrading
+      POSTGRES_PASSWORD: contexttrading
+      POSTGRES_DB: contexttrading
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    profiles: ["later"]
+
+volumes:
+  pgdata:

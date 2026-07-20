@@ -1,0 +1,95 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "contexttrading"
+version = "0.1.0"
+description = "Deterministic Smart Money Concepts analysis engine with an explain-only AI layer."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "ContextTrading Contributors" }]
+keywords = ["trading", "smart-money-concepts", "smc", "market-structure", "deterministic"]
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.5",
+    "pydantic-settings>=2.1",
+    "numpy>=1.26",
+    "pandas>=2.1",
+    "polars>=0.20",
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+    "plotly>=5.18",
+    "httpx>=0.27",
+    "python-dotenv>=1.0",
+    "PyYAML>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.1",
+    "pytest-benchmark>=4.0",
+    "hypothesis>=6.98",
+    "ruff>=0.4",
+    "black>=24.0",
+    "pre-commit>=3.6",
+]
+cli = ["typer>=0.12"]
+
+[project.urls]
+Homepage = "https://github.com/contexttrading/contexttrading"
+Documentation = "https://github.com/contexttrading/contexttrading/tree/main/docs"
+Repository = "https://github.com/contexttrading/contexttrading"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-dir]
+"" = "src"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "UP",  # pyupgrade
+    "B",   # flake8-bugbear
+    "SIM", # flake8-simplify
+    "RUF", # ruff-specific rules
+]
+ignore = []
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["B008"]
+
+[tool.black]
+target-version = ["py312"]
+line-length = 100
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "benchmark: performance benchmark tests",
+]
+filterwarnings = ["error::DeprecationWarning"]
+
+[tool.coverage.run]
+source = ["src/contexttrading"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
