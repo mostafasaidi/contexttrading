@@ -1,0 +1,97 @@
+{
+  "engine_version": "0.1.0",
+  "generated_from": {
+    "candle_count": 192,
+    "end": "2024-01-02T23:45:00Z",
+    "schema_version": "1.0.0",
+    "start": "2024-01-01T00:00:00Z"
+  },
+  "module": "confluence",
+  "payload": {
+    "agreeing_factors": 4,
+    "bearish_score": 0.5054945054945055,
+    "bias": "bearish",
+    "bullish_score": 0.15391948609803663,
+    "conflicting_factors": 2,
+    "factors": [
+      {
+        "contribution": 0.0,
+        "detail": "external trend unknown (moderate)",
+        "direction": "ranging",
+        "factor": "trend",
+        "raw": 0.0,
+        "schema_version": "1.0.0",
+        "source_id": null,
+        "weight": 1.0
+      },
+      {
+        "contribution": 1.2857142857142856,
+        "detail": "mtf bias bearish (moderate, share 0.857)",
+        "direction": "bearish",
+        "factor": "mtf",
+        "raw": 0.8571428571428571,
+        "schema_version": "1.0.0",
+        "source_id": null,
+        "weight": 1.5
+      },
+      {
+        "contribution": 1.0,
+        "detail": "recent sweeps 0.00 bullish / 1.00 bearish (class-weighted)",
+        "direction": "bearish",
+        "factor": "liquidity",
+        "raw": 1.0,
+        "schema_version": "1.0.0",
+        "source_id": null,
+        "weight": 1.0
+      },
+      {
+        "contribution": 0.515191504845111,
+        "detail": "bullish fvg fvg_1d99fd41be94e5ac72b46ff7 (strength 0.515)",
+        "direction": "bullish",
+        "factor": "fvg",
+        "raw": 0.515191504845111,
+        "schema_version": "1.0.0",
+        "source_id": "fvg_1d99fd41be94e5ac72b46ff7",
+        "weight": 1.0
+      },
+      {
+        "contribution": 0.48528515479212697,
+        "detail": "bullish fvg fvg_4fcc933eab8e2a46045b3631 (strength 0.485)",
+        "direction": "bullish",
+        "factor": "fvg",
+        "raw": 0.48528515479212697,
+        "schema_version": "1.0.0",
+        "source_id": "fvg_4fcc933eab8e2a46045b3631",
+        "weight": 1.0
+      },
+      {
+        "contribution": 0.5,
+        "detail": "judas swing: asia high swept in london killzone",
+        "direction": "bearish",
+        "factor": "session",
+        "raw": 1.0,
+        "schema_version": "1.0.0",
+        "source_id": "ssweep_d41e25a57327890764688de0",
+        "weight": 0.5
+      },
+      {
+        "contribution": 0.5,
+        "detail": "judas swing: asia high swept in london killzone",
+        "direction": "bearish",
+        "factor": "session",
+        "raw": 1.0,
+        "schema_version": "1.0.0",
+        "source_id": "ssweep_32dff0c8c4a11d1ebf8cc2e5",
+        "weight": 0.5
+      }
+    ],
+    "reference_price": 102.5000000000001,
+    "schema_version": "1.0.0",
+    "score": 0.5054945054945055,
+    "zones": []
+  },
+  "run_id": null,
+  "schema_version": "1.0.0",
+  "symbol": "JUDAS",
+  "timeframe": "15m"
+}

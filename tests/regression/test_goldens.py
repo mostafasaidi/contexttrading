@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pytest
 
+from contexttrading.analysis.confluence import analyze_confluence
 from contexttrading.analysis.fvg import analyze_fvg
 from contexttrading.analysis.liquidity import analyze_liquidity
 from contexttrading.analysis.mtf import analyze_mtf
@@ -137,3 +138,17 @@ class TestMtfGoldens:
     def test_five_day_mtf(self) -> None:
         result = analyze_mtf(five_day_15m_series(), ["1h", "4h", "1d"], engine_config())
         _assert_golden("mtf_five_day.json", result.model_dump_json())
+
+
+class TestConfluenceGoldens:
+    def test_five_day_confluence(self) -> None:
+        result = analyze_confluence(five_day_15m_series(), engine_config())
+        _assert_golden("confluence_five_day.json", result.model_dump_json())
+
+    def test_judas_confluence(self) -> None:
+        result = analyze_confluence(judas_15m_series(), engine_config())
+        _assert_golden("confluence_judas.json", result.model_dump_json())
+
+    def test_uptrend_confluence(self) -> None:
+        result = analyze_confluence(uptrend_series(), engine_config())
+        _assert_golden("confluence_uptrend.json", result.model_dump_json())

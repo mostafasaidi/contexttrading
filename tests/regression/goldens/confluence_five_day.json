@@ -1,0 +1,187 @@
+{
+  "engine_version": "0.1.0",
+  "generated_from": {
+    "candle_count": 480,
+    "end": "2024-01-05T23:45:00Z",
+    "schema_version": "1.0.0",
+    "start": "2024-01-01T00:00:00Z"
+  },
+  "module": "confluence",
+  "payload": {
+    "agreeing_factors": 4,
+    "bearish_score": 0.2727272727272727,
+    "bias": "bullish",
+    "bullish_score": 0.627964022235904,
+    "conflicting_factors": 2,
+    "factors": [
+      {
+        "contribution": 0.6,
+        "detail": "external trend bullish (moderate)",
+        "direction": "bullish",
+        "factor": "trend",
+        "raw": 0.6,
+        "schema_version": "1.0.0",
+        "source_id": null,
+        "weight": 1.0
+      },
+      {
+        "contribution": 1.5,
+        "detail": "mtf bias bullish (strong, share 1.000)",
+        "direction": "bullish",
+        "factor": "mtf",
+        "raw": 1.0,
+        "schema_version": "1.0.0",
+        "source_id": null,
+        "weight": 1.5
+      },
+      {
+        "contribution": 1.0,
+        "detail": "recent breaks 5 bullish / 0 bearish of 5",
+        "direction": "bullish",
+        "factor": "structure",
+        "raw": 1.0,
+        "schema_version": "1.0.0",
+        "source_id": null,
+        "weight": 1.0
+      },
+      {
+        "contribution": 1.0,
+        "detail": "recent sweeps 0.00 bullish / 3.00 bearish (class-weighted)",
+        "direction": "bearish",
+        "factor": "liquidity",
+        "raw": 1.0,
+        "schema_version": "1.0.0",
+        "source_id": null,
+        "weight": 1.0
+      },
+      {
+        "contribution": 0.35380212229747193,
+        "detail": "price in discount of the dealing range",
+        "direction": "bullish",
+        "factor": "premium_discount",
+        "raw": 0.7076042445949439,
+        "schema_version": "1.0.0",
+        "source_id": null,
+        "weight": 0.5
+      },
+      {
+        "contribution": 0.5,
+        "detail": "judas swing: asia high swept in london killzone",
+        "direction": "bearish",
+        "factor": "session",
+        "raw": 1.0,
+        "schema_version": "1.0.0",
+        "source_id": "ssweep_1f33675d6352e327ae96ebe1",
+        "weight": 0.5
+      }
+    ],
+    "reference_price": 121.5077950723035,
+    "schema_version": "1.0.0",
+    "score": 0.627964022235904,
+    "zones": [
+      {
+        "direction": "bullish",
+        "id": "conf_2273b991c4241f93cb2dc021",
+        "label": null,
+        "layer": "default",
+        "member_ids": [
+          "mb_16458b7b22b60d1440736006",
+          "ob_f4b23ae4919a4e9ea731851e",
+          "sd_8bd4206e652e424f3513f329"
+        ],
+        "member_kinds": [
+          "orderblock",
+          "supplydemand"
+        ],
+        "priority": 0,
+        "schema_version": "1.0.0",
+        "score": 0.4671797392980798,
+        "style": {
+          "color": "#22ab94",
+          "fill": true,
+          "layer": "confluence.zones",
+          "line_style": "solid",
+          "line_width": 2.0,
+          "opacity": 0.21679493482451995,
+          "priority": 9,
+          "render_type": "box",
+          "schema_version": "1.0.0",
+          "tooltip": "bullish confluence zone (score 0.47)",
+          "visible": true
+        },
+        "zone_bottom": 109.45124479325594,
+        "zone_top": 109.6716743203954
+      },
+      {
+        "direction": "bullish",
+        "id": "conf_ffc10200b87402e5c34e7917",
+        "label": null,
+        "layer": "default",
+        "member_ids": [
+          "mb_2f0c09e873e99110732f94be",
+          "ob_5893ef62b94e7e589c3402d6",
+          "sd_15e17edb6def0b171127ff02"
+        ],
+        "member_kinds": [
+          "orderblock",
+          "supplydemand"
+        ],
+        "priority": 0,
+        "schema_version": "1.0.0",
+        "score": 0.4631280670617315,
+        "style": {
+          "color": "#22ab94",
+          "fill": true,
+          "layer": "confluence.zones",
+          "line_style": "solid",
+          "line_width": 2.0,
+          "opacity": 0.21578201676543288,
+          "priority": 9,
+          "render_type": "box",
+          "schema_version": "1.0.0",
+          "tooltip": "bullish confluence zone (score 0.46)",
+          "visible": true
+        },
+        "zone_bottom": 119.6943408029239,
+        "zone_top": 119.89370258637413
+      },
+      {
+        "direction": "bullish",
+        "id": "conf_3a19bc17361da9343987a6ec",
+        "label": null,
+        "layer": "default",
+        "member_ids": [
+          "mb_eb3afd833af22c919fd45de1",
+          "ob_a9958b8a61169567e5a1200a",
+          "sd_949097c548dcee0e29286b75"
+        ],
+        "member_kinds": [
+          "orderblock",
+          "supplydemand"
+        ],
+        "priority": 0,
+        "schema_version": "1.0.0",
+        "score": 0.4597510800117158,
+        "style": {
+          "color": "#22ab94",
+          "fill": true,
+          "layer": "confluence.zones",
+          "line_style": "solid",
+          "line_width": 2.0,
+          "opacity": 0.21493777000292896,
+          "priority": 9,
+          "render_type": "box",
+          "schema_version": "1.0.0",
+          "tooltip": "bullish confluence zone (score 0.46)",
+          "visible": true
+        },
+        "zone_bottom": 106.78464304273143,
+        "zone_top": 106.98289321897886
+      }
+    ]
+  },
+  "run_id": null,
+  "schema_version": "1.0.0",
+  "symbol": "SESS",
+  "timeframe": "15m"
+}
