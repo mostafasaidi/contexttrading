@@ -148,8 +148,7 @@ class BacktestStatistics(VersionedModel):
     payoff_ratio: float | None = Field(default=None, ge=0, description="avg_win / avg_loss.")
     max_consecutive_wins: int = Field(ge=0)
     max_consecutive_losses: int = Field(ge=0)
-    max_drawdown_abs: float = Field(ge=0)
-    max_drawdown_pct: float = Field(ge=0)
+    drawdown: DrawdownInfo
     sharpe: float | None = Field(default=None, description="None when returns have zero std.")
     sortino: float | None = Field(default=None, description="None when no downside returns.")
     calmar: float | None = Field(default=None, description="None when max drawdown is 0.")
