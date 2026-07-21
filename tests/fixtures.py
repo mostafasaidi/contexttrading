@@ -286,3 +286,39 @@ def judas_15m_records() -> list[dict[str, Any]]:
 def judas_15m_series(symbol: str = "JUDAS") -> CandleSeries:
     """CandleSeries variant of :func:`judas_15m_records`."""
     return CandleSeries.from_records(judas_15m_records(), symbol=symbol, timeframe="15m")
+
+
+def full_stack_results(
+    series: CandleSeries,
+    config: EngineConfig | None = None,
+    *,
+    mtf_timeframes: tuple[str, ...] = ("1h", "4h"),
+) -> dict[str, Any]:
+    """Run every analysis module over a series; results keyed by module name.
+
+    Shared by visualization/golden/integration tests so the full pipeline is
+    defined exactly once.
+    """
+    from contexttrading.analysis.confluence import analyze_confluence
+    from contexttrading.analysis.fvg import analyze_fvg
+    from contexttrading.analysis.liquidity import analyze_liquidity
+    from contexttrading.analysis.mtf import analyze_mtf
+    from contexttrading.analysis.orderblocks import analyze_orderblocks
+    from contexttrading.analysis.premium_discount import analyze_dealing_range
+    from contexttrading.analysis.sessions import analyze_sessions
+    from contexttrading.analysis.structure import analyze_structure, analyze_trend
+    from contexttrading.analysis.supplydemand import analyze_supplydemand
+
+    config = config or EngineConfig()
+    return {
+        "structure": analyze_structure(series, config),
+        "trend": analyze_trend(series, config),
+        "liquidity": analyze_liquidity(series, config),
+        "premium_discount": analyze_dealing_range(series, config),
+        "fvg": analyze_fvg(series, config),
+        "orderblocks": analyze_orderblocks(series, config),
+        "supplydemand": analyze_supplydemand(series, config),
+        "sessions": analyze_sessions(series, config),
+        "confluence": analyze_confluence(series, config),
+        "mtf": analyze_mtf(series, list(mtf_timeframes), config),
+    }

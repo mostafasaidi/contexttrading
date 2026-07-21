@@ -1,0 +1,1670 @@
+{
+  "engine_version": "0.1.0",
+  "generated_from": {
+    "candle_count": 29,
+    "end": "2024-01-01T00:28:00Z",
+    "schema_version": "1.0.0",
+    "start": "2024-01-01T00:00:00Z"
+  },
+  "module": "chart",
+  "payload": {
+    "candles": [
+      {
+        "close": 10.0,
+        "high": 10.05,
+        "low": 9.99,
+        "open": 10.0,
+        "schema_version": "1.0.0",
+        "time": 1704067200
+      },
+      {
+        "close": 11.25,
+        "high": 11.3,
+        "low": 9.99,
+        "open": 10.0,
+        "schema_version": "1.0.0",
+        "time": 1704067260
+      },
+      {
+        "close": 12.5,
+        "high": 12.55,
+        "low": 11.24,
+        "open": 11.25,
+        "schema_version": "1.0.0",
+        "time": 1704067320
+      },
+      {
+        "close": 13.75,
+        "high": 13.8,
+        "low": 12.49,
+        "open": 12.5,
+        "schema_version": "1.0.0",
+        "time": 1704067380
+      },
+      {
+        "close": 15.0,
+        "high": 15.05,
+        "low": 13.74,
+        "open": 13.75,
+        "schema_version": "1.0.0",
+        "time": 1704067440
+      },
+      {
+        "close": 14.25,
+        "high": 15.01,
+        "low": 14.2,
+        "open": 15.0,
+        "schema_version": "1.0.0",
+        "time": 1704067500
+      },
+      {
+        "close": 13.5,
+        "high": 14.26,
+        "low": 13.45,
+        "open": 14.25,
+        "schema_version": "1.0.0",
+        "time": 1704067560
+      },
+      {
+        "close": 12.75,
+        "high": 13.51,
+        "low": 12.7,
+        "open": 13.5,
+        "schema_version": "1.0.0",
+        "time": 1704067620
+      },
+      {
+        "close": 12.0,
+        "high": 12.76,
+        "low": 11.95,
+        "open": 12.75,
+        "schema_version": "1.0.0",
+        "time": 1704067680
+      },
+      {
+        "close": 13.25,
+        "high": 13.3,
+        "low": 11.99,
+        "open": 12.0,
+        "schema_version": "1.0.0",
+        "time": 1704067740
+      },
+      {
+        "close": 14.5,
+        "high": 14.55,
+        "low": 13.24,
+        "open": 13.25,
+        "schema_version": "1.0.0",
+        "time": 1704067800
+      },
+      {
+        "close": 15.75,
+        "high": 15.8,
+        "low": 14.49,
+        "open": 14.5,
+        "schema_version": "1.0.0",
+        "time": 1704067860
+      },
+      {
+        "close": 17.0,
+        "high": 17.05,
+        "low": 15.74,
+        "open": 15.75,
+        "schema_version": "1.0.0",
+        "time": 1704067920
+      },
+      {
+        "close": 16.25,
+        "high": 17.01,
+        "low": 16.2,
+        "open": 17.0,
+        "schema_version": "1.0.0",
+        "time": 1704067980
+      },
+      {
+        "close": 15.5,
+        "high": 16.26,
+        "low": 15.45,
+        "open": 16.25,
+        "schema_version": "1.0.0",
+        "time": 1704068040
+      },
+      {
+        "close": 14.75,
+        "high": 15.51,
+        "low": 14.7,
+        "open": 15.5,
+        "schema_version": "1.0.0",
+        "time": 1704068100
+      },
+      {
+        "close": 14.0,
+        "high": 14.76,
+        "low": 13.95,
+        "open": 14.75,
+        "schema_version": "1.0.0",
+        "time": 1704068160
+      },
+      {
+        "close": 15.25,
+        "high": 15.3,
+        "low": 13.99,
+        "open": 14.0,
+        "schema_version": "1.0.0",
+        "time": 1704068220
+      },
+      {
+        "close": 16.5,
+        "high": 16.55,
+        "low": 15.24,
+        "open": 15.25,
+        "schema_version": "1.0.0",
+        "time": 1704068280
+      },
+      {
+        "close": 17.75,
+        "high": 17.8,
+        "low": 16.49,
+        "open": 16.5,
+        "schema_version": "1.0.0",
+        "time": 1704068340
+      },
+      {
+        "close": 19.0,
+        "high": 19.05,
+        "low": 17.74,
+        "open": 17.75,
+        "schema_version": "1.0.0",
+        "time": 1704068400
+      },
+      {
+        "close": 18.25,
+        "high": 19.01,
+        "low": 18.2,
+        "open": 19.0,
+        "schema_version": "1.0.0",
+        "time": 1704068460
+      },
+      {
+        "close": 17.5,
+        "high": 18.26,
+        "low": 17.45,
+        "open": 18.25,
+        "schema_version": "1.0.0",
+        "time": 1704068520
+      },
+      {
+        "close": 16.75,
+        "high": 17.51,
+        "low": 16.7,
+        "open": 17.5,
+        "schema_version": "1.0.0",
+        "time": 1704068580
+      },
+      {
+        "close": 16.0,
+        "high": 16.76,
+        "low": 15.95,
+        "open": 16.75,
+        "schema_version": "1.0.0",
+        "time": 1704068640
+      },
+      {
+        "close": 16.5,
+        "high": 16.55,
+        "low": 15.99,
+        "open": 16.0,
+        "schema_version": "1.0.0",
+        "time": 1704068700
+      },
+      {
+        "close": 17.0,
+        "high": 17.05,
+        "low": 16.49,
+        "open": 16.5,
+        "schema_version": "1.0.0",
+        "time": 1704068760
+      },
+      {
+        "close": 17.5,
+        "high": 17.55,
+        "low": 16.99,
+        "open": 17.0,
+        "schema_version": "1.0.0",
+        "time": 1704068820
+      },
+      {
+        "close": 18.0,
+        "high": 18.05,
+        "low": 17.49,
+        "open": 17.5,
+        "schema_version": "1.0.0",
+        "time": 1704068880
+      }
+    ],
+    "layers": [
+      {
+        "name": "sessions.boxes",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 0
+      },
+      {
+        "name": "sessions.killzones",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 1
+      },
+      {
+        "name": "range.premium",
+        "primitives": [
+          {
+            "bottom": 17.5,
+            "color": "#f23645",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "range.premium",
+            "line_style": "solid",
+            "opacity": 0.15,
+            "primitive": "box",
+            "priority": 2,
+            "schema_version": "1.0.0",
+            "source_id": "range:premium",
+            "start_time": 1704067200,
+            "tooltip": {
+              "direction": "bullish",
+              "price_location": "premium",
+              "type": "premium zone",
+              "zone": "17.5 - 19.05"
+            },
+            "top": 19.05,
+            "z_order": 202
+          }
+        ],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 2
+      },
+      {
+        "name": "range.discount",
+        "primitives": [
+          {
+            "bottom": 15.95,
+            "color": "#22ab94",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "range.discount",
+            "line_style": "solid",
+            "opacity": 0.15,
+            "primitive": "box",
+            "priority": 2,
+            "schema_version": "1.0.0",
+            "source_id": "range:discount",
+            "start_time": 1704067200,
+            "tooltip": {
+              "direction": "bullish",
+              "price_location": "premium",
+              "type": "discount zone",
+              "zone": "15.95 - 17.5"
+            },
+            "top": 17.5,
+            "z_order": 302
+          }
+        ],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 3
+      },
+      {
+        "name": "range.ote",
+        "primitives": [
+          {
+            "bottom": 16.601,
+            "color": "#ff9800",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "range.ote",
+            "line_style": "solid",
+            "opacity": 0.15,
+            "primitive": "box",
+            "priority": 2,
+            "schema_version": "1.0.0",
+            "source_id": "range:ote",
+            "start_time": 1704067200,
+            "tooltip": {
+              "direction": "bullish",
+              "price_location": "premium",
+              "type": "ote zone",
+              "zone": "16.601 - 17.128"
+            },
+            "top": 17.128,
+            "z_order": 402
+          }
+        ],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 4
+      },
+      {
+        "name": "range.equilibrium",
+        "primitives": [
+          {
+            "color": "#787b86",
+            "layer": "range.equilibrium",
+            "line_style": "dashed",
+            "line_width": 1.0,
+            "price": 17.5,
+            "primitive": "price_line",
+            "priority": 3,
+            "schema_version": "1.0.0",
+            "source_id": "range:equilibrium",
+            "title": "EQ 50%",
+            "tooltip": {
+              "price": "17.5",
+              "type": "equilibrium (50%)"
+            },
+            "z_order": 503
+          }
+        ],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 5
+      },
+      {
+        "name": "confluence.zones",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 6
+      },
+      {
+        "name": "fvg.zones",
+        "primitives": [
+          {
+            "bottom": 17.51,
+            "color": "#f23645",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "solid",
+            "opacity": 0.2,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_0c4c8fe05432115b3003bcce",
+            "start_time": 1704068460,
+            "tooltip": {
+              "gap_atr": "0.693",
+              "gap_size": "0.69",
+              "rank": "11",
+              "status": "partially_mitigated",
+              "strength": "0.296",
+              "type": "bearish fvg"
+            },
+            "top": 18.2,
+            "z_order": 708
+          },
+          {
+            "bottom": 16.55,
+            "color": "#22ab94",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "solid",
+            "opacity": 0.2,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_109698c0ea6d3204ed1b8bef",
+            "start_time": 1704068700,
+            "tooltip": {
+              "gap_atr": "0.622",
+              "gap_size": "0.44",
+              "rank": "5",
+              "status": "unmitigated",
+              "strength": "0.370",
+              "type": "bullish fvg"
+            },
+            "top": 16.99,
+            "z_order": 708
+          },
+          {
+            "bottom": 12.76,
+            "color": "#22ab94",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "solid",
+            "opacity": 0.2,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_13a3196e41875053f9d1849b",
+            "start_time": 1704067680,
+            "tooltip": {
+              "gap_atr": "0.471",
+              "gap_size": "0.48",
+              "rank": "9",
+              "status": "unmitigated",
+              "strength": "0.322",
+              "type": "bullish fvg"
+            },
+            "top": 13.24,
+            "z_order": 708
+          },
+          {
+            "bottom": 13.51,
+            "color": "#f23645",
+            "end_time": 1704067800,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_15acfefcde38f7a8dcad1099",
+            "start_time": 1704067500,
+            "tooltip": {
+              "gap_atr": "0.726",
+              "gap_size": "0.69",
+              "rank": "16",
+              "status": "violated",
+              "strength": "0.229",
+              "type": "inverse bearish fvg"
+            },
+            "top": 14.2,
+            "z_order": 708
+          },
+          {
+            "bottom": 14.76,
+            "color": "#f23645",
+            "end_time": 1704068280,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_1d9dff406aaed5d7fcf06250",
+            "start_time": 1704068040,
+            "tooltip": {
+              "gap_atr": "0.740",
+              "gap_size": "0.69",
+              "rank": "14",
+              "status": "violated",
+              "strength": "0.232",
+              "type": "inverse bearish fvg"
+            },
+            "top": 15.45,
+            "z_order": 708
+          },
+          {
+            "bottom": 10.05,
+            "color": "#22ab94",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "solid",
+            "opacity": 0.2,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_2630c123bade69ae78a32945",
+            "start_time": 1704067200,
+            "tooltip": {
+              "gap_atr": "n/a",
+              "gap_size": "1.19",
+              "rank": "3",
+              "status": "unmitigated",
+              "strength": "0.430",
+              "type": "bullish fvg"
+            },
+            "top": 11.24,
+            "z_order": 708
+          },
+          {
+            "bottom": 12.76,
+            "color": "#f23645",
+            "end_time": 1704067800,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_27995473bc1e560d57651a70",
+            "start_time": 1704067560,
+            "tooltip": {
+              "gap_atr": "0.764",
+              "gap_size": "0.69",
+              "rank": "13",
+              "status": "violated",
+              "strength": "0.235",
+              "type": "inverse bearish fvg"
+            },
+            "top": 13.45,
+            "z_order": 708
+          },
+          {
+            "bottom": 14.55,
+            "color": "#22ab94",
+            "end_time": 1704068160,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_4e8876e9d87af9e738cb8588",
+            "start_time": 1704067800,
+            "tooltip": {
+              "gap_atr": "1.008",
+              "gap_size": "1.19",
+              "rank": "1",
+              "status": "violated",
+              "strength": "0.510",
+              "type": "inverse bullish fvg"
+            },
+            "top": 15.74,
+            "z_order": 708
+          },
+          {
+            "bottom": 17.05,
+            "color": "#22ab94",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "solid",
+            "opacity": 0.2,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_50d8f99cc598e392163a8f8a",
+            "start_time": 1704068760,
+            "tooltip": {
+              "gap_atr": "0.668",
+              "gap_size": "0.44",
+              "rank": "4",
+              "status": "unmitigated",
+              "strength": "0.378",
+              "type": "bullish fvg"
+            },
+            "top": 17.49,
+            "z_order": 708
+          },
+          {
+            "bottom": 15.51,
+            "color": "#f23645",
+            "end_time": 1704068280,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_5c9d5417f1c5966578410b3a",
+            "start_time": 1704067980,
+            "tooltip": {
+              "gap_atr": "0.694",
+              "gap_size": "0.69",
+              "rank": "17",
+              "status": "violated",
+              "strength": "0.225",
+              "type": "inverse bearish fvg"
+            },
+            "top": 16.2,
+            "z_order": 708
+          },
+          {
+            "bottom": 16.55,
+            "color": "#f23645",
+            "end_time": 1704068760,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_7499dffb325683ec2d9efa3c",
+            "start_time": 1704068580,
+            "tooltip": {
+              "gap_atr": "0.168",
+              "gap_size": "0.15",
+              "rank": "21",
+              "status": "violated",
+              "strength": "0.168",
+              "type": "inverse bearish fvg"
+            },
+            "top": 16.7,
+            "z_order": 708
+          },
+          {
+            "bottom": 15.3,
+            "color": "#22ab94",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "solid",
+            "opacity": 0.2,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_9b5255eb22b0b4f517303657",
+            "start_time": 1704068220,
+            "tooltip": {
+              "gap_atr": "1.059",
+              "gap_size": "1.19",
+              "rank": "8",
+              "status": "partially_mitigated",
+              "strength": "0.331",
+              "type": "bullish fvg"
+            },
+            "top": 16.49,
+            "z_order": 708
+          },
+          {
+            "bottom": 16.55,
+            "color": "#22ab94",
+            "end_time": 1704068640,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_9f6d7d995c4eb7c97067d07d",
+            "start_time": 1704068280,
+            "tooltip": {
+              "gap_atr": "1.003",
+              "gap_size": "1.19",
+              "rank": "2",
+              "status": "violated",
+              "strength": "0.509",
+              "type": "inverse bullish fvg"
+            },
+            "top": 17.74,
+            "z_order": 708
+          },
+          {
+            "bottom": 16.76,
+            "color": "#f23645",
+            "end_time": 1704068820,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_b6da3cca56389a38417411f7",
+            "start_time": 1704068520,
+            "tooltip": {
+              "gap_atr": "0.739",
+              "gap_size": "0.69",
+              "rank": "15",
+              "status": "violated",
+              "strength": "0.230",
+              "type": "inverse bearish fvg"
+            },
+            "top": 17.45,
+            "z_order": 708
+          },
+          {
+            "bottom": 13.3,
+            "color": "#22ab94",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "solid",
+            "opacity": 0.2,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_c6f2cfd92452038913e70321",
+            "start_time": 1704067740,
+            "tooltip": {
+              "gap_atr": "1.067",
+              "gap_size": "1.19",
+              "rank": "10",
+              "status": "partially_mitigated",
+              "strength": "0.318",
+              "type": "bullish fvg"
+            },
+            "top": 14.49,
+            "z_order": 708
+          },
+          {
+            "bottom": 14.76,
+            "color": "#22ab94",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "solid",
+            "opacity": 0.2,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_d8392b289d744c15301312f2",
+            "start_time": 1704068160,
+            "tooltip": {
+              "gap_atr": "0.466",
+              "gap_size": "0.48",
+              "rank": "7",
+              "status": "unmitigated",
+              "strength": "0.335",
+              "type": "bullish fvg"
+            },
+            "top": 15.24,
+            "z_order": 708
+          },
+          {
+            "bottom": 11.3,
+            "color": "#22ab94",
+            "end_time": 1704068880,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "solid",
+            "opacity": 0.2,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_d97a74934192ad9ff4c137c6",
+            "start_time": 1704067260,
+            "tooltip": {
+              "gap_atr": "1.332",
+              "gap_size": "1.19",
+              "rank": "6",
+              "status": "partially_mitigated",
+              "strength": "0.336",
+              "type": "bullish fvg"
+            },
+            "top": 12.49,
+            "z_order": 708
+          },
+          {
+            "bottom": 13.8,
+            "color": "#22ab94",
+            "end_time": 1704067560,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_e5d186f05386cde3a32c3bd1",
+            "start_time": 1704067380,
+            "tooltip": {
+              "gap_atr": "0.356",
+              "gap_size": "0.4",
+              "rank": "18",
+              "status": "violated",
+              "strength": "0.189",
+              "type": "inverse bullish fvg"
+            },
+            "top": 14.2,
+            "z_order": 708
+          },
+          {
+            "bottom": 12.55,
+            "color": "#22ab94",
+            "end_time": 1704067680,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_f9a4df2d597004a076105e45",
+            "start_time": 1704067320,
+            "tooltip": {
+              "gap_atr": "1.153",
+              "gap_size": "1.19",
+              "rank": "12",
+              "status": "violated",
+              "strength": "0.276",
+              "type": "inverse bullish fvg"
+            },
+            "top": 13.74,
+            "z_order": 708
+          },
+          {
+            "bottom": 17.8,
+            "color": "#22ab94",
+            "end_time": 1704068520,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_fe94b9b4d68a6b01d2709901",
+            "start_time": 1704068340,
+            "tooltip": {
+              "gap_atr": "0.326",
+              "gap_size": "0.4",
+              "rank": "20",
+              "status": "violated",
+              "strength": "0.186",
+              "type": "inverse bullish fvg"
+            },
+            "top": 18.2,
+            "z_order": 708
+          },
+          {
+            "bottom": 15.8,
+            "color": "#22ab94",
+            "end_time": 1704068040,
+            "fill": true,
+            "layer": "fvg.zones",
+            "line_style": "dotted",
+            "opacity": 0.3,
+            "primitive": "box",
+            "priority": 8,
+            "schema_version": "1.0.0",
+            "source_id": "fvg_ffca5398bbb5299f5fd40cf9",
+            "start_time": 1704067860,
+            "tooltip": {
+              "gap_atr": "0.327",
+              "gap_size": "0.4",
+              "rank": "19",
+              "status": "violated",
+              "strength": "0.186",
+              "type": "inverse bullish fvg"
+            },
+            "top": 16.2,
+            "z_order": 708
+          }
+        ],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 7
+      },
+      {
+        "name": "orderblocks.ob",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 8
+      },
+      {
+        "name": "orderblocks.brk",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 9
+      },
+      {
+        "name": "orderblocks.mb",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 10
+      },
+      {
+        "name": "supplydemand.supply",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 11
+      },
+      {
+        "name": "supplydemand.demand",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 12
+      },
+      {
+        "name": "liquidity.equal_levels",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 13
+      },
+      {
+        "name": "liquidity.pools",
+        "primitives": [
+          {
+            "color": "#787b86",
+            "layer": "liquidity.pools",
+            "line_style": "dotted",
+            "line_width": 1.0,
+            "price": 17.05,
+            "primitive": "price_line",
+            "priority": 12,
+            "schema_version": "1.0.0",
+            "source_id": "pool_04db142a47e002c7281a5313",
+            "title": "swing_high (broken)",
+            "tooltip": {
+              "kind": "swing_high",
+              "price": "17.05",
+              "status": "broken",
+              "type": "buyside liquidity"
+            },
+            "z_order": 1412
+          },
+          {
+            "color": "#ab47bc",
+            "layer": "liquidity.pools",
+            "line_style": "solid",
+            "line_width": 1.0,
+            "price": 13.95,
+            "primitive": "price_line",
+            "priority": 12,
+            "schema_version": "1.0.0",
+            "source_id": "pool_2ccf968287b0799a1c4efe7b",
+            "title": "swing_low (untapped)",
+            "tooltip": {
+              "kind": "swing_low",
+              "price": "13.95",
+              "status": "untapped",
+              "type": "sellside liquidity"
+            },
+            "z_order": 1412
+          },
+          {
+            "color": "#787b86",
+            "layer": "liquidity.pools",
+            "line_style": "dotted",
+            "line_width": 1.0,
+            "price": 15.05,
+            "primitive": "price_line",
+            "priority": 12,
+            "schema_version": "1.0.0",
+            "source_id": "pool_a68dfea2d5d3dfd3fbd9e499",
+            "title": "swing_high (broken)",
+            "tooltip": {
+              "kind": "swing_high",
+              "price": "15.05",
+              "status": "broken",
+              "type": "buyside liquidity"
+            },
+            "z_order": 1412
+          },
+          {
+            "color": "#2962ff",
+            "layer": "liquidity.pools",
+            "line_style": "solid",
+            "line_width": 1.0,
+            "price": 19.05,
+            "primitive": "price_line",
+            "priority": 12,
+            "schema_version": "1.0.0",
+            "source_id": "pool_da5611062a19f19f884b2db4",
+            "title": "swing_high (untapped)",
+            "tooltip": {
+              "kind": "swing_high",
+              "price": "19.05",
+              "status": "untapped",
+              "type": "buyside liquidity"
+            },
+            "z_order": 1412
+          },
+          {
+            "color": "#ab47bc",
+            "layer": "liquidity.pools",
+            "line_style": "solid",
+            "line_width": 1.0,
+            "price": 11.95,
+            "primitive": "price_line",
+            "priority": 12,
+            "schema_version": "1.0.0",
+            "source_id": "pool_eabcfe762168d75aa0a9eba4",
+            "title": "swing_low (untapped)",
+            "tooltip": {
+              "kind": "swing_low",
+              "price": "11.95",
+              "status": "untapped",
+              "type": "sellside liquidity"
+            },
+            "z_order": 1412
+          },
+          {
+            "color": "#ab47bc",
+            "layer": "liquidity.pools",
+            "line_style": "solid",
+            "line_width": 1.0,
+            "price": 15.95,
+            "primitive": "price_line",
+            "priority": 12,
+            "schema_version": "1.0.0",
+            "source_id": "pool_f897f478627e57ad342ca8d5",
+            "title": "swing_low (untapped)",
+            "tooltip": {
+              "kind": "swing_low",
+              "price": "15.95",
+              "status": "untapped",
+              "type": "sellside liquidity"
+            },
+            "z_order": 1412
+          }
+        ],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 14
+      },
+      {
+        "name": "liquidity.sweeps",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 15
+      },
+      {
+        "name": "sessions.levels",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 16
+      },
+      {
+        "name": "sessions.sweeps",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 17
+      },
+      {
+        "name": "mtf.levels",
+        "primitives": [],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 18
+      },
+      {
+        "name": "swings.external",
+        "primitives": [
+          {
+            "color": "#f23645",
+            "layer": "swings.external",
+            "position": "aboveBar",
+            "price": 19.05,
+            "primitive": "marker",
+            "priority": 10,
+            "schema_version": "1.0.0",
+            "shape": "diamond",
+            "source_id": "swing_03eab626e23f183231bc636a",
+            "text": "H",
+            "time": 1704068400,
+            "tooltip": {
+              "index": "20",
+              "price": "19.05",
+              "type": "external swing high"
+            },
+            "z_order": 1910
+          },
+          {
+            "color": "#22ab94",
+            "layer": "swings.external",
+            "position": "belowBar",
+            "price": 11.95,
+            "primitive": "marker",
+            "priority": 10,
+            "schema_version": "1.0.0",
+            "shape": "diamond",
+            "source_id": "swing_328d7bc652acd70ac4a8cc3b",
+            "text": "L",
+            "time": 1704067680,
+            "tooltip": {
+              "index": "8",
+              "price": "11.95",
+              "type": "external swing low"
+            },
+            "z_order": 1910
+          },
+          {
+            "color": "#22ab94",
+            "layer": "swings.external",
+            "position": "belowBar",
+            "price": 15.95,
+            "primitive": "marker",
+            "priority": 10,
+            "schema_version": "1.0.0",
+            "shape": "diamond",
+            "source_id": "swing_371036999cc7b24d113ffabc",
+            "text": "L",
+            "time": 1704068640,
+            "tooltip": {
+              "index": "24",
+              "price": "15.95",
+              "type": "external swing low"
+            },
+            "z_order": 1910
+          },
+          {
+            "color": "#22ab94",
+            "layer": "swings.external",
+            "position": "belowBar",
+            "price": 13.95,
+            "primitive": "marker",
+            "priority": 10,
+            "schema_version": "1.0.0",
+            "shape": "diamond",
+            "source_id": "swing_448072222b67f341dd2a7a1b",
+            "text": "L",
+            "time": 1704068160,
+            "tooltip": {
+              "index": "16",
+              "price": "13.95",
+              "type": "external swing low"
+            },
+            "z_order": 1910
+          },
+          {
+            "color": "#f23645",
+            "layer": "swings.external",
+            "position": "aboveBar",
+            "price": 15.05,
+            "primitive": "marker",
+            "priority": 10,
+            "schema_version": "1.0.0",
+            "shape": "diamond",
+            "source_id": "swing_52104c7c2c1b368562ef7e81",
+            "text": "H",
+            "time": 1704067440,
+            "tooltip": {
+              "index": "4",
+              "price": "15.05",
+              "type": "external swing high"
+            },
+            "z_order": 1910
+          },
+          {
+            "color": "#f23645",
+            "layer": "swings.external",
+            "position": "aboveBar",
+            "price": 17.05,
+            "primitive": "marker",
+            "priority": 10,
+            "schema_version": "1.0.0",
+            "shape": "diamond",
+            "source_id": "swing_80940fdb3d4a7a40452157f2",
+            "text": "H",
+            "time": 1704067920,
+            "tooltip": {
+              "index": "12",
+              "price": "17.05",
+              "type": "external swing high"
+            },
+            "z_order": 1910
+          }
+        ],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 19
+      },
+      {
+        "name": "swings.internal",
+        "primitives": [
+          {
+            "color": "#787b86",
+            "layer": "swings.internal",
+            "position": "belowBar",
+            "price": 11.95,
+            "primitive": "marker",
+            "priority": 5,
+            "schema_version": "1.0.0",
+            "shape": "circle",
+            "source_id": "swing_167aea4aa4ce14af180f8a87",
+            "text": "L",
+            "time": 1704067680,
+            "tooltip": {
+              "index": "8",
+              "price": "11.95",
+              "type": "internal swing low"
+            },
+            "z_order": 2005
+          },
+          {
+            "color": "#787b86",
+            "layer": "swings.internal",
+            "position": "aboveBar",
+            "price": 19.05,
+            "primitive": "marker",
+            "priority": 5,
+            "schema_version": "1.0.0",
+            "shape": "circle",
+            "source_id": "swing_7a62969d2908a68efbd74bac",
+            "text": "H",
+            "time": 1704068400,
+            "tooltip": {
+              "index": "20",
+              "price": "19.05",
+              "type": "internal swing high"
+            },
+            "z_order": 2005
+          },
+          {
+            "color": "#787b86",
+            "layer": "swings.internal",
+            "position": "belowBar",
+            "price": 15.95,
+            "primitive": "marker",
+            "priority": 5,
+            "schema_version": "1.0.0",
+            "shape": "circle",
+            "source_id": "swing_8193f98e3902ce35c0b3688a",
+            "text": "L",
+            "time": 1704068640,
+            "tooltip": {
+              "index": "24",
+              "price": "15.95",
+              "type": "internal swing low"
+            },
+            "z_order": 2005
+          },
+          {
+            "color": "#787b86",
+            "layer": "swings.internal",
+            "position": "aboveBar",
+            "price": 17.05,
+            "primitive": "marker",
+            "priority": 5,
+            "schema_version": "1.0.0",
+            "shape": "circle",
+            "source_id": "swing_8dbf4b3aba7e0cd87911bb02",
+            "text": "H",
+            "time": 1704067920,
+            "tooltip": {
+              "index": "12",
+              "price": "17.05",
+              "type": "internal swing high"
+            },
+            "z_order": 2005
+          },
+          {
+            "color": "#787b86",
+            "layer": "swings.internal",
+            "position": "aboveBar",
+            "price": 15.05,
+            "primitive": "marker",
+            "priority": 5,
+            "schema_version": "1.0.0",
+            "shape": "circle",
+            "source_id": "swing_974d8b153782a2e79ce7b917",
+            "text": "H",
+            "time": 1704067440,
+            "tooltip": {
+              "index": "4",
+              "price": "15.05",
+              "type": "internal swing high"
+            },
+            "z_order": 2005
+          },
+          {
+            "color": "#787b86",
+            "layer": "swings.internal",
+            "position": "belowBar",
+            "price": 13.95,
+            "primitive": "marker",
+            "priority": 5,
+            "schema_version": "1.0.0",
+            "shape": "circle",
+            "source_id": "swing_f17c1f4bee96385c0c1cdfe2",
+            "text": "L",
+            "time": 1704068160,
+            "tooltip": {
+              "index": "16",
+              "price": "13.95",
+              "type": "internal swing low"
+            },
+            "z_order": 2005
+          }
+        ],
+        "schema_version": "1.0.0",
+        "visible": false,
+        "z_order": 20
+      },
+      {
+        "name": "structure.breaks",
+        "primitives": [
+          {
+            "color": "#22ab94",
+            "end_price": 15.75,
+            "end_time": 1704067860,
+            "layer": "structure.breaks",
+            "line_style": "solid",
+            "line_width": 2.0,
+            "primitive": "segment",
+            "priority": 20,
+            "schema_version": "1.0.0",
+            "source_id": "break_6d84971269e5d9389b077c99",
+            "start_price": 15.05,
+            "start_time": 1704067440,
+            "tooltip": {
+              "break_price": "15.75",
+              "broken_swing_id": "swing_974d8b153782a2e79ce7b917",
+              "level": "15.05",
+              "strength": "strong",
+              "type": "bos bullish"
+            },
+            "z_order": 2120
+          },
+          {
+            "color": "#22ab94",
+            "end_price": 17.75,
+            "end_time": 1704068340,
+            "layer": "structure.breaks",
+            "line_style": "solid",
+            "line_width": 2.0,
+            "primitive": "segment",
+            "priority": 20,
+            "schema_version": "1.0.0",
+            "source_id": "break_db8469bf3638cb16444de57c",
+            "start_price": 17.05,
+            "start_time": 1704067920,
+            "tooltip": {
+              "break_price": "17.75",
+              "broken_swing_id": "swing_80940fdb3d4a7a40452157f2",
+              "level": "17.05",
+              "strength": "strong",
+              "type": "bos bullish"
+            },
+            "z_order": 2120
+          },
+          {
+            "color": "#22ab94",
+            "end_price": 15.75,
+            "end_time": 1704067860,
+            "layer": "structure.breaks",
+            "line_style": "solid",
+            "line_width": 2.0,
+            "primitive": "segment",
+            "priority": 20,
+            "schema_version": "1.0.0",
+            "source_id": "break_ecab445b02187f006a3b2c4d",
+            "start_price": 15.05,
+            "start_time": 1704067440,
+            "tooltip": {
+              "break_price": "15.75",
+              "broken_swing_id": "swing_52104c7c2c1b368562ef7e81",
+              "level": "15.05",
+              "strength": "strong",
+              "type": "bos bullish"
+            },
+            "z_order": 2120
+          },
+          {
+            "color": "#22ab94",
+            "end_price": 17.75,
+            "end_time": 1704068340,
+            "layer": "structure.breaks",
+            "line_style": "solid",
+            "line_width": 2.0,
+            "primitive": "segment",
+            "priority": 20,
+            "schema_version": "1.0.0",
+            "source_id": "break_f9e6b9fe6d504816783ce23f",
+            "start_price": 17.05,
+            "start_time": 1704067920,
+            "tooltip": {
+              "break_price": "17.75",
+              "broken_swing_id": "swing_8dbf4b3aba7e0cd87911bb02",
+              "level": "17.05",
+              "strength": "strong",
+              "type": "bos bullish"
+            },
+            "z_order": 2120
+          }
+        ],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 21
+      },
+      {
+        "name": "structure.protected",
+        "primitives": [
+          {
+            "color": "#22ab94",
+            "layer": "structure.protected",
+            "line_style": "solid",
+            "line_width": 1.0,
+            "price": 13.95,
+            "primitive": "price_line",
+            "priority": 18,
+            "schema_version": "1.0.0",
+            "source_id": "swing_448072222b67f341dd2a7a1b",
+            "title": "protected low",
+            "tooltip": {
+              "price": "13.95",
+              "type": "protected low"
+            },
+            "z_order": 2218
+          }
+        ],
+        "schema_version": "1.0.0",
+        "visible": true,
+        "z_order": 22
+      }
+    ],
+    "legend": {
+      "confluence.zones": "Confluence zones",
+      "fvg.zones": "Fair value gaps",
+      "liquidity.equal_levels": "Equal highs/lows",
+      "liquidity.pools": "Liquidity pools",
+      "liquidity.sweeps": "Liquidity sweeps",
+      "mtf.levels": "HTF levels",
+      "orderblocks.brk": "Breaker blocks",
+      "orderblocks.mb": "Mitigation blocks",
+      "orderblocks.ob": "Order blocks",
+      "range.discount": "Discount zone",
+      "range.equilibrium": "Equilibrium (50%)",
+      "range.ote": "OTE zone",
+      "range.premium": "Premium zone",
+      "sessions.boxes": "Sessions",
+      "sessions.killzones": "Killzones",
+      "sessions.levels": "Session levels",
+      "sessions.sweeps": "Session sweeps / Judas",
+      "structure.breaks": "Structure breaks (BOS/CHoCH)",
+      "structure.protected": "Protected high/low",
+      "supplydemand.demand": "Demand zones",
+      "supplydemand.supply": "Supply zones",
+      "swings.external": "External swings",
+      "swings.internal": "Internal swings"
+    },
+    "schema_version": "1.0.0",
+    "symbol": "TEST",
+    "theme": {
+      "background": "#131722",
+      "down_color": "#f23645",
+      "grid_color": "#1e222d",
+      "name": "dark",
+      "schema_version": "1.0.0",
+      "text_color": "#d1d4dc",
+      "up_color": "#22ab94"
+    },
+    "timeframe": "1m",
+    "volume": [
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704067200,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704067260,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704067320,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704067380,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704067440,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704067500,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704067560,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704067620,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704067680,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704067740,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704067800,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704067860,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704067920,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704067980,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704068040,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704068100,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704068160,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704068220,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704068280,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704068340,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704068400,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704068460,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704068520,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704068580,
+        "value": 100.0
+      },
+      {
+        "color": "#f23645",
+        "schema_version": "1.0.0",
+        "time": 1704068640,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704068700,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704068760,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704068820,
+        "value": 100.0
+      },
+      {
+        "color": "#22ab94",
+        "schema_version": "1.0.0",
+        "time": 1704068880,
+        "value": 100.0
+      }
+    ]
+  },
+  "run_id": null,
+  "schema_version": "1.0.0",
+  "symbol": "TEST",
+  "timeframe": "1m"
+}

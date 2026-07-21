@@ -24,12 +24,14 @@ from contexttrading.analysis.sessions import analyze_sessions
 from contexttrading.analysis.structure import analyze_structure, analyze_trend
 from contexttrading.analysis.supplydemand import analyze_supplydemand
 from contexttrading.core.config import SessionConfig
+from contexttrading.visualization import build_chart_payload
 from tests.fixtures import (
     MTF_UPTREND_PIVOTS,
     downtrend_series,
     engine_config,
     fakeout_records,
     five_day_15m_series,
+    full_stack_results,
     judas_15m_series,
     to_series,
     uptrend_series,
@@ -152,3 +154,23 @@ class TestConfluenceGoldens:
     def test_uptrend_confluence(self) -> None:
         result = analyze_confluence(uptrend_series(), engine_config())
         _assert_golden("confluence_uptrend.json", result.model_dump_json())
+
+
+class TestChartGoldens:
+    def test_five_day_chart_full_stack(self) -> None:
+        series = five_day_15m_series()
+        results = full_stack_results(series, engine_config())
+        chart = build_chart_payload(series, results)
+        _assert_golden("chart_five_day.json", chart.model_dump_json())
+
+    def test_uptrend_chart_subset(self) -> None:
+        series = uptrend_series()
+        config = engine_config()
+        results = {
+            "structure": analyze_structure(series, config),
+            "liquidity": analyze_liquidity(series, config),
+            "fvg": analyze_fvg(series, config),
+            "premium_discount": analyze_dealing_range(series, config),
+        }
+        chart = build_chart_payload(series, results)
+        _assert_golden("chart_uptrend.json", chart.model_dump_json())
