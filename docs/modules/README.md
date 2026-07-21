@@ -14,8 +14,7 @@ notes, determinism notes, and migration history.
 | analysis.structure | [structure.md](structure.md) | 3 ✅ |
 | analysis.liquidity | [liquidity.md](liquidity.md) | 3 ✅ |
 | analysis.premium_discount | [premium-discount.md](premium-discount.md) | 3 ✅ |
-| analysis.liquidity | _planned_ | 4 |
-| analysis.fvg | _planned_ | 4 |
+| analysis.fvg | [fvg.md](fvg.md) | 4 ✅ |
 | analysis.orderblocks | _planned_ | 5 |
 | analysis.sessions | _planned_ | 6 |
 | analysis.confluence | _planned_ | 7 |
