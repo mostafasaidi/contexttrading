@@ -56,6 +56,21 @@ from contexttrading.models.structure import (
 )
 from contexttrading.models.supplydemand import SupplyDemandResult, SupplyDemandZone
 from contexttrading.models.visualization import VisualStyle
+from contexttrading.visualization.primitives import (
+    AreaBand,
+    Box,
+    Label,
+    Marker,
+    PriceLine,
+    Segment,
+)
+from contexttrading.visualization.serializer import (
+    ChartCandle,
+    ChartPayload,
+    ChartTheme,
+    LayerPayload,
+    VolumeBar,
+)
 
 #: Every model whose schema is part of the public contract.
 EXPORTED_MODELS: tuple[type[BaseModel], ...] = (
@@ -93,6 +108,17 @@ EXPORTED_MODELS: tuple[type[BaseModel], ...] = (
     FactorContribution,
     ConfluenceZone,
     ConfluenceResult,
+    PriceLine,
+    Box,
+    Marker,
+    Label,
+    Segment,
+    AreaBand,
+    ChartCandle,
+    VolumeBar,
+    LayerPayload,
+    ChartTheme,
+    ChartPayload,
 )
 
 

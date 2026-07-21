@@ -1,0 +1,57 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "additionalProperties": false,
+    "description": "Renderer color palette.",
+    "properties": {
+      "background": {
+        "title": "Background",
+        "type": "string"
+      },
+      "down_color": {
+        "description": "Bearish candles / falling volume.",
+        "title": "Down Color",
+        "type": "string"
+      },
+      "grid_color": {
+        "title": "Grid Color",
+        "type": "string"
+      },
+      "name": {
+        "enum": [
+          "dark",
+          "light"
+        ],
+        "title": "Name",
+        "type": "string"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "text_color": {
+        "title": "Text Color",
+        "type": "string"
+      },
+      "up_color": {
+        "description": "Bullish candles / rising volume.",
+        "title": "Up Color",
+        "type": "string"
+      }
+    },
+    "required": [
+      "name",
+      "background",
+      "text_color",
+      "grid_color",
+      "up_color",
+      "down_color"
+    ],
+    "title": "ChartTheme",
+    "type": "object"
+  },
+  "name": "ChartTheme",
+  "schema_version": "1.0.0"
+}

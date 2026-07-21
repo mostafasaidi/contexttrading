@@ -1,0 +1,121 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Price/time rectangle (zones: FVG, OB, SD, confluence, range bands).",
+    "properties": {
+      "bottom": {
+        "exclusiveMinimum": 0,
+        "title": "Bottom",
+        "type": "number"
+      },
+      "color": {
+        "description": "Copied from the source object's VisualStyle.",
+        "title": "Color",
+        "type": "string"
+      },
+      "end_time": {
+        "description": "Right edge, UNIX seconds.",
+        "minimum": 0,
+        "title": "End Time",
+        "type": "integer"
+      },
+      "fill": {
+        "default": true,
+        "title": "Fill",
+        "type": "boolean"
+      },
+      "layer": {
+        "description": "Named layer (grouping/toggling).",
+        "minLength": 1,
+        "title": "Layer",
+        "type": "string"
+      },
+      "line_style": {
+        "$ref": "#/$defs/LineStyle",
+        "default": "solid"
+      },
+      "opacity": {
+        "default": 0.2,
+        "maximum": 1,
+        "minimum": 0,
+        "title": "Opacity",
+        "type": "number"
+      },
+      "primitive": {
+        "const": "box",
+        "default": "box",
+        "title": "Primitive",
+        "type": "string"
+      },
+      "priority": {
+        "default": 0,
+        "description": "In-layer stacking priority.",
+        "title": "Priority",
+        "type": "integer"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "source_id": {
+        "description": "ID of the backing AnalysisObject.",
+        "minLength": 1,
+        "title": "Source Id",
+        "type": "string"
+      },
+      "start_time": {
+        "description": "Left edge, UNIX seconds.",
+        "minimum": 0,
+        "title": "Start Time",
+        "type": "integer"
+      },
+      "tooltip": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "description": "Structured key/value pairs from the source object (deterministic).",
+        "title": "Tooltip",
+        "type": "object"
+      },
+      "top": {
+        "exclusiveMinimum": 0,
+        "title": "Top",
+        "type": "number"
+      },
+      "z_order": {
+        "default": 0,
+        "description": "Global stacking order: layer_rank * 100 + priority.",
+        "title": "Z Order",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "source_id",
+      "layer",
+      "color",
+      "start_time",
+      "end_time",
+      "bottom",
+      "top"
+    ],
+    "title": "Box",
+    "type": "object"
+  },
+  "name": "Box",
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,850 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "AreaBand": {
+        "additionalProperties": false,
+        "description": "Full-height time-range shading (sessions, killzones).",
+        "properties": {
+          "color": {
+            "description": "Copied from the source object's VisualStyle.",
+            "title": "Color",
+            "type": "string"
+          },
+          "end_time": {
+            "minimum": 0,
+            "title": "End Time",
+            "type": "integer"
+          },
+          "layer": {
+            "description": "Named layer (grouping/toggling).",
+            "minLength": 1,
+            "title": "Layer",
+            "type": "string"
+          },
+          "opacity": {
+            "default": 0.1,
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "primitive": {
+            "const": "area_band",
+            "default": "area_band",
+            "title": "Primitive",
+            "type": "string"
+          },
+          "priority": {
+            "default": 0,
+            "description": "In-layer stacking priority.",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "source_id": {
+            "description": "ID of the backing AnalysisObject.",
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          },
+          "start_time": {
+            "minimum": 0,
+            "title": "Start Time",
+            "type": "integer"
+          },
+          "tooltip": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Structured key/value pairs from the source object (deterministic).",
+            "title": "Tooltip",
+            "type": "object"
+          },
+          "z_order": {
+            "default": 0,
+            "description": "Global stacking order: layer_rank * 100 + priority.",
+            "title": "Z Order",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "source_id",
+          "layer",
+          "color",
+          "start_time",
+          "end_time"
+        ],
+        "title": "AreaBand",
+        "type": "object"
+      },
+      "Box": {
+        "additionalProperties": false,
+        "description": "Price/time rectangle (zones: FVG, OB, SD, confluence, range bands).",
+        "properties": {
+          "bottom": {
+            "exclusiveMinimum": 0,
+            "title": "Bottom",
+            "type": "number"
+          },
+          "color": {
+            "description": "Copied from the source object's VisualStyle.",
+            "title": "Color",
+            "type": "string"
+          },
+          "end_time": {
+            "description": "Right edge, UNIX seconds.",
+            "minimum": 0,
+            "title": "End Time",
+            "type": "integer"
+          },
+          "fill": {
+            "default": true,
+            "title": "Fill",
+            "type": "boolean"
+          },
+          "layer": {
+            "description": "Named layer (grouping/toggling).",
+            "minLength": 1,
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "opacity": {
+            "default": 0.2,
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "primitive": {
+            "const": "box",
+            "default": "box",
+            "title": "Primitive",
+            "type": "string"
+          },
+          "priority": {
+            "default": 0,
+            "description": "In-layer stacking priority.",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "source_id": {
+            "description": "ID of the backing AnalysisObject.",
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          },
+          "start_time": {
+            "description": "Left edge, UNIX seconds.",
+            "minimum": 0,
+            "title": "Start Time",
+            "type": "integer"
+          },
+          "tooltip": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Structured key/value pairs from the source object (deterministic).",
+            "title": "Tooltip",
+            "type": "object"
+          },
+          "top": {
+            "exclusiveMinimum": 0,
+            "title": "Top",
+            "type": "number"
+          },
+          "z_order": {
+            "default": 0,
+            "description": "Global stacking order: layer_rank * 100 + priority.",
+            "title": "Z Order",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "source_id",
+          "layer",
+          "color",
+          "start_time",
+          "end_time",
+          "bottom",
+          "top"
+        ],
+        "title": "Box",
+        "type": "object"
+      },
+      "ChartCandle": {
+        "additionalProperties": false,
+        "description": "One OHLC candle in Lightweight Charts format (time in seconds).",
+        "properties": {
+          "close": {
+            "exclusiveMinimum": 0,
+            "title": "Close",
+            "type": "number"
+          },
+          "high": {
+            "exclusiveMinimum": 0,
+            "title": "High",
+            "type": "number"
+          },
+          "low": {
+            "exclusiveMinimum": 0,
+            "title": "Low",
+            "type": "number"
+          },
+          "open": {
+            "exclusiveMinimum": 0,
+            "title": "Open",
+            "type": "number"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "time": {
+            "description": "Candle open time, UNIX seconds (UTC).",
+            "minimum": 0,
+            "title": "Time",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "time",
+          "open",
+          "high",
+          "low",
+          "close"
+        ],
+        "title": "ChartCandle",
+        "type": "object"
+      },
+      "ChartTheme": {
+        "additionalProperties": false,
+        "description": "Renderer color palette.",
+        "properties": {
+          "background": {
+            "title": "Background",
+            "type": "string"
+          },
+          "down_color": {
+            "description": "Bearish candles / falling volume.",
+            "title": "Down Color",
+            "type": "string"
+          },
+          "grid_color": {
+            "title": "Grid Color",
+            "type": "string"
+          },
+          "name": {
+            "enum": [
+              "dark",
+              "light"
+            ],
+            "title": "Name",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "text_color": {
+            "title": "Text Color",
+            "type": "string"
+          },
+          "up_color": {
+            "description": "Bullish candles / rising volume.",
+            "title": "Up Color",
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "background",
+          "text_color",
+          "grid_color",
+          "up_color",
+          "down_color"
+        ],
+        "title": "ChartTheme",
+        "type": "object"
+      },
+      "Label": {
+        "additionalProperties": false,
+        "description": "Anchored text at a time/price point.",
+        "properties": {
+          "color": {
+            "description": "Copied from the source object's VisualStyle.",
+            "title": "Color",
+            "type": "string"
+          },
+          "layer": {
+            "description": "Named layer (grouping/toggling).",
+            "minLength": 1,
+            "title": "Layer",
+            "type": "string"
+          },
+          "price": {
+            "exclusiveMinimum": 0,
+            "title": "Price",
+            "type": "number"
+          },
+          "primitive": {
+            "const": "label",
+            "default": "label",
+            "title": "Primitive",
+            "type": "string"
+          },
+          "priority": {
+            "default": 0,
+            "description": "In-layer stacking priority.",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "source_id": {
+            "description": "ID of the backing AnalysisObject.",
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          },
+          "text": {
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          },
+          "time": {
+            "minimum": 0,
+            "title": "Time",
+            "type": "integer"
+          },
+          "tooltip": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Structured key/value pairs from the source object (deterministic).",
+            "title": "Tooltip",
+            "type": "object"
+          },
+          "z_order": {
+            "default": 0,
+            "description": "Global stacking order: layer_rank * 100 + priority.",
+            "title": "Z Order",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "source_id",
+          "layer",
+          "color",
+          "time",
+          "price",
+          "text"
+        ],
+        "title": "Label",
+        "type": "object"
+      },
+      "LayerPayload": {
+        "additionalProperties": false,
+        "description": "A named, toggleable layer of sorted render primitives.",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "primitives": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "area_band": "#/$defs/AreaBand",
+                  "box": "#/$defs/Box",
+                  "label": "#/$defs/Label",
+                  "marker": "#/$defs/Marker",
+                  "price_line": "#/$defs/PriceLine",
+                  "segment": "#/$defs/Segment"
+                },
+                "propertyName": "primitive"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/PriceLine"
+                },
+                {
+                  "$ref": "#/$defs/Box"
+                },
+                {
+                  "$ref": "#/$defs/Marker"
+                },
+                {
+                  "$ref": "#/$defs/Label"
+                },
+                {
+                  "$ref": "#/$defs/Segment"
+                },
+                {
+                  "$ref": "#/$defs/AreaBand"
+                }
+              ]
+            },
+            "title": "Primitives",
+            "type": "array"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          },
+          "z_order": {
+            "description": "Layer rank (stacking base).",
+            "minimum": 0,
+            "title": "Z Order",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "name",
+          "z_order"
+        ],
+        "title": "LayerPayload",
+        "type": "object"
+      },
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "Marker": {
+        "additionalProperties": false,
+        "description": "Point marker at a candle (swings, sweeps, Judas events).",
+        "properties": {
+          "color": {
+            "description": "Copied from the source object's VisualStyle.",
+            "title": "Color",
+            "type": "string"
+          },
+          "layer": {
+            "description": "Named layer (grouping/toggling).",
+            "minLength": 1,
+            "title": "Layer",
+            "type": "string"
+          },
+          "position": {
+            "enum": [
+              "aboveBar",
+              "belowBar"
+            ],
+            "title": "Position",
+            "type": "string"
+          },
+          "price": {
+            "description": "Anchor price (swing/extreme).",
+            "exclusiveMinimum": 0,
+            "title": "Price",
+            "type": "number"
+          },
+          "primitive": {
+            "const": "marker",
+            "default": "marker",
+            "title": "Primitive",
+            "type": "string"
+          },
+          "priority": {
+            "default": 0,
+            "description": "In-layer stacking priority.",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "shape": {
+            "enum": [
+              "arrowUp",
+              "arrowDown",
+              "circle",
+              "diamond",
+              "square"
+            ],
+            "title": "Shape",
+            "type": "string"
+          },
+          "source_id": {
+            "description": "ID of the backing AnalysisObject.",
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          },
+          "text": {
+            "default": "",
+            "description": "Short marker text.",
+            "title": "Text",
+            "type": "string"
+          },
+          "time": {
+            "description": "Candle time, UNIX seconds.",
+            "minimum": 0,
+            "title": "Time",
+            "type": "integer"
+          },
+          "tooltip": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Structured key/value pairs from the source object (deterministic).",
+            "title": "Tooltip",
+            "type": "object"
+          },
+          "z_order": {
+            "default": 0,
+            "description": "Global stacking order: layer_rank * 100 + priority.",
+            "title": "Z Order",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "source_id",
+          "layer",
+          "color",
+          "time",
+          "price",
+          "position",
+          "shape"
+        ],
+        "title": "Marker",
+        "type": "object"
+      },
+      "PriceLine": {
+        "additionalProperties": false,
+        "description": "Horizontal line at a price level (levels, pools, equilibrium).",
+        "properties": {
+          "color": {
+            "description": "Copied from the source object's VisualStyle.",
+            "title": "Color",
+            "type": "string"
+          },
+          "layer": {
+            "description": "Named layer (grouping/toggling).",
+            "minLength": 1,
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "price": {
+            "exclusiveMinimum": 0,
+            "title": "Price",
+            "type": "number"
+          },
+          "primitive": {
+            "const": "price_line",
+            "default": "price_line",
+            "title": "Primitive",
+            "type": "string"
+          },
+          "priority": {
+            "default": 0,
+            "description": "In-layer stacking priority.",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "source_id": {
+            "description": "ID of the backing AnalysisObject.",
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          },
+          "title": {
+            "default": "",
+            "description": "Short line title (LW Charts price line).",
+            "title": "Title",
+            "type": "string"
+          },
+          "tooltip": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Structured key/value pairs from the source object (deterministic).",
+            "title": "Tooltip",
+            "type": "object"
+          },
+          "z_order": {
+            "default": 0,
+            "description": "Global stacking order: layer_rank * 100 + priority.",
+            "title": "Z Order",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "source_id",
+          "layer",
+          "color",
+          "price"
+        ],
+        "title": "PriceLine",
+        "type": "object"
+      },
+      "Segment": {
+        "additionalProperties": false,
+        "description": "Two-point line segment (structure breaks, trend lines).",
+        "properties": {
+          "color": {
+            "description": "Copied from the source object's VisualStyle.",
+            "title": "Color",
+            "type": "string"
+          },
+          "end_price": {
+            "exclusiveMinimum": 0,
+            "title": "End Price",
+            "type": "number"
+          },
+          "end_time": {
+            "minimum": 0,
+            "title": "End Time",
+            "type": "integer"
+          },
+          "layer": {
+            "description": "Named layer (grouping/toggling).",
+            "minLength": 1,
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "primitive": {
+            "const": "segment",
+            "default": "segment",
+            "title": "Primitive",
+            "type": "string"
+          },
+          "priority": {
+            "default": 0,
+            "description": "In-layer stacking priority.",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "source_id": {
+            "description": "ID of the backing AnalysisObject.",
+            "minLength": 1,
+            "title": "Source Id",
+            "type": "string"
+          },
+          "start_price": {
+            "exclusiveMinimum": 0,
+            "title": "Start Price",
+            "type": "number"
+          },
+          "start_time": {
+            "minimum": 0,
+            "title": "Start Time",
+            "type": "integer"
+          },
+          "tooltip": {
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Structured key/value pairs from the source object (deterministic).",
+            "title": "Tooltip",
+            "type": "object"
+          },
+          "z_order": {
+            "default": 0,
+            "description": "Global stacking order: layer_rank * 100 + priority.",
+            "title": "Z Order",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "source_id",
+          "layer",
+          "color",
+          "start_time",
+          "start_price",
+          "end_time",
+          "end_price"
+        ],
+        "title": "Segment",
+        "type": "object"
+      },
+      "Timeframe": {
+        "description": "Supported candle timeframes.\n\nValues are the canonical string codes (``\"1m\"`` … ``\"1M\"``). Ordering is\nby duration: ``M1 < M5 < H1 < D1 < W1 < MN1``.",
+        "enum": [
+          "1m",
+          "3m",
+          "5m",
+          "15m",
+          "30m",
+          "1h",
+          "2h",
+          "4h",
+          "6h",
+          "8h",
+          "12h",
+          "1d",
+          "1w",
+          "1M"
+        ],
+        "title": "Timeframe",
+        "type": "string"
+      },
+      "VolumeBar": {
+        "additionalProperties": false,
+        "description": "One volume bar, colored by candle direction via the theme.",
+        "properties": {
+          "color": {
+            "description": "Theme up/down color by candle direction.",
+            "title": "Color",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "time": {
+            "description": "Candle open time, UNIX seconds (UTC).",
+            "minimum": 0,
+            "title": "Time",
+            "type": "integer"
+          },
+          "value": {
+            "minimum": 0,
+            "title": "Value",
+            "type": "number"
+          }
+        },
+        "required": [
+          "time",
+          "value",
+          "color"
+        ],
+        "title": "VolumeBar",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Everything a renderer needs: candles, volume, layers, theme, legend.",
+    "properties": {
+      "candles": {
+        "items": {
+          "$ref": "#/$defs/ChartCandle"
+        },
+        "title": "Candles",
+        "type": "array"
+      },
+      "layers": {
+        "items": {
+          "$ref": "#/$defs/LayerPayload"
+        },
+        "title": "Layers",
+        "type": "array"
+      },
+      "legend": {
+        "additionalProperties": {
+          "type": "string"
+        },
+        "description": "Human-readable label per layer name (fixed strings).",
+        "title": "Legend",
+        "type": "object"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "symbol": {
+        "minLength": 1,
+        "title": "Symbol",
+        "type": "string"
+      },
+      "theme": {
+        "$ref": "#/$defs/ChartTheme"
+      },
+      "timeframe": {
+        "$ref": "#/$defs/Timeframe"
+      },
+      "volume": {
+        "items": {
+          "$ref": "#/$defs/VolumeBar"
+        },
+        "title": "Volume",
+        "type": "array"
+      }
+    },
+    "required": [
+      "symbol",
+      "timeframe",
+      "theme"
+    ],
+    "title": "ChartPayload",
+    "type": "object"
+  },
+  "name": "ChartPayload",
+  "schema_version": "1.0.0"
+}
