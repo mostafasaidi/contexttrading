@@ -81,3 +81,29 @@ class TestLegClassification:
             TrendDirection.BULLISH,
             TrendDirection.BEARISH,
         ]
+
+    def test_same_bar_alternation_is_skipped(self) -> None:
+        """A bar that is both swing high and low yields no zero-duration leg."""
+        from contexttrading.models.structure import SwingPoint
+
+        def swing(index: int, price: float, kind: SwingType) -> SwingPoint:
+            return SwingPoint(
+                index=index,
+                timestamp=f"2024-01-01T00:{index:02d}:00Z",
+                price=price,
+                swing_type=kind,
+                swing_class="external",
+                lookback=2,
+            )
+
+        swings = [
+            swing(2, 10.0, SwingType.HIGH),
+            swing(5, 12.0, SwingType.HIGH),
+            swing(5, 9.0, SwingType.LOW),  # same bar is also the swing low
+            swing(9, 13.0, SwingType.HIGH),
+        ]
+        legs = classify_legs(swings, [None] * 20)
+        # H@2 is absorbed by the more extreme H@5; the same-bar H@5 -> L@9
+        # pair would previously crash with a zero-duration Leg.
+        assert [(leg.start_index, leg.end_index) for leg in legs] == [(5, 9)]
+        assert all(leg.duration >= 1 for leg in legs)

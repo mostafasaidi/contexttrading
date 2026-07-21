@@ -60,6 +60,12 @@ def classify_legs(
     legs: list[Leg] = []
     for i in range(1, len(alt)):
         start, end = alt[i - 1], alt[i]
+        if end.index == start.index:
+            # A bar can be both swing high and swing low (small lookbacks,
+            # volatile resampled series); a leg spans distinct bars, so the
+            # same-bar alternation is noise — skip it rather than emit a
+            # zero-duration leg.
+            continue
         direction = (
             TrendDirection.BULLISH if end.swing_type is SwingType.HIGH else TrendDirection.BEARISH
         )

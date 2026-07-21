@@ -75,7 +75,9 @@ def run_module(
         "orderblocks": lambda: analyze_orderblocks(series, config),
         "supplydemand": lambda: analyze_supplydemand(series, config),
         "sessions": lambda: analyze_sessions(series, config),
-        "confluence": lambda: analyze_confluence(series, config),
+        "confluence": lambda: analyze_confluence(
+            series, config, mtf_timeframes=list(mtf_timeframes)
+        ),
         "mtf": lambda: analyze_mtf(series, list(mtf_timeframes), config),
     }
     module = MODULE_SLUGS.get(slug, slug if slug in runners else None)
