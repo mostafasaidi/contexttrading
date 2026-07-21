@@ -1,6 +1,6 @@
 # ContextTrading — Build State (pause checkpoint)
 
-> Saved 2026-07-21 (end of Phase 6). Resume point for the next session.
+> Saved 2026-07-21 (end of Phase 7). Resume point for the next session.
 > This file tracks the autonomous build driven by MASTER PROMPTS 01–04.
 > Delete or archive when the project reaches production-ready status.
 
@@ -28,8 +28,8 @@
 | 4. FVG engine (detection, nested/stacked, inverse, mitigation lifecycle, strength ranking) | ✅ DONE |
 | 5. Order block engine (OB, breaker, mitigation blocks, supply/demand, validation) | ✅ DONE |
 | 6. Session engine (Sydney, Tokyo, London, NY, kill zones, Judas swings) + MTF context | ✅ DONE |
-| 7. Confluence engine (weighted deterministic scoring, signal composition) | ⬅️ NEXT |
-| 8. Visualization & storage (Plotly renderer, Lightweight-Charts payloads, result store) | pending |
+| 7. Confluence engine (weighted deterministic scoring, explainable factors, confluence zones) | ✅ DONE |
+| 8. Visualization & storage (Plotly renderer, Lightweight-Charts payloads, result store) | ⬅️ NEXT |
 | 9. AI layer & API (context builder, narrative, trade eval, FastAPI service) | pending |
 | 10. Backtesting (replay, statistics, metrics, optimization) | pending |
 | 11. Examples, polish, performance (examples/, benchmarks, docs completion) | pending |
@@ -41,10 +41,10 @@
 - Each run: implement one phase → full unit/property/golden/integration tests → ruff + black clean → logical conventional commits.
 - TodoList mirrors the 12 phases (Phase 6 = in_progress).
 
-## Current verified state (end of Phase 6)
+## Current verified state (end of Phase 7)
 
-- **485 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD/resampling, 16 byte-exact regression goldens in `tests/regression/goldens/` — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 32 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
-- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests · Phase 6: `82ff12e` session engine · `2a0591b` resampling + MTF context · `94cd231` tests.
+- **516 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD/resampling/confluence, 19 byte-exact regression goldens in `tests/regression/goldens/` — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 37 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
+- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests · Phase 6: `82ff12e` session engine · `2a0591b` resampling + MTF context · `94cd231` tests · Phase 7: `3c6a1b8` confluence engine · `19f2829` tests.
 
 ## Phase 5 decisions (for Phase 6+ reuse)
 
@@ -66,6 +66,15 @@
 - MTF: contexts = base (rank 0) + ascending HTFs, weight = `mtf_tf_weight_base ** rank` (default 2.0 → 1, 2, 4, 8). Bias = weighted majority (ties → RANGING); strength STRONG only when >= 2 contexts and all known agree; MODERATE at share >= `mtf_moderate_share` (2/3); UNKNOWN contexts dilute the share. `htf_influence` = weighted share of HTFs opposing the base-TF trend. recommended_execution_timeframe = base TF iff it agrees with the bias, else None. Resampled series too short for structure → UNKNOWN context, never an exception.
 - MTFBias/TimeframeContext are plain VersionedModels (computed summaries, not detected objects); SessionStats/SessionSweep are AnalysisObjects with content-hash IDs (`sess_`, `ssweep_`).
 
+## Phase 7 decisions (for Phase 8+ reuse)
+
+- `analyze_confluence(series, config=None, session_config=None, mtf_timeframes=None)` orchestrates the module entrypoints (`analyze_*`) — it detects nothing itself. Default MTF ladder = next two enum timeframes above base (15m → 30m, 1h — 30m exists in the enum).
+- Score semantics: per-side sums of `weight*raw` normalized by TOTAL emitted factor weight; factors with no directional evidence emit raw 0 and DILUTE (confidence semantics); non-evaluable factors (no breaks/sweeps/range) are omitted and don't dilute. bull+bear <= 1; bias = winning side, ties RANGING.
+- Qualitative raw maps are documented module constants in `analysis/confluence/factors.py`, NOT config: TREND_STRENGTH_RAW (1.0/0.6/0.3), SWEEP_CLASS_RAW (1.0/0.8/0.6), BLOCK_KIND_RAW (ob 1.0 / brk 0.8 / mb 0.7). All weights/lookbacks/proximity are `conf_*` EngineConfig fields.
+- Direction mapping: sellside sweep = bullish evidence (and mirrored); Judas buyside sweep = bearish; DISCOUNT = bullish. SD DEMAND = bullish; OB/FVG directions used directly.
+- Confluence zones: chain-merge overlapping active zones (fvg/ob/sd + dealing-range premium/discount band, NO proximity filter); emit only unanimous-direction clusters with >= `conf_zone_min_factors` (2) distinct kinds; score = best-raw-per-kind weighted coverage / total zone-kind weight. ConfluenceZone is an AnalysisObject (ID_PREFIX "conf", layer `confluence.zones`, opacity scales with score); FactorContribution/ConfluenceResult are plain VersionedModels.
+- Property-test gotcha: degenerate hypothesis walks (strictly monotonic, zero-wick) violate structure-engine Leg contracts (magnitude > 0, duration >= 1) — excluded via `assume(False)` in `test_confluence_property.py`, documented there. A latent Phase-3 engine edge; revisit only if real feeds hit it.
+
 ## Conventions Phase 4+ MUST follow (established in Phases 1–3)
 
 - Module contract: pure `(CandleSeries, EngineConfig) -> AnalysisResult[T]`; no wall-clock, no I/O, no unseeded randomness; `generated_from` from series bounds.
@@ -77,14 +86,13 @@
 - Docs per module in `docs/modules/`: Purpose/Responsibilities/Inputs/Outputs/Dependencies/Examples/Testing/Limitations; update `docs/roadmap.md`.
 - Note: `PoolStatus` includes `BROKEN` (deviation from MP02 list, deliberate); MTF context moved to Phase 6 with sessions.
 
-## Phase 7 brief (ready to hand to the coder subagent)
+## Phase 8 brief (ready to hand to the coder subagent)
 
-Confluence engine under `src/contexttrading/analysis/confluence/`:
-- Deterministic weighted scoring across existing module outputs: run the engine modules (structure/trend, liquidity, dealing range, FVG, order blocks, supply/demand, sessions, MTF) over one series and compose per-setup confluence scores — no new detection logic, only composition of existing versioned outputs.
-- `ConfluenceConfig`/weights as `EngineConfig` fields with defaults + docstrings; factor contributions must be individually explainable (each score lists its factors and their weighted contributions — the AI layer in Phase 9 will narrate them verbatim).
-- Alignment inputs: MTF bias direction, premium/discount location, sweep/Judas events, unmitigated zones near current price, session context (killzone active, day-extreme stats).
-- Follow established patterns: `AnalysisResult[T]` envelope, schema slots + export, unit/property/golden/integration tests, docs in `docs/modules/confluence.md`.
-- Also candidate: signal composition (setup types like sweep-into-OB-in-discount aligned with MTF bias) as structured, deterministic objects with VisualStyle presets for the Phase-8 renderer.
+Visualization & storage (roadmap Phase 8):
+- **Renderer/serializer (MP02 VISUALIZATION)**: convert `AnalysisResult` payloads into TradingView Lightweight-Charts-ready JSON (series/markers/price-lines/zones) and Plotly figures. Every detected object ALREADY carries a `VisualStyle` preset (color/opacity/line_style/render_type/priority/layer/tooltip) — the renderer CONSUMES `style` fields and must never invent presentation or recompute geometry. Layer names in use: `swings.*`, `structure.breaks`, `liquidity.*`, `range.*`, `fvg.zones`, `orderblocks.*`, `supplydemand.*`, `sessions.boxes/killzones/levels/sweeps`, `confluence.zones`.
+- Time mapping: Lightweight Charts needs UNIX timestamps (UTC seconds); boxes map to rectangle primitives or two price lines + fill hints; markers map to series markers with position above/below bar by direction.
+- **Storage**: `StorageConfig` exists (sqlite default). Result store persists versioned `AnalysisResult` JSON per (module, symbol, timeframe, window); keep schema_version checks on read.
+- Follow established patterns: schema slots + export for any new payload models, unit/golden/integration tests, docs in `docs/modules/visualization.md` + `docs/modules/storage.md`.
 
 ## User preferences observed
 

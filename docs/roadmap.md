@@ -8,8 +8,8 @@
 | 4 | FVG engine | Fair value gaps, imbalance, inversion FVG (liquidity landed in Phase 3) | ✅ Done |
 | 5 | Order blocks & supply/demand | OB detection, breaker blocks, mitigation status, zone strength | ✅ Done |
 | 6 | Sessions & MTF | Killzones, session high/low, Judas swings, deterministic resampling, multi-timeframe trend alignment (premium/discount landed in Phase 3) | ✅ Done |
-| 7 | Confluence engine | Weighted deterministic scoring, signal composition (trading logic) | ⬜ Next |
-| 8 | Visualization & storage | Plotly renderer, Lightweight-Charts payloads, SQLite/PostgreSQL/Redis result store | ⬜ |
+| 7 | Confluence engine | Weighted deterministic scoring, explainable factor breakdown, confluence zones | ✅ Done |
+| 8 | Visualization & storage | Plotly renderer, Lightweight-Charts payloads, SQLite/PostgreSQL/Redis result store | ⬜ Next |
 | 9 | AI layer & API | Provider adapters, structured narrative/risk outputs, FastAPI service, schema endpoints, `docs/api/` | ⬜ |
 | 10 | Backtesting | Event-driven replay, fills/costs, equity + reports, seeded determinism | ⬜ |
 | 11 | Examples, polish, performance | `examples/`, benchmarks, docs completion, DX polish | ⬜ |

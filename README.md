@@ -42,7 +42,7 @@ LLM in front of.
 | Premium/discount | ✅ Phase 3 | Dealing range, equilibrium, OTE zone, price location |
 | Sessions | ✅ Phase 6 | Configurable windows + killzones, session high/low/PDH/PDL pools, Judas swings, day-extreme stats |
 | MTF context | ✅ Phase 6 | Deterministic resampling (epoch/Monday/month anchors), weighted multi-timeframe bias |
-| Confluence | 🔜 Phase 7 | Weighted, deterministic confluence scoring |
+| Confluence | ✅ Phase 7 | Explainable weighted scores, directional bias, spatial confluence zones |
 | Visualization | 🔜 Phase 8 | Plotly + TradingView Lightweight Charts styles |
 | AI narrative | 🔜 Phase 9 | Explain-only AI layer over versioned JSON |
 | Backtesting & API | 🔜 Phases 10–11 | Event-driven backtester, FastAPI service |

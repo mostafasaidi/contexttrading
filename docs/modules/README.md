@@ -19,4 +19,4 @@ notes, determinism notes, and migration history.
 | analysis.supplydemand | [supplydemand.md](supplydemand.md) | 5 ✅ |
 | analysis.sessions | [sessions.md](sessions.md) | 6 ✅ |
 | analysis.mtf | [mtf.md](mtf.md) | 6 ✅ |
-| analysis.confluence | _planned_ | 7 |
+| analysis.confluence | [confluence.md](confluence.md) | 7 ✅ |
