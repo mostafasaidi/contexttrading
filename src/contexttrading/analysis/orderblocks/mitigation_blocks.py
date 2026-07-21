@@ -49,7 +49,13 @@ def build_mitigation_blocks(
 ) -> list[MitigationBlock]:
     """Emit mitigation blocks for eligible sweeps (chronological order)."""
     candles = series.candles
-    pool_sources = {pool.id: pool.source_ids[0] for pool in pools}
+    # The un-broken swing backing the pool: for equal-level pools source_ids
+    # is [level.id, *member_swing_ids] — take the first member swing; for
+    # standalone swing pools it is source_ids[0].
+    pool_sources = {
+        pool.id: pool.source_ids[1] if len(pool.source_ids) > 1 else pool.source_ids[0]
+        for pool in pools
+    }
     out: list[MitigationBlock] = []
 
     for sweep in sorted(sweeps, key=lambda s: s.candle_index):

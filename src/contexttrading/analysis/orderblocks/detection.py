@@ -6,13 +6,12 @@ Deterministic rules
   are sweep material, not displacement) anchors at most one order block.
 - **Bullish OB**: the last down-close candle (``close < open``) strictly
   before ``break_index``. **Bearish OB**: mirrored (last up-close candle).
-- Search bound: the most recent opposite external swing before the break
-  (swing low for bullish, swing high for bearish); when none exists, fall
-  back to ``break_index - ob_max_lookback``.
-- **Cluster**: if the OB candle is immediately preceded by contiguous
-  same-sign candles, the zone extends over the whole cluster
-  (``[min low, max high]``); the last candle stays the anchor for body,
-  timestamp, and volume.
+- Search bound: up to ``ob_max_lookback`` candles back from the break — the
+  first opposite-close candle found walking backwards is, by definition, the
+  last one before the displacement move.
+- **Cluster**: not merged. Contiguous same-sign runs (every trend leg) would
+  produce oversized zones, so the anchor is always the single last
+  opposite-close candle; oversized candles are handled by refinement.
 - **Zone** = cluster range ``[low, high]``; **body** = anchor candle body.
 - **Refinement**: when the zone height exceeds ``ob_refine_atr_multiple`` x
   ATR at the anchor candle, emit a *refined zone* = the extreme
@@ -37,7 +36,6 @@ from contexttrading.core.constants import (
     BreakStrength,
     StructureBreakSignificance,
     StructureBreakType,
-    SwingType,
     TrendDirection,
 )
 from contexttrading.models.candle import CandleSeries
@@ -66,8 +64,9 @@ class RawOrderBlock:
 
     @property
     def actionable_from_index(self) -> int:
-        """Lifecycle starts at the linked break candle."""
-        return self.linked_break.break_index
+        """Lifecycle starts at the candle AFTER the linked break candle —
+        the break candle belongs to the departure, not to a revisit."""
+        return self.linked_break.break_index + 1
 
     @property
     def mitigation_level(self) -> float:
@@ -79,19 +78,6 @@ class RawOrderBlock:
         if self.is_refined and self.refined_bottom is not None and self.refined_top is not None:
             return (self.refined_bottom + self.refined_top) / 2
         return self.zone_bottom if self.direction is TrendDirection.BULLISH else self.zone_top
-
-
-def _search_bound(scan: StructureScan, brk: StructureBreak, config: EngineConfig) -> int:
-    """First index eligible for the OB candle search (inclusive)."""
-    opposite = SwingType.LOW if brk.direction is TrendDirection.BULLISH else SwingType.HIGH
-    candidates = [
-        s.index
-        for s in scan.external_swings
-        if s.swing_type is opposite and s.index < brk.break_index
-    ]
-    if candidates:
-        return max(candidates)
-    return max(brk.break_index - config.ob_max_lookback, 0)
 
 
 def _break_rank(brk: StructureBreak) -> tuple[int, int, int]:
@@ -114,7 +100,7 @@ def detect_raw_order_blocks(
 
     for brk in confirmed:
         bullish = brk.direction is TrendDirection.BULLISH
-        bound = _search_bound(scan, brk, config)
+        bound = max(brk.break_index - config.ob_max_lookback, 0)
         anchor = None
         for i in range(brk.break_index - 1, bound - 1, -1):
             candle = candles[i]
@@ -125,21 +111,16 @@ def detect_raw_order_blocks(
         if anchor is None:
             continue
 
-        # Extend over contiguous same-sign candles immediately before the anchor.
+        # Single-candle anchor. Cluster merging (contiguous same-sign candles)
+        # was considered and dropped: every trend leg is a contiguous same-sign
+        # run, so merging produced oversized, useless zones; oversized single
+        # candles are handled by the refinement rule below instead.
         start = anchor
-        while start - 1 >= bound:
-            prev = candles[start - 1]
-            same_sign = prev.close < prev.open if bullish else prev.close > prev.open
-            if not same_sign:
-                break
-            start -= 1
-
-        cluster = candles[start : anchor + 1]
-        zone_bottom = min(c.low for c in cluster)
-        zone_top = max(c.high for c in cluster)
-        if zone_top <= zone_bottom:
-            continue  # degenerate flat cluster
         anchor_candle = candles[anchor]
+        zone_bottom = anchor_candle.low
+        zone_top = anchor_candle.high
+        if zone_top <= zone_bottom:
+            continue  # degenerate flat candle
         body_bottom = min(anchor_candle.open, anchor_candle.close)
         body_top = max(anchor_candle.open, anchor_candle.close)
 
