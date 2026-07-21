@@ -20,3 +20,5 @@ notes, determinism notes, and migration history.
 | analysis.sessions | [sessions.md](sessions.md) | 6 ✅ |
 | analysis.mtf | [mtf.md](mtf.md) | 6 ✅ |
 | analysis.confluence | [confluence.md](confluence.md) | 7 ✅ |
+| visualization | [visualization.md](visualization.md) | 8 ✅ |
+| data.store | [visualization.md](visualization.md#result-store-datastore) | 8 ✅ |

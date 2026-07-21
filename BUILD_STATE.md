@@ -1,6 +1,6 @@
 # ContextTrading — Build State (pause checkpoint)
 
-> Saved 2026-07-21 (end of Phase 7). Resume point for the next session.
+> Saved 2026-07-22 (end of Phase 8). Resume point for the next session.
 > This file tracks the autonomous build driven by MASTER PROMPTS 01–04.
 > Delete or archive when the project reaches production-ready status.
 
@@ -29,8 +29,8 @@
 | 5. Order block engine (OB, breaker, mitigation blocks, supply/demand, validation) | ✅ DONE |
 | 6. Session engine (Sydney, Tokyo, London, NY, kill zones, Judas swings) + MTF context | ✅ DONE |
 | 7. Confluence engine (weighted deterministic scoring, explainable factors, confluence zones) | ✅ DONE |
-| 8. Visualization & storage (Plotly renderer, Lightweight-Charts payloads, result store) | ⬅️ NEXT |
-| 9. AI layer & API (context builder, narrative, trade eval, FastAPI service) | pending |
+| 8. Visualization & storage (render primitives, mappers, chart serializer, reference frontend, SQLite result store) | ✅ DONE |
+| 9. AI layer & API (context builder, narrative, trade eval, FastAPI service) | ⬅️ NEXT |
 | 10. Backtesting (replay, statistics, metrics, optimization) | pending |
 | 11. Examples, polish, performance (examples/, benchmarks, docs completion) | pending |
 | 12. Release hardening (PyPI, Docker, security review, v1.0 schema freeze) | pending |
@@ -41,10 +41,10 @@
 - Each run: implement one phase → full unit/property/golden/integration tests → ruff + black clean → logical conventional commits.
 - TodoList mirrors the 12 phases (Phase 6 = in_progress).
 
-## Current verified state (end of Phase 7)
+## Current verified state (end of Phase 8)
 
-- **516 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD/resampling/confluence, 19 byte-exact regression goldens in `tests/regression/goldens/` — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 37 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
-- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests · Phase 6: `82ff12e` session engine · `2a0591b` resampling + MTF context · `94cd231` tests · Phase 7: `3c6a1b8` confluence engine · `19f2829` tests.
+- **577 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD/resampling/confluence, 23 byte-exact regression goldens in `tests/regression/goldens/` incl. 2 full-stack chart goldens — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 41 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
+- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests · Phase 6: `82ff12e` session engine · `2a0591b` resampling + MTF context · `94cd231` tests · Phase 7: `3c6a1b8` confluence engine · `19f2829` tests · Phase 8: `bb3c621` primitives + mappers · `fdac1b0` chart serializer + schema exports · `e2931af` SQLite result store · `5044dd3` reference frontend + demo payload · `f4268b0` tests.
 
 ## Phase 5 decisions (for Phase 6+ reuse)
 
@@ -75,6 +75,23 @@
 - Confluence zones: chain-merge overlapping active zones (fvg/ob/sd + dealing-range premium/discount band, NO proximity filter); emit only unanimous-direction clusters with >= `conf_zone_min_factors` (2) distinct kinds; score = best-raw-per-kind weighted coverage / total zone-kind weight. ConfluenceZone is an AnalysisObject (ID_PREFIX "conf", layer `confluence.zones`, opacity scales with score); FactorContribution/ConfluenceResult are plain VersionedModels.
 - Property-test gotcha: degenerate hypothesis walks (strictly monotonic, zero-wick) violate structure-engine Leg contracts (magnitude > 0, duration >= 1) — excluded via `assume(False)` in `test_confluence_property.py`, documented there. A latent Phase-3 engine edge; revisit only if real feeds hit it.
 
+## Phase 8 decisions (for Phase 9+ reuse)
+
+- Visualization is renderer-agnostic: `build_chart_payload(series, results, config=None) -> AnalysisResult[ChartPayload]` (module `"chart"`) is the ONLY render contract — candles + volume + 23 canonical layers + theme + legend. Plotly dropped deliberately (MP01 listed it; the payload serves any renderer). The renderer CONSUMES `VisualStyle` presets; the only colors born in visualization are theme colors and the bull/bear/neutral triplet for HTF level lines (MTF contexts carry no style).
+- Primitives: discriminated union (`primitive` field) of `PriceLine`/`Box`/`Marker`/`Label`/`Segment`/`AreaBand` in `visualization/primitives.py`, schema version 1.0.0. `Label` is currently emitted by no mapper (reserved for AI annotations). Time = UNIX seconds everywhere; ms leak guarded by tests. Index→time via `series.candles[i].timestamp`; open-ended zones extend to the last candle.
+- 23 layers in canonical z-order (`LAYER_SPECS` in serializer.py); `z_order = rank*100 + priority`; primitives sorted `(z_order, source_id)` → byte-identical payloads. `swings.internal` is the only default-hidden layer; `VisualizationConfig.hidden_layers/shown_layers` override. All layers emitted even when empty.
+- Reference frontend: no-build static page (`visualization/frontend/`, LW Charts v4 UMD via CDN) — boxes/bands/segments on an overlay canvas (v4 has no native rectangle; v5 `attachPrimitive` is the upgrade path); marker shape `diamond` falls back to `square`. Serve via `python -m http.server` (fetch fails on file://). Demo payload committed (`demo-payload.json`, five-day 15m full stack).
+- `data/store.py`: SQLite `ResultStore` keyed `(symbol, timeframe, module, series_hash)`, INSERT OR REPLACE; `hash_series` = sha256 over canonical records; load validates `is_compatible(stored, current)` → `SchemaVersionError` (CT-2001), storage failures → `DataError` (CT-1000). `PAYLOAD_MODELS` maps all 11 module names (incl. `chart`) to payload classes for typed round-trips. PostgreSQL/Redis deferred to Phase 11.
+- Shared test helper `tests/fixtures.py::full_stack_results(series, config, mtf_timeframes=("1h","4h"))` runs all 10 analyzers once — used by visualization unit/property/golden/integration tests.
+
+## Phase 9 brief (ready to hand to the coder subagent)
+
+AI layer & API (roadmap Phase 9, spec = MP03):
+- **Hard invariant: AI NEVER calculates.** It consumes engine JSON only (`AnalysisResult` envelopes, `ChartPayload` where useful) and emits versioned structured JSON: Executive Summary, Market Narrative, Bias, Confluences, Risk, Weaknesses, Trade Evaluation, Alternative Scenarios, Confidence (evidence-based), Action Items. Every claim must cite engine evidence (object ids), never free-floating prose.
+- Build: `ai/` package — context builder (engine results → compact prompt-ready JSON), provider adapters (interface + at least one concrete), narrative/trade-eval/risk/journal/report generators as structured outputs with pydantic schemas + schema export, confidence bound to factor evidence.
+- API: FastAPI service exposing analyze + AI endpoints; schema endpoints serving `docs/schemas/json/`; `docs/api/`.
+- Follow established patterns: versioned payloads, unit/golden/integration tests, `docs/modules/ai.md` + `docs/modules/api.md`, ruff/black, conventional commits.
+
 ## Conventions Phase 4+ MUST follow (established in Phases 1–3)
 
 - Module contract: pure `(CandleSeries, EngineConfig) -> AnalysisResult[T]`; no wall-clock, no I/O, no unseeded randomness; `generated_from` from series bounds.
@@ -85,14 +102,6 @@
 - Errors: `AnalysisError` CT-3000, `InsufficientDataError` CT-3001, `DataGapError`, always with `context={...}`.
 - Docs per module in `docs/modules/`: Purpose/Responsibilities/Inputs/Outputs/Dependencies/Examples/Testing/Limitations; update `docs/roadmap.md`.
 - Note: `PoolStatus` includes `BROKEN` (deviation from MP02 list, deliberate); MTF context moved to Phase 6 with sessions.
-
-## Phase 8 brief (ready to hand to the coder subagent)
-
-Visualization & storage (roadmap Phase 8):
-- **Renderer/serializer (MP02 VISUALIZATION)**: convert `AnalysisResult` payloads into TradingView Lightweight-Charts-ready JSON (series/markers/price-lines/zones) and Plotly figures. Every detected object ALREADY carries a `VisualStyle` preset (color/opacity/line_style/render_type/priority/layer/tooltip) — the renderer CONSUMES `style` fields and must never invent presentation or recompute geometry. Layer names in use: `swings.*`, `structure.breaks`, `liquidity.*`, `range.*`, `fvg.zones`, `orderblocks.*`, `supplydemand.*`, `sessions.boxes/killzones/levels/sweeps`, `confluence.zones`.
-- Time mapping: Lightweight Charts needs UNIX timestamps (UTC seconds); boxes map to rectangle primitives or two price lines + fill hints; markers map to series markers with position above/below bar by direction.
-- **Storage**: `StorageConfig` exists (sqlite default). Result store persists versioned `AnalysisResult` JSON per (module, symbol, timeframe, window); keep schema_version checks on read.
-- Follow established patterns: schema slots + export for any new payload models, unit/golden/integration tests, docs in `docs/modules/visualization.md` + `docs/modules/storage.md`.
 
 ## User preferences observed
 
