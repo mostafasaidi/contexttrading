@@ -1,0 +1,108 @@
+{
+  "engine_version": "0.1.0",
+  "generated_from": {
+    "candle_count": 16,
+    "end": "2024-01-01T00:15:00Z",
+    "schema_version": "1.0.0",
+    "start": "2024-01-01T00:00:00Z"
+  },
+  "module": "supplydemand",
+  "payload": {
+    "counts_by_kind": {
+      "supply": 2
+    },
+    "counts_by_status": {
+      "tested": 2
+    },
+    "schema_version": "1.0.0",
+    "total_count": 2,
+    "zones": [
+      {
+        "actionable_from_index": 14,
+        "age": 1,
+        "base_end_index": 7,
+        "base_start_index": 7,
+        "broken_index": null,
+        "departure_atr_multiple": 3.697163931185955,
+        "departure_leg_id": "leg_c74495190ad9a9be3ccd85c7",
+        "first_touch_index": 14,
+        "formed_at": "2024-01-01T00:07:00Z",
+        "id": "sd_370086323b07acbbfa7f614f",
+        "is_duplicate": true,
+        "kind": "supply",
+        "label": null,
+        "layer": "default",
+        "linked_order_block_id": "ob_a024c193ecfaf6f2878a1ee7",
+        "mean_base_body_atr": 0.10642335766423144,
+        "mitigated_index": null,
+        "priority": 0,
+        "rank": 1,
+        "schema_version": "1.0.0",
+        "status": "tested",
+        "strength": 0.8060539273836433,
+        "style": {
+          "color": "#f23645",
+          "fill": true,
+          "layer": "supplydemand.supply",
+          "line_style": "solid",
+          "line_width": 1.0,
+          "opacity": 0.15,
+          "priority": 6,
+          "render_type": "box",
+          "schema_version": "1.0.0",
+          "tooltip": "supply zone (tested)",
+          "visible": true
+        },
+        "tests": 1,
+        "trend_aligned": true,
+        "zone_bottom": 10.52,
+        "zone_top": 10.62
+      },
+      {
+        "actionable_from_index": 11,
+        "age": 4,
+        "base_end_index": 6,
+        "base_start_index": 6,
+        "broken_index": null,
+        "departure_atr_multiple": 0.5685463837719412,
+        "departure_leg_id": null,
+        "first_touch_index": 14,
+        "formed_at": "2024-01-01T00:06:00Z",
+        "id": "sd_328f6cf364b7e68143265028",
+        "is_duplicate": false,
+        "kind": "supply",
+        "label": null,
+        "layer": "default",
+        "linked_order_block_id": "ob_a024c193ecfaf6f2878a1ee7",
+        "mean_base_body_atr": 0.8624667258207606,
+        "mitigated_index": null,
+        "priority": 0,
+        "rank": 2,
+        "schema_version": "1.0.0",
+        "status": "tested",
+        "strength": 0.4014604030497538,
+        "style": {
+          "color": "#f23645",
+          "fill": true,
+          "layer": "supplydemand.supply",
+          "line_style": "solid",
+          "line_width": 1.0,
+          "opacity": 0.15,
+          "priority": 6,
+          "render_type": "box",
+          "schema_version": "1.0.0",
+          "tooltip": "supply zone (tested)",
+          "visible": true
+        },
+        "tests": 1,
+        "trend_aligned": true,
+        "zone_bottom": 10.35,
+        "zone_top": 10.6
+      }
+    ]
+  },
+  "run_id": null,
+  "schema_version": "1.0.0",
+  "symbol": "RBD",
+  "timeframe": "1m"
+}

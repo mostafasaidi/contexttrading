@@ -16,8 +16,10 @@ import pytest
 
 from contexttrading.analysis.fvg import analyze_fvg
 from contexttrading.analysis.liquidity import analyze_liquidity
+from contexttrading.analysis.orderblocks import analyze_orderblocks
 from contexttrading.analysis.premium_discount import analyze_dealing_range
 from contexttrading.analysis.structure import analyze_structure, analyze_trend
+from contexttrading.analysis.supplydemand import analyze_supplydemand
 from tests.fixtures import (
     downtrend_series,
     engine_config,
@@ -27,6 +29,7 @@ from tests.fixtures import (
     v_reversal_series,
 )
 from tests.fvg_fixtures import inversion_series, nested_fvg_records
+from tests.ob_fixtures import mb_sweep_records, rbd_records
 
 GOLDENS_DIR = Path(__file__).parent / "goldens"
 UPDATE = os.environ.get("CT_UPDATE_GOLDENS") == "1"
@@ -88,3 +91,20 @@ class TestFvgGoldens:
     def test_inversion_fvg(self) -> None:
         result = analyze_fvg(inversion_series(), engine_config())
         _assert_golden("fvg_inversion.json", result.model_dump_json())
+
+
+class TestOrderBlockGoldens:
+    def test_v_reversal_orderblocks(self) -> None:
+        # continuation OBs + a reversal OB + a breaker at the CHoCH
+        result = analyze_orderblocks(v_reversal_series(), engine_config())
+        _assert_golden("orderblocks_trending.json", result.model_dump_json())
+
+    def test_sweep_mitigation_blocks(self) -> None:
+        result = analyze_orderblocks(to_series(mb_sweep_records(), symbol="MB"), engine_config())
+        _assert_golden("orderblocks_sweep.json", result.model_dump_json())
+
+
+class TestSupplyDemandGoldens:
+    def test_rbd_supply_zone(self) -> None:
+        result = analyze_supplydemand(to_series(rbd_records(), symbol="RBD"), engine_config())
+        _assert_golden("supplydemand_rbd.json", result.model_dump_json())
