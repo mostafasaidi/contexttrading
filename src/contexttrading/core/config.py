@@ -196,6 +196,34 @@ class EngineConfig(BaseModel):
         default=0.10, ge=0, le=1, description="Strength weight: age decay."
     )
 
+    # -- sessions ----------------------------------------------------------------------
+    session_doji_body_fraction: float = Field(
+        default=0.2,
+        ge=0,
+        le=1,
+        description="Session body (|close-open| / range) below which the session "
+        "direction is RANGING.",
+    )
+
+    # -- multi-timeframe -----------------------------------------------------------------
+    mtf_include_incomplete_bar: bool = Field(
+        default=True,
+        description="Keep the still-forming last bar when resampling (is_closed=False).",
+    )
+    mtf_tf_weight_base: float = Field(
+        default=2.0,
+        gt=0,
+        description="Weight of timeframe rank r in MTF aggregation: base ** r "
+        "(rank 0 = base timeframe).",
+    )
+    mtf_moderate_share: float = Field(
+        default=2.0 / 3.0,
+        gt=0,
+        le=1,
+        description="Weighted agreement share at which MTF bias strength is at "
+        "least MODERATE (STRONG requires full agreement).",
+    )
+
     # -- trend / market phase -----------------------------------------------------------
     phase_lookback: int = Field(
         default=20, ge=2, description="Bars inspected for market-phase heuristics."
@@ -221,7 +249,14 @@ class EngineConfig(BaseModel):
 
 
 class SessionConfig(BaseModel):
-    """Session/killzone configuration with explicit timezone handling."""
+    """Session/killzone configuration with explicit timezone handling.
+
+    Default windows follow common ICT/SMC practice, expressed in UTC (the
+    ``default_timezone``): Sydney and Tokyo accumulate the Asian range,
+    London and New York are the main expansion sessions, and the kill zones
+    are the windows where Judas swings are evaluated. Windows may wrap
+    midnight; an instance belongs to the calendar date of its START bar.
+    """
 
     model_config = ConfigDict(extra="forbid")
 
@@ -230,8 +265,22 @@ class SessionConfig(BaseModel):
         description="IANA timezone used to define session windows (e.g. 'America/New_York').",
     )
     sessions: dict[str, dict[str, str]] = Field(
-        default_factory=dict,
+        default_factory=lambda: {
+            "sydney": {"start": "21:00", "end": "06:00"},
+            "tokyo": {"start": "00:00", "end": "09:00"},
+            "london": {"start": "07:00", "end": "16:00"},
+            "new_york": {"start": "12:00", "end": "21:00"},
+        },
         description="Named windows: {session: {start: 'HH:MM', end: 'HH:MM'}} in default_timezone.",
+    )
+    killzones: dict[str, dict[str, str]] = Field(
+        default_factory=lambda: {
+            "london": {"start": "07:00", "end": "10:00"},
+            "new_york_am": {"start": "12:00", "end": "15:00"},
+            "london_close": {"start": "15:00", "end": "17:00"},
+            "new_york_pm": {"start": "18:00", "end": "20:00"},
+        },
+        description="Kill-zone windows in the same format as ``sessions``.",
     )
 
     @field_validator("default_timezone")
@@ -243,7 +292,7 @@ class SessionConfig(BaseModel):
             raise ValueError(f"Unknown IANA timezone: {value!r}") from exc
         return value
 
-    @field_validator("sessions")
+    @field_validator("sessions", "killzones")
     @classmethod
     def _validate_windows(cls, value: dict[str, dict[str, str]]) -> dict[str, dict[str, str]]:
         for name, window in value.items():
