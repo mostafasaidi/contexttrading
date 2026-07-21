@@ -1,6 +1,6 @@
 # ContextTrading — Build State (pause checkpoint)
 
-> Saved 2026-07-22 (end of Phase 8). Resume point for the next session.
+> Saved 2026-07-22 (end of AI analyst layer). Resume point for the next session.
 > This file tracks the autonomous build driven by MASTER PROMPTS 01–04.
 > Delete or archive when the project reaches production-ready status.
 
@@ -30,10 +30,11 @@
 | 6. Session engine (Sydney, Tokyo, London, NY, kill zones, Judas swings) + MTF context | ✅ DONE |
 | 7. Confluence engine (weighted deterministic scoring, explainable factors, confluence zones) | ✅ DONE |
 | 8. Visualization & storage (render primitives, mappers, chart serializer, reference frontend, SQLite result store) | ✅ DONE |
-| 9. AI layer & API (context builder, narrative, trade eval, FastAPI service) | ⬅️ NEXT |
-| 10. Backtesting (replay, statistics, metrics, optimization) | pending |
-| 11. Examples, polish, performance (examples/, benchmarks, docs completion) | pending |
-| 12. Release hardening (PyPI, Docker, security review, v1.0 schema freeze) | pending |
+| 9. AI analyst layer (prompts, context builder, providers, citation enforcement, structured reports) | ✅ DONE |
+| 10. REST API service (FastAPI, analyze/AI endpoints, schema endpoints, docs/api/) | ⬅️ NEXT |
+| 11. Backtesting (replay, statistics, metrics, optimization) | pending |
+| 12. Examples, polish, performance (examples/, benchmarks, docs completion, PostgreSQL/Redis stores) | pending |
+| 13. Release hardening (PyPI, Docker, security review, v1.0 schema freeze) | pending |
 
 ## Build mechanics (how to resume)
 
@@ -41,10 +42,10 @@
 - Each run: implement one phase → full unit/property/golden/integration tests → ruff + black clean → logical conventional commits.
 - TodoList mirrors the 12 phases (Phase 6 = in_progress).
 
-## Current verified state (end of Phase 8)
+## Current verified state (end of AI analyst layer)
 
-- **577 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD/resampling/confluence, 23 byte-exact regression goldens in `tests/regression/goldens/` incl. 2 full-stack chart goldens — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 41 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
-- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests · Phase 6: `82ff12e` session engine · `2a0591b` resampling + MTF context · `94cd231` tests · Phase 7: `3c6a1b8` confluence engine · `19f2829` tests · Phase 8: `bb3c621` primitives + mappers · `fdac1b0` chart serializer + schema exports · `e2931af` SQLite result store · `5044dd3` reference frontend + demo payload · `f4268b0` tests.
+- **653 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD/resampling/confluence, 23 byte-exact regression goldens in `tests/regression/goldens/` incl. 2 full-stack chart goldens — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 41 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
+- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests · Phase 6: `82ff12e` session engine · `2a0591b` resampling + MTF context · `94cd231` tests · Phase 7: `3c6a1b8` confluence engine · `19f2829` tests · Phase 8: `bb3c621` primitives + mappers · `fdac1b0` chart serializer + schema exports · `e2931af` SQLite result store · `5044dd3` reference frontend + demo payload · `f4268b0` tests · AI layer: `a649745` report models + config · `d4d87ec` prompt assets + registry · `230606b` context builders · `6002ef0` providers · `a689ce5` validation + analyst pipeline · `312f167` tests.
 
 ## Phase 5 decisions (for Phase 6+ reuse)
 
@@ -86,11 +87,20 @@
 
 ## Phase 9 brief (ready to hand to the coder subagent)
 
-AI layer & API (roadmap Phase 9, spec = MP03):
-- **Hard invariant: AI NEVER calculates.** It consumes engine JSON only (`AnalysisResult` envelopes, `ChartPayload` where useful) and emits versioned structured JSON: Executive Summary, Market Narrative, Bias, Confluences, Risk, Weaknesses, Trade Evaluation, Alternative Scenarios, Confidence (evidence-based), Action Items. Every claim must cite engine evidence (object ids), never free-floating prose.
-- Build: `ai/` package — context builder (engine results → compact prompt-ready JSON), provider adapters (interface + at least one concrete), narrative/trade-eval/risk/journal/report generators as structured outputs with pydantic schemas + schema export, confidence bound to factor evidence.
-- API: FastAPI service exposing analyze + AI endpoints; schema endpoints serving `docs/schemas/json/`; `docs/api/`.
-- Follow established patterns: versioned payloads, unit/golden/integration tests, `docs/modules/ai.md` + `docs/modules/api.md`, ruff/black, conventional commits.
+REST API service (roadmap Phase 10; MP04 calls it Phase 9):
+- FastAPI app exposing the engine + AI analyst over HTTP: analyze endpoints (run modules over posted candles), chart-payload endpoint, AI endpoints (`/ai/market-analysis`, `/ai/trade-evaluation`, `/ai/journal-review`, `/ai/performance-review`), schema endpoints serving `docs/schemas/json/`, health/version endpoints.
+- Reuse everything: `full_stack_results`-style orchestration, `build_chart_payload`, `InstitutionalAnalyst` with `provider_from_config(Settings().ai)`; API errors map to the CT-xxxx taxonomy (`APIError` CT-7000 exists; `APIConfig` exists in core/config.py).
+- Request/response models are versioned pydantic models (schema export); no ad-hoc dicts. Deterministic: same request body → same response body.
+- Tests: FastAPI TestClient (no network), contract tests per endpoint, error-mapping tests, golden response for a fixture series. Docs: `docs/modules/api.md` + `docs/api/`.
+
+## AI-layer decisions (Phase 9 in roadmap numbering, for reuse)
+
+- `AIReportResult[T]` envelope (subject = "SYMBOL/TF" or "journal:period") instead of reusing AnalysisResult — journal/performance subjects have no timeframe/window.
+- Evidence ids: engine object ids + synthetic keys `trend:state`, `mtf:bias`, `range:dealing`, `factor:NN:name` (confluence assembly order), `setup:current`, `stat:*`, `trade:*`. The `evidence_index` is NEVER truncated (display sections are, with `TruncationEntry` records).
+- Citation enforcement: hallucinated id anywhere (evidence_ids / factor_ids / zone_id / flat evidence_citations) → `CitationError` CT-5002 (hard); empty evidence_ids on an EvidenceStatement → warning in `provenance.validation_warnings`; parse/schema failure → `AIResponseError` CT-5001. Retry exactly once with error feedback, then propagate.
+- MockProvider output is a pure function of the injected context (no seed needed); HTTP providers lazy-import httpx (optional dep) and read keys only from `AIConfig.api_key_env`.
+- Prompts are `.md` files with `<!-- prompt-version: X.Y.Z -->`; registry records sha256; reports embed prompt name/version/hash in `ReportProvenance`.
+- Roadmap renumbered to 13 phases: 9 = AI analyst layer (done), 10 = API, 11 = backtesting, 12 = polish (+PostgreSQL/Redis), 13 = release.
 
 ## Conventions Phase 4+ MUST follow (established in Phases 1–3)
 

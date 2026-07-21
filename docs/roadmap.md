@@ -1,4 +1,4 @@
-# Roadmap — 12 Phases
+# Roadmap — 13 Phases
 
 | Phase | Name | Deliverables | Status |
 |---|---|---|---|
@@ -9,11 +9,12 @@
 | 5 | Order blocks & supply/demand | OB detection, breaker blocks, mitigation status, zone strength | ✅ Done |
 | 6 | Sessions & MTF | Killzones, session high/low, Judas swings, deterministic resampling, multi-timeframe trend alignment (premium/discount landed in Phase 3) | ✅ Done |
 | 7 | Confluence engine | Weighted deterministic scoring, explainable factor breakdown, confluence zones | ✅ Done |
-| 8 | Visualization & storage | Lightweight-Charts chart payloads + reference frontend, SQLite result store (Plotly renderer dropped — payload is renderer-agnostic; PostgreSQL/Redis deferred to Phase 11) | ✅ Done |
-| 9 | AI layer & API | Provider adapters, structured narrative/risk outputs, FastAPI service, schema endpoints, `docs/api/` | ⬜ |
-| 10 | Backtesting | Event-driven replay, fills/costs, equity + reports, seeded determinism | ⬜ |
-| 11 | Examples, polish, performance | `examples/`, benchmarks, docs completion, DX polish | ⬜ |
-| 12 | Release hardening | Packaging to PyPI, Docker images, security review, v1.0 schema freeze | ⬜ |
+| 8 | Visualization & storage | Lightweight-Charts chart payloads + reference frontend, SQLite result store (Plotly renderer dropped — payload is renderer-agnostic; PostgreSQL/Redis deferred to Phase 12) | ✅ Done |
+| 9 | AI analyst layer | Versioned prompts, deterministic context builder, provider abstraction, citation enforcement, evidence-bound structured reports | ✅ Done |
+| 10 | API service | FastAPI service, analyze/AI endpoints, schema endpoints, `docs/api/` | ⬜ Next |
+| 11 | Backtesting | Event-driven replay, fills/costs, equity + reports, seeded determinism | ⬜ |
+| 12 | Examples, polish, performance | `examples/`, benchmarks, docs completion, DX polish, PostgreSQL/Redis store adapters | ⬜ |
+| 13 | Release hardening | Packaging to PyPI, Docker images, security review, v1.0 schema freeze | ⬜ |
 
 ## Principles governing the roadmap
 
