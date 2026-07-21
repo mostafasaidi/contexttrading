@@ -17,7 +17,9 @@ Definitions (all deterministic; no sampling):
   timeframe seconds — i.e. bars per year, assuming continuous trading.
 - ``calmar`` = annualized_return / max_drawdown_pct, with
   annualized_return = (eq_final / eq_initial) ** (annualization / n) - 1
-  (n = number of bar returns); None when max drawdown is 0 or n == 0.
+  (n = number of bar returns, computed in log space); None when max
+  drawdown is 0, n == 0, or the annualization exponent overflows
+  (tiny-sample extrapolation absurdity).
 - ``exposure_pct`` = fraction of bars with an open position.
 - ``statistics_reliable`` = total_trades >= config.min_trades.
 """
@@ -118,8 +120,14 @@ def compute_statistics(
     if returns and curve[0].equity > 0 and drawdown.max_drawdown_pct > 0:
         growth = curve[-1].equity / curve[0].equity
         if growth > 0:
-            annualized_return = growth ** (ann / len(returns)) - 1.0
-            calmar = annualized_return / drawdown.max_drawdown_pct
+            try:
+                annualized_return = math.expm1(math.log(growth) * ann / len(returns))
+            except OverflowError:
+                # Absurd extrapolation (tiny sample, huge per-bar compounding)
+                # — Calmar is undefined rather than infinite.
+                annualized_return = None
+            if annualized_return is not None:
+                calmar = annualized_return / drawdown.max_drawdown_pct
 
     exposure = sum(1 for point in curve if point.in_position) / len(curve) if curve else 0.0
     return BacktestStatistics(
