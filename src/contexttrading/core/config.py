@@ -393,6 +393,24 @@ class AIConfig(BaseModel):
     timeout_seconds: float = Field(default=30.0, gt=0)
 
 
+class VisualizationConfig(BaseModel):
+    """Chart payload configuration (theme and layer visibility)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    theme: Literal["dark", "light"] = Field(
+        default="dark", description="Color palette for the chart payload."
+    )
+    hidden_layers: list[str] = Field(
+        default_factory=list,
+        description="Layer names rendered but hidden by default (overrides defaults).",
+    )
+    shown_layers: list[str] = Field(
+        default_factory=list,
+        description="Layer names force-visible even when hidden by default.",
+    )
+
+
 class LoggingConfig(BaseModel):
     """Structured logging configuration."""
 
@@ -419,6 +437,7 @@ class Settings(BaseSettings):
     storage: StorageConfig = Field(default_factory=StorageConfig)
     ai: AIConfig = Field(default_factory=AIConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
+    visualization: VisualizationConfig = Field(default_factory=VisualizationConfig)
 
     @classmethod
     def from_file(cls, path: str | Path, **overrides: Any) -> Settings:

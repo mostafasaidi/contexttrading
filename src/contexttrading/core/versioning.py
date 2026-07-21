@@ -33,6 +33,9 @@ SCHEMA_VERSION_MTF: str = "1.0.0"
 # Phase-7 model schema versions.
 SCHEMA_VERSION_CONFLUENCE: str = "1.0.0"
 
+# Phase-7b/8 model schema versions (visualization).
+SCHEMA_VERSION_VISUALIZATION: str = "1.0.0"
+
 #: Registry of all current schema versions, keyed by logical model name.
 CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "AnalysisResult": SCHEMA_VERSION_ENVELOPE,
@@ -70,6 +73,17 @@ CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "FactorContribution": SCHEMA_VERSION_CONFLUENCE,
     "ConfluenceZone": SCHEMA_VERSION_CONFLUENCE,
     "ConfluenceResult": SCHEMA_VERSION_CONFLUENCE,
+    "PriceLine": SCHEMA_VERSION_VISUALIZATION,
+    "Box": SCHEMA_VERSION_VISUALIZATION,
+    "Marker": SCHEMA_VERSION_VISUALIZATION,
+    "Label": SCHEMA_VERSION_VISUALIZATION,
+    "Segment": SCHEMA_VERSION_VISUALIZATION,
+    "AreaBand": SCHEMA_VERSION_VISUALIZATION,
+    "ChartCandle": SCHEMA_VERSION_VISUALIZATION,
+    "VolumeBar": SCHEMA_VERSION_VISUALIZATION,
+    "LayerPayload": SCHEMA_VERSION_VISUALIZATION,
+    "ChartTheme": SCHEMA_VERSION_VISUALIZATION,
+    "ChartPayload": SCHEMA_VERSION_VISUALIZATION,
 }
 
 
