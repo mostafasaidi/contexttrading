@@ -1,6 +1,6 @@
 # ContextTrading — Build State (pause checkpoint)
 
-> Saved 2026-07-20 ~23:46. Resume point for the next session.
+> Saved 2026-07-21 (end of Phase 6). Resume point for the next session.
 > This file tracks the autonomous build driven by MASTER PROMPTS 01–04.
 > Delete or archive when the project reaches production-ready status.
 
@@ -27,13 +27,13 @@
 | 3. Market structure engine (swings, BOS/CHoCH, trend, liquidity, EQH/EQL, premium/discount, indicators) | ✅ DONE |
 | 4. FVG engine (detection, nested/stacked, inverse, mitigation lifecycle, strength ranking) | ✅ DONE |
 | 5. Order block engine (OB, breaker, mitigation blocks, supply/demand, validation) | ✅ DONE |
-| 6. Session engine (Sydney, Tokyo, London, NY, kill zones) + MTF context | ⬅️ NEXT |
-| 7. Visualization engine (TradingView Lightweight Charts objects/rendering) | pending |
-| 8. AI layer (context builder, narrative, trade eval, risk, journal, reports, prompts) | pending |
-| 9. REST API (FastAPI, OpenAPI, auth, endpoints, streaming) | pending |
+| 6. Session engine (Sydney, Tokyo, London, NY, kill zones, Judas swings) + MTF context | ✅ DONE |
+| 7. Confluence engine (weighted deterministic scoring, signal composition) | ⬅️ NEXT |
+| 8. Visualization & storage (Plotly renderer, Lightweight-Charts payloads, result store) | pending |
+| 9. AI layer & API (context builder, narrative, trade eval, FastAPI service) | pending |
 | 10. Backtesting (replay, statistics, metrics, optimization) | pending |
-| 11. Full test suite hardening (unit/integration/regression/performance/edge) | pending |
-| 12. Final docs, examples, tutorials, CI verification | pending |
+| 11. Examples, polish, performance (examples/, benchmarks, docs completion) | pending |
+| 12. Release hardening (PyPI, Docker, security review, v1.0 schema freeze) | pending |
 
 ## Build mechanics (how to resume)
 
@@ -41,10 +41,10 @@
 - Each run: implement one phase → full unit/property/golden/integration tests → ruff + black clean → logical conventional commits.
 - TodoList mirrors the 12 phases (Phase 6 = in_progress).
 
-## Current verified state (end of Phase 5)
+## Current verified state (end of Phase 6)
 
-- **419 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD, 12 byte-exact regression goldens in `tests/regression/goldens/` — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 23 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
-- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests.
+- **485 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD/resampling, 16 byte-exact regression goldens in `tests/regression/goldens/` — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 32 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
+- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests · Phase 6: `82ff12e` session engine · `2a0591b` resampling + MTF context · `94cd231` tests.
 
 ## Phase 5 decisions (for Phase 6+ reuse)
 
@@ -55,6 +55,16 @@
 - SD zones: OB-derived (over the active/refined zone) + RBD/DBR pattern zones at reversal swings (base = 1..`sd_max_base_candles` small-body candles ending AT the swing; departure = impulse leg >= `sd_departure_atr_multiple` x ATR; actionable at leg end + external lookback, else skipped). Duplicate = overlap/min(heights) >= 0.8 vs an OB zone.
 - SD lifecycle is its own enum (`SDZoneStatus` FRESH/TESTED/MITIGATED/BROKEN) — unlike blocks, MITIGATED is terminal there; BROKEN (close-through) beats MITIGATED on the same candle.
 - External swings with lookback L need index >= L (fixtures must place the first swing at index >= external lookback).
+
+## Phase 6 decisions (for Phase 7+ reuse)
+
+- `analyze_sessions(series, engine_config=None, session_config=None)` deviates from the strict one-config contract deliberately: session windows live in `SessionConfig`, which now ships documented UTC defaults — sessions sydney 21:00-06:00, tokyo 00:00-09:00, london 07:00-16:00, new_york 12:00-21:00; killzones london 07:00-10:00, new_york_am 12:00-15:00, london_close 15:00-17:00, new_york_pm 18:00-20:00 (validated like `sessions`).
+- Midnight-wrapping windows belong to the date of their START bar (in `default_timezone`). Overlapping windows are tracked independently; day-extreme counts can exceed the day count. Killzones get stats but no pools and are excluded from day-extreme counts.
+- Asian range per day D = candles inside sydney/tokyo windows in `[london_open(D)-12h, london_open(D))`; synthesized as group `"asia"`. Session/asia pools activate at instance end + 1; PDH/PDL pools activate with the new day's first candle. All feed the standard `scan_sweeps` — no parallel lifecycle.
+- Judas rules: `asia` level swept during the london killzone, or `london` level swept during `new_york_am`/`new_york_pm` → `SessionSweep` linked to the underlying `LiquiditySweep`. PDH/PDL sweeps are NOT Judas events.
+- Resampling anchors: epoch floor up to 1d; 1w = Monday 00:00 UTC (epoch day 4); 1M = calendar month start (real calendar, never the 30-day constant). OHLCV = first/max/min/last/sum; empty buckets emit no bar; only the LAST bar may carry `is_closed=False` (dropped when `mtf_include_incomplete_bar=False`). Upsampling (target <= source) → `DataError`. `CandleSeries.resample()` now delegates to `analysis.mtf.resample` via lazy import (old NotImplementedError stub removed; its two contract tests rewritten).
+- MTF: contexts = base (rank 0) + ascending HTFs, weight = `mtf_tf_weight_base ** rank` (default 2.0 → 1, 2, 4, 8). Bias = weighted majority (ties → RANGING); strength STRONG only when >= 2 contexts and all known agree; MODERATE at share >= `mtf_moderate_share` (2/3); UNKNOWN contexts dilute the share. `htf_influence` = weighted share of HTFs opposing the base-TF trend. recommended_execution_timeframe = base TF iff it agrees with the bias, else None. Resampled series too short for structure → UNKNOWN context, never an exception.
+- MTFBias/TimeframeContext are plain VersionedModels (computed summaries, not detected objects); SessionStats/SessionSweep are AnalysisObjects with content-hash IDs (`sess_`, `ssweep_`).
 
 ## Conventions Phase 4+ MUST follow (established in Phases 1–3)
 
@@ -67,13 +77,14 @@
 - Docs per module in `docs/modules/`: Purpose/Responsibilities/Inputs/Outputs/Dependencies/Examples/Testing/Limitations; update `docs/roadmap.md`.
 - Note: `PoolStatus` includes `BROKEN` (deviation from MP02 list, deliberate); MTF context moved to Phase 6 with sessions.
 
-## Phase 6 brief (ready to hand to the coder subagent)
+## Phase 7 brief (ready to hand to the coder subagent)
 
-Session engine + MTF context under `src/contexttrading/analysis/sessions/`:
-- `SessionConfig` already exists (timezone-validated windows; `SessionName` enum in constants). Session windows are wall-clock — keep determinism by deriving everything from candle timestamps only (UTC-aware), never `now()`.
-- Session high/low pools: `LiquidityPoolKind` already has SESSION_HIGH/SESSION_LOW/PREVIOUS_DAY_HIGH/PREVIOUS_DAY_LOW slots — feed them into the existing pool/sweep machinery rather than building a parallel lifecycle.
-- MTF context: resample `CandleSeries` to higher timeframes deterministically (aggregate, no lookahead), run `StructureScanner` per timeframe, align trends; the engine already supports any series.
-- Follow established patterns: chronological lifecycle, content-hash IDs, schema slots + export, unit/property/golden/integration tests, docs in `docs/modules/sessions.md`.
+Confluence engine under `src/contexttrading/analysis/confluence/`:
+- Deterministic weighted scoring across existing module outputs: run the engine modules (structure/trend, liquidity, dealing range, FVG, order blocks, supply/demand, sessions, MTF) over one series and compose per-setup confluence scores — no new detection logic, only composition of existing versioned outputs.
+- `ConfluenceConfig`/weights as `EngineConfig` fields with defaults + docstrings; factor contributions must be individually explainable (each score lists its factors and their weighted contributions — the AI layer in Phase 9 will narrate them verbatim).
+- Alignment inputs: MTF bias direction, premium/discount location, sweep/Judas events, unmitigated zones near current price, session context (killzone active, day-extreme stats).
+- Follow established patterns: `AnalysisResult[T]` envelope, schema slots + export, unit/property/golden/integration tests, docs in `docs/modules/confluence.md`.
+- Also candidate: signal composition (setup types like sweep-into-OB-in-discount aligned with MTF bias) as structured, deterministic objects with VisualStyle presets for the Phase-8 renderer.
 
 ## User preferences observed
 

@@ -40,7 +40,8 @@ LLM in front of.
 | Order blocks | ✅ Phase 5 | Displacement-anchored OBs, breaker blocks, mitigation blocks, refinement |
 | Supply/demand | ✅ Phase 5 | RBD/DBR zones, OB-derived zones, dedupe, deterministic strength |
 | Premium/discount | ✅ Phase 3 | Dealing range, equilibrium, OTE zone, price location |
-| Sessions & MTF | 🔜 Phase 6 | Killzones, multi-timeframe trend |
+| Sessions | ✅ Phase 6 | Configurable windows + killzones, session high/low/PDH/PDL pools, Judas swings, day-extreme stats |
+| MTF context | ✅ Phase 6 | Deterministic resampling (epoch/Monday/month anchors), weighted multi-timeframe bias |
 | Confluence | 🔜 Phase 7 | Weighted, deterministic confluence scoring |
 | Visualization | 🔜 Phase 8 | Plotly + TradingView Lightweight Charts styles |
 | AI narrative | 🔜 Phase 9 | Explain-only AI layer over versioned JSON |

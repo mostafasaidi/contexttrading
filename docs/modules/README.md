@@ -17,5 +17,6 @@ notes, determinism notes, and migration history.
 | analysis.fvg | [fvg.md](fvg.md) | 4 ✅ |
 | analysis.orderblocks | [orderblocks.md](orderblocks.md) | 5 ✅ |
 | analysis.supplydemand | [supplydemand.md](supplydemand.md) | 5 ✅ |
-| analysis.sessions | _planned_ | 6 |
+| analysis.sessions | [sessions.md](sessions.md) | 6 ✅ |
+| analysis.mtf | [mtf.md](mtf.md) | 6 ✅ |
 | analysis.confluence | _planned_ | 7 |
