@@ -87,6 +87,21 @@ class ChartResponse(VersionedModel):
     )
 
 
+class BacktestRequest(VersionedModel):
+    """Backtest request: candles + strategy + config overrides."""
+
+    SCHEMA_VERSION: ClassVar[str] = SCHEMA_VERSION_API
+
+    series: CandlesInput
+    strategy: str = Field(
+        default="smc_pullback", description="Registered strategy name (see routes/backtest)."
+    )
+    engine_overrides: dict[str, Any] = Field(default_factory=dict)
+    backtest_overrides: dict[str, Any] = Field(default_factory=dict)
+    strategy_params: dict[str, Any] = Field(default_factory=dict)
+    mtf_timeframes: list[str] = Field(default_factory=lambda: ["1h", "4h"])
+
+
 class TradeEvaluationRequest(VersionedModel):
     """AI trade-evaluation request."""
 

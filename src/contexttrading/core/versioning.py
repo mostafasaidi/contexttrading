@@ -118,6 +118,7 @@ CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "FullAnalysisResponse": SCHEMA_VERSION_API,
     "ChartRequest": SCHEMA_VERSION_API,
     "ChartResponse": SCHEMA_VERSION_API,
+    "BacktestRequest": SCHEMA_VERSION_API,
     "TradeEvaluationRequest": SCHEMA_VERSION_API,
     "JournalReviewRequest": SCHEMA_VERSION_API,
     "WeeklyReviewRequest": SCHEMA_VERSION_API,

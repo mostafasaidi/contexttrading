@@ -57,6 +57,7 @@ _TAGS = [
     {"name": "ai", "description": "Evidence-bound AI analyst reports."},
     {"name": "results", "description": "Persisted result retrieval."},
     {"name": "stream", "description": "Progressive NDJSON analysis stream."},
+    {"name": "backtest", "description": "Deterministic no-lookahead backtesting."},
     {"name": "meta", "description": "Health and readiness."},
 ]
 
@@ -181,7 +182,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             and not request.app.state.settings.api.allow_anonymous,
         }
 
-    from contexttrading.api.routes import ai, analysis, charts, results, stream
+    from contexttrading.api.routes import ai, analysis, backtest, charts, results, stream
 
     error_responses: dict[int | str, Any] = {
         status: {"model": ErrorEnvelope, "description": description}
@@ -196,6 +197,6 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             (504, "AI provider timeout (CT-5xxx)"),
         )
     }
-    for module in (analysis, charts, ai, results, stream):
+    for module in (analysis, charts, ai, results, stream, backtest):
         app.include_router(module.router, responses=error_responses)
     return app

@@ -30,6 +30,7 @@ from contexttrading.ai.context import (
 )
 from contexttrading.api.models import (
     AnalysisRequest,
+    BacktestRequest,
     CandlesInput,
     ChartRequest,
     ChartResponse,
@@ -197,6 +198,7 @@ EXPORTED_MODELS: tuple[type[BaseModel], ...] = (
     WeeklyReviewRequest,
     StoredResultResponse,
     ErrorEnvelope,
+    BacktestRequest,
     OrderIntent,
     TradeRecord,
     EquityPoint,
