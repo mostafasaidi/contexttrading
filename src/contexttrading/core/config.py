@@ -122,6 +122,80 @@ class EngineConfig(BaseModel):
         default=0.10, ge=0, le=1, description="Strength weight: nested/stacked bonus."
     )
 
+    # -- order blocks ---------------------------------------------------------------
+    ob_max_lookback: int = Field(
+        default=30,
+        ge=1,
+        description="Max candles searched back from a break for the OB candle "
+        "(used when no opposite external swing bounds the search).",
+    )
+    ob_refine_atr_multiple: float = Field(
+        default=2.0,
+        gt=0,
+        description="OB candle range (in ATRs) above which a refined zone is emitted.",
+    )
+    ob_refine_wick_fraction: float = Field(
+        default=0.5,
+        gt=0,
+        le=1,
+        description="Refined zone = this extreme fraction of the OB range "
+        "(bullish: lowest part; bearish: highest).",
+    )
+    breaker_confirm_lookback: int = Field(
+        default=20,
+        ge=1,
+        description="Candles after an OB violation within which a confirming "
+        "counter-direction break must occur to emit a breaker block.",
+    )
+
+    # -- supply / demand ---------------------------------------------------------------
+    sd_base_body_atr_fraction: float = Field(
+        default=0.5,
+        ge=0,
+        description="Max candle body (in ATRs) for a candle to count as base.",
+    )
+    sd_max_base_candles: int = Field(
+        default=3, ge=1, description="Max consecutive candles in a supply/demand base."
+    )
+    sd_departure_atr_multiple: float = Field(
+        default=1.5,
+        gt=0,
+        description="Minimum departure-leg magnitude (in ATRs) for a valid zone.",
+    )
+    sd_departure_atr_cap: float = Field(
+        default=3.0,
+        gt=0,
+        description="Departure ATR-multiple at which the departure score saturates.",
+    )
+    sd_duplicate_overlap_fraction: float = Field(
+        default=0.8,
+        gt=0,
+        le=1,
+        description="Zone overlap (intersection / smaller zone height) at which a "
+        "pattern zone is marked duplicate of an order block.",
+    )
+    sd_strength_half_life: int = Field(
+        default=50, ge=1, description="Candles for the age-decay half-life in scoring."
+    )
+    sd_weight_departure: float = Field(
+        default=0.30, ge=0, le=1, description="Strength weight: departure magnitude."
+    )
+    sd_weight_tightness: float = Field(
+        default=0.20, ge=0, le=1, description="Strength weight: base tightness."
+    )
+    sd_weight_freshness: float = Field(
+        default=0.20, ge=0, le=1, description="Strength weight: zone freshness."
+    )
+    sd_weight_tests: float = Field(
+        default=0.10, ge=0, le=1, description="Strength weight: per-test decay."
+    )
+    sd_weight_trend: float = Field(
+        default=0.10, ge=0, le=1, description="Strength weight: external-trend alignment."
+    )
+    sd_weight_age: float = Field(
+        default=0.10, ge=0, le=1, description="Strength weight: age decay."
+    )
+
     # -- trend / market phase -----------------------------------------------------------
     phase_lookback: int = Field(
         default=20, ge=2, description="Bars inspected for market-phase heuristics."

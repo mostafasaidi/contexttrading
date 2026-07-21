@@ -347,3 +347,28 @@ class PriceLocation(StrEnum):
     PREMIUM = "premium"
     DISCOUNT = "discount"
     EQUILIBRIUM = "equilibrium"
+
+
+# ---------------------------------------------------------------------------
+# Phase 5: order blocks & supply/demand
+# ---------------------------------------------------------------------------
+
+
+class BlockOrigin(StrEnum):
+    """Whether a block anchors a trend-continuation leg or a reversal."""
+
+    CONTINUATION = "continuation"
+    REVERSAL = "reversal"
+
+
+class SDZoneStatus(StrEnum):
+    """Lifecycle of a supply/demand zone.
+
+    ``FRESH`` → ``TESTED`` (re-entered, not broken) → terminal ``MITIGATED``
+    (traded through the base) or ``BROKEN`` (closed through the base).
+    """
+
+    FRESH = "fresh"
+    TESTED = "tested"
+    MITIGATED = "mitigated"
+    BROKEN = "broken"

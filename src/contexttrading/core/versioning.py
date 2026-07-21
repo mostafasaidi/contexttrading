@@ -22,6 +22,10 @@ SCHEMA_VERSION_RANGE: str = "1.0.0"
 # Phase-4 model schema versions.
 SCHEMA_VERSION_FVG: str = "1.0.0"
 
+# Phase-5 model schema versions.
+SCHEMA_VERSION_ORDERBLOCK: str = "1.0.0"
+SCHEMA_VERSION_SUPPLYDEMAND: str = "1.0.0"
+
 #: Registry of all current schema versions, keyed by logical model name.
 CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "AnalysisResult": SCHEMA_VERSION_ENVELOPE,
@@ -44,6 +48,12 @@ CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "DealingRangeResult": SCHEMA_VERSION_RANGE,
     "FVG": SCHEMA_VERSION_FVG,
     "FVGResult": SCHEMA_VERSION_FVG,
+    "OrderBlock": SCHEMA_VERSION_ORDERBLOCK,
+    "BreakerBlock": SCHEMA_VERSION_ORDERBLOCK,
+    "MitigationBlock": SCHEMA_VERSION_ORDERBLOCK,
+    "OrderBlockResult": SCHEMA_VERSION_ORDERBLOCK,
+    "SupplyDemandZone": SCHEMA_VERSION_SUPPLYDEMAND,
+    "SupplyDemandResult": SCHEMA_VERSION_SUPPLYDEMAND,
 }
 
 
