@@ -20,9 +20,11 @@ def ramp_records(count: int = 40, start: float = 100.0, step: float = 1.0) -> li
     for i in range(count):
         records.append(
             {
-                "timestamp": f"2024-01-01T00:{i % 60:02d}:00Z"
-                if i < 60
-                else f"2024-01-01T{i // 60:02d}:{i % 60:02d}:00Z",
+                "timestamp": (
+                    f"2024-01-01T00:{i % 60:02d}:00Z"
+                    if i < 60
+                    else f"2024-01-01T{i // 60:02d}:{i % 60:02d}:00Z"
+                ),
                 "open": price,
                 "high": price + step,
                 "low": price - 0.5 * step,

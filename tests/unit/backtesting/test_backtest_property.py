@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import pytest
-from hypothesis import given, settings as hyp_settings
+from hypothesis import given
+from hypothesis import settings as hyp_settings
 from hypothesis import strategies as st
 
 from contexttrading.backtesting.replay import run_backtest
@@ -85,8 +86,8 @@ def test_backtest_invariants(steps, entry_bar, sl_offset) -> None:
         if trade.exit_reason == "stop_loss":
             assert trade.exit_price <= trade.stop_loss
         # MAE/MFE bounds and consistency.
-        assert 0.0 <= trade.mae_price
-        assert 0.0 <= trade.mfe_price
+        assert trade.mae_price >= 0.0
+        assert trade.mfe_price >= 0.0
         assert trade.holding_bars == trade.exit_index - trade.entry_index
 
     stats = result.statistics

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import ClassVar
+
 import pytest
 
 from contexttrading.backtesting.optimize import _combos, grid_search, walk_forward
@@ -37,12 +39,12 @@ class TestCombos:
             _combos({"strategy.a": []})
 
     def test_bad_prefix_rejected(self) -> None:
-        with pytest.raises(BacktestError, match="engine./backtest./strategy"):
+        with pytest.raises(BacktestError, match=r"engine\./backtest\./strategy"):
             _combos({"nope.a": [1]})
 
 
 class TestGridSearch:
-    SPACE = {"strategy.enter_bar": [5, 10], "strategy.tp_r": [1.0, 2.0]}
+    SPACE: ClassVar = {"strategy.enter_bar": [5, 10], "strategy.tp_r": [1.0, 2.0]}
 
     def test_leaderboard_ranked_by_objective(self, ramp_series) -> None:
         result = grid_search(ramp_series, factory, self.SPACE, backtest_config=FREE)
@@ -64,9 +66,7 @@ class TestGridSearch:
         # sharpe needs >= 2 non-flat returns; a single EOD-closed trade keeps
         # equity flat until the last bar -> zero-variance returns -> None
         space = {"strategy.enter_bar": [5, 30]}
-        result = grid_search(
-            ramp_series, factory, space, objective="sharpe", backtest_config=FREE
-        )
+        result = grid_search(ramp_series, factory, space, objective="sharpe", backtest_config=FREE)
         assert result.leaderboard[-1].objective_value is None or all(
             e.objective_value is not None for e in result.leaderboard
         )
@@ -90,9 +90,7 @@ class TestGridSearch:
 
     def test_unknown_engine_field_rejected(self, ramp_series) -> None:
         with pytest.raises(ValidationError):
-            grid_search(
-                ramp_series, factory, {"engine.not_a_field": [1]}, backtest_config=FREE
-            )
+            grid_search(ramp_series, factory, {"engine.not_a_field": [1]}, backtest_config=FREE)
 
 
 class TestWalkForward:

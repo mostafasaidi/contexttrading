@@ -2,15 +2,16 @@
 
 from __future__ import annotations
 
+import itertools
+
 import pytest
 
 from contexttrading.backtesting.replay import run_backtest
 from contexttrading.core.config import BacktestConfig
 from contexttrading.core.errors import BacktestError
 from contexttrading.models.backtest import OrderIntent
-from contexttrading.models.candle import CandleSeries
 from tests.fixtures import engine_config
-from tests.unit.backtesting.conftest import ScriptStrategy, ramp_records
+from tests.unit.backtesting.conftest import ScriptStrategy
 
 
 def buy(sl: float, tp: float | None = None, **kw) -> OrderIntent:
@@ -74,7 +75,11 @@ class TestEndOfData:
 
     def test_eod_close_disabled_leaves_trade_unrecorded(self, ramp_series) -> None:
         cfg = BacktestConfig(
-            warmup_bars=2, min_trades=1, spread_bps=0, slippage_bps=0, commission_bps=0,
+            warmup_bars=2,
+            min_trades=1,
+            spread_bps=0,
+            slippage_bps=0,
+            commission_bps=0,
             eod_close=False,
         )
         strategy = ScriptStrategy({3: [buy(sl=95.0, tp=10_000.0)]})
@@ -101,7 +106,7 @@ class TestWarmupAndRecompute:
         seen = strategy.results_seen
         # recompute at bars 10, 15, 20, ... : results object changes only there;
         # the first call already sees recompute #1, so transitions = recomputes - 1
-        changes = sum(1 for prev, curr in zip(seen, seen[1:]) if prev is not curr)
+        changes = sum(1 for prev, curr in itertools.pairwise(seen) if prev is not curr)
         expected = len(range(10, len(ramp_series.candles), 5)) - 1
         assert changes == expected
         # the recompute at bar 10 covers exactly bars 0..10
@@ -135,8 +140,11 @@ class TestValidation:
         class Bad(ScriptStrategy):
             def on_bar(self, bar_index, series, results, position, equity):
                 if bar_index == 3:
-                    return [OrderIntent(kind="market", direction="bullish",
-                                        stop_loss=90.0, created_index=1)]
+                    return [
+                        OrderIntent(
+                            kind="market", direction="bullish", stop_loss=90.0, created_index=1
+                        )
+                    ]
                 return []
 
         with pytest.raises(BacktestError, match="decision bar"):

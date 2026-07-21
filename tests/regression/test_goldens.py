@@ -223,9 +223,7 @@ class TestBacktestGoldens:
             five_day_15m_series(),
             SMCPullbackStrategy(),
             engine_config(),
-            BacktestConfig(
-                warmup_bars=30, min_trades=1, recompute_interval=4, window_bars=240
-            ),
+            BacktestConfig(warmup_bars=30, min_trades=1, recompute_interval=4, window_bars=240),
         )
         _assert_golden("backtest_smc_five_day.json", result.model_dump_json())
 

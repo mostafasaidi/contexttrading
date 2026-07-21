@@ -68,9 +68,7 @@ class TestNoLookaheadByConstruction:
             p.model_dump(mode="json") for p in truncated_curve
         ]
 
-        full_trades = {
-            t.entry_index: t.model_dump(mode="json") for t in result.trades
-        }
+        full_trades = {t.entry_index: t.model_dump(mode="json") for t in result.trades}
         for trade in truncated.trades:
             if trade.exit_reason == "end_of_data" and trade.exit_index == TRUNCATE_AT - 1:
                 continue  # sanctioned: the full run had not exited yet at T
@@ -91,9 +89,11 @@ class TestEvidence:
             # The strategy saw the results of the latest RECOMPUTE point at
             # or before the decision bar (recompute_interval staleness is a
             # documented replay feature), so evidence must resolve there.
-            recompute_bar = CONFIG.warmup_bars + (
-                (decision_bar - CONFIG.warmup_bars) // CONFIG.recompute_interval
-            ) * CONFIG.recompute_interval
+            recompute_bar = (
+                CONFIG.warmup_bars
+                + ((decision_bar - CONFIG.warmup_bars) // CONFIG.recompute_interval)
+                * CONFIG.recompute_interval
+            )
             start = max(0, recompute_bar + 1 - CONFIG.window_bars)
             window = dataset[start : recompute_bar + 1]
             blob = ""
@@ -112,9 +112,7 @@ class TestSanity:
         assert stats.total_trades == len(result.trades)
         assert stats.total_trades >= 1
         final = result.equity_curve[-1]
-        assert final.closed_equity == pytest.approx(
-            CONFIG.initial_equity + stats.net_pnl, rel=1e-9
-        )
+        assert final.closed_equity == pytest.approx(CONFIG.initial_equity + stats.net_pnl, rel=1e-9)
         for trade in result.trades:
             # a position can be stopped on its own fill bar (holding_bars == 0)
             assert trade.exit_index >= trade.entry_index
