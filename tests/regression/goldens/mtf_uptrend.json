@@ -1,0 +1,235 @@
+{
+  "engine_version": "0.1.0",
+  "generated_from": {
+    "candle_count": 209,
+    "end": "2024-01-03T04:00:00Z",
+    "schema_version": "1.0.0",
+    "start": "2024-01-01T00:00:00Z"
+  },
+  "module": "mtf",
+  "payload": {
+    "base_timeframe": "15m",
+    "bias": {
+      "agreement_share": 0.42857142857142855,
+      "conflict_notes": [],
+      "direction": "bullish",
+      "htf_influence": 0.0,
+      "recommended_execution_timeframe": "15m",
+      "schema_version": "1.0.0",
+      "strength": "weak"
+    },
+    "contexts": [
+      {
+        "candle_count": 209,
+        "dealing_range": {
+          "direction": "bullish",
+          "discount_style": {
+            "color": "#22ab94",
+            "fill": true,
+            "layer": "range.discount",
+            "line_style": "solid",
+            "line_width": 1.0,
+            "opacity": 0.15,
+            "priority": 2,
+            "render_type": "box",
+            "schema_version": "1.0.0",
+            "tooltip": "discount zone",
+            "visible": true
+          },
+          "equilibrium": 22.0,
+          "equilibrium_style": {
+            "color": "#787b86",
+            "fill": false,
+            "layer": "range.equilibrium",
+            "line_style": "dashed",
+            "line_width": 1.0,
+            "opacity": 1.0,
+            "priority": 3,
+            "render_type": "line",
+            "schema_version": "1.0.0",
+            "tooltip": "equilibrium (50%)",
+            "visible": true
+          },
+          "high": 24.05,
+          "high_swing_id": "swing_227440bf2aa765c447994a43",
+          "low": 19.95,
+          "low_swing_id": "swing_4a1677cd88f0eaa4e6d5f2de",
+          "ote_fibs": [
+            0.62,
+            0.79
+          ],
+          "ote_high": 21.508,
+          "ote_low": 20.811,
+          "ote_style": {
+            "color": "#ff9800",
+            "fill": true,
+            "layer": "range.ote",
+            "line_style": "solid",
+            "line_width": 1.0,
+            "opacity": 0.15,
+            "priority": 2,
+            "render_type": "box",
+            "schema_version": "1.0.0",
+            "tooltip": "optimal trade entry",
+            "visible": true
+          },
+          "premium_style": {
+            "color": "#f23645",
+            "fill": true,
+            "layer": "range.premium",
+            "line_style": "solid",
+            "line_width": 1.0,
+            "opacity": 0.15,
+            "priority": 2,
+            "render_type": "box",
+            "schema_version": "1.0.0",
+            "tooltip": "premium zone",
+            "visible": true
+          },
+          "price_location": "discount",
+          "reference_price": 21.0,
+          "schema_version": "1.0.0"
+        },
+        "direction": "bullish",
+        "schema_version": "1.0.0",
+        "timeframe": "15m",
+        "trend": {
+          "bos_follow_through": 1.0,
+          "confidence_basis": [
+            "hh_hl_sequence",
+            "strong_bos:10/10",
+            "impulse_correction_ratio:1.14",
+            "leg_overlap:1.00"
+          ],
+          "direction": "bullish",
+          "external_trend": "bullish",
+          "impulse_correction_ratio": 1.139202322398491,
+          "internal_trend": "bullish",
+          "market_phase": "distribution",
+          "schema_version": "1.0.0",
+          "strength": "moderate"
+        },
+        "weight": 1.0
+      },
+      {
+        "candle_count": 53,
+        "dealing_range": {
+          "direction": "bullish",
+          "discount_style": {
+            "color": "#22ab94",
+            "fill": true,
+            "layer": "range.discount",
+            "line_style": "solid",
+            "line_width": 1.0,
+            "opacity": 0.15,
+            "priority": 2,
+            "render_type": "box",
+            "schema_version": "1.0.0",
+            "tooltip": "discount zone",
+            "visible": true
+          },
+          "equilibrium": 22.0,
+          "equilibrium_style": {
+            "color": "#787b86",
+            "fill": false,
+            "layer": "range.equilibrium",
+            "line_style": "dashed",
+            "line_width": 1.0,
+            "opacity": 1.0,
+            "priority": 3,
+            "render_type": "line",
+            "schema_version": "1.0.0",
+            "tooltip": "equilibrium (50%)",
+            "visible": true
+          },
+          "high": 24.05,
+          "high_swing_id": "swing_13b03fc270f221371c65e517",
+          "low": 19.95,
+          "low_swing_id": "swing_5c6a3f789c9250daa594ae05",
+          "ote_fibs": [
+            0.62,
+            0.79
+          ],
+          "ote_high": 21.508,
+          "ote_low": 20.811,
+          "ote_style": {
+            "color": "#ff9800",
+            "fill": true,
+            "layer": "range.ote",
+            "line_style": "solid",
+            "line_width": 1.0,
+            "opacity": 0.15,
+            "priority": 2,
+            "render_type": "box",
+            "schema_version": "1.0.0",
+            "tooltip": "optimal trade entry",
+            "visible": true
+          },
+          "premium_style": {
+            "color": "#f23645",
+            "fill": true,
+            "layer": "range.premium",
+            "line_style": "solid",
+            "line_width": 1.0,
+            "opacity": 0.15,
+            "priority": 2,
+            "render_type": "box",
+            "schema_version": "1.0.0",
+            "tooltip": "premium zone",
+            "visible": true
+          },
+          "price_location": "discount",
+          "reference_price": 21.0,
+          "schema_version": "1.0.0"
+        },
+        "direction": "bullish",
+        "schema_version": "1.0.0",
+        "timeframe": "1h",
+        "trend": {
+          "bos_follow_through": 1.0,
+          "confidence_basis": [
+            "hh_hl_sequence",
+            "strong_bos:10/10",
+            "impulse_correction_ratio:1.60",
+            "recent_bos_in_trend:4"
+          ],
+          "direction": "bullish",
+          "external_trend": "bullish",
+          "impulse_correction_ratio": 1.6043894072625673,
+          "internal_trend": "bullish",
+          "market_phase": "expansion",
+          "schema_version": "1.0.0",
+          "strength": "strong"
+        },
+        "weight": 2.0
+      },
+      {
+        "candle_count": 14,
+        "dealing_range": null,
+        "direction": "unknown",
+        "schema_version": "1.0.0",
+        "timeframe": "4h",
+        "trend": {
+          "bos_follow_through": null,
+          "confidence_basis": [
+            "sequence_undetermined",
+            "no_trend_no_expansion"
+          ],
+          "direction": "unknown",
+          "external_trend": "unknown",
+          "impulse_correction_ratio": null,
+          "internal_trend": "unknown",
+          "market_phase": "consolidation",
+          "schema_version": "1.0.0",
+          "strength": "moderate"
+        },
+        "weight": 4.0
+      }
+    ],
+    "schema_version": "1.0.0"
+  },
+  "run_id": null,
+  "schema_version": "1.0.0",
+  "symbol": "UP",
+  "timeframe": "15m"
+}

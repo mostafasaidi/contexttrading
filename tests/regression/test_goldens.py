@@ -16,17 +16,24 @@ import pytest
 
 from contexttrading.analysis.fvg import analyze_fvg
 from contexttrading.analysis.liquidity import analyze_liquidity
+from contexttrading.analysis.mtf import analyze_mtf
 from contexttrading.analysis.orderblocks import analyze_orderblocks
 from contexttrading.analysis.premium_discount import analyze_dealing_range
+from contexttrading.analysis.sessions import analyze_sessions
 from contexttrading.analysis.structure import analyze_structure, analyze_trend
 from contexttrading.analysis.supplydemand import analyze_supplydemand
+from contexttrading.core.config import SessionConfig
 from tests.fixtures import (
+    MTF_UPTREND_PIVOTS,
     downtrend_series,
     engine_config,
     fakeout_records,
+    five_day_15m_series,
+    judas_15m_series,
     to_series,
     uptrend_series,
     v_reversal_series,
+    zigzag_series,
 )
 from tests.fvg_fixtures import inversion_series, nested_fvg_records
 from tests.ob_fixtures import mb_sweep_records, rbd_records
@@ -108,3 +115,25 @@ class TestSupplyDemandGoldens:
     def test_rbd_supply_zone(self) -> None:
         result = analyze_supplydemand(to_series(rbd_records(), symbol="RBD"), engine_config())
         _assert_golden("supplydemand_rbd.json", result.model_dump_json())
+
+
+class TestSessionGoldens:
+    def test_five_day_sessions(self) -> None:
+        result = analyze_sessions(five_day_15m_series(), engine_config(), SessionConfig())
+        _assert_golden("sessions_five_day.json", result.model_dump_json())
+
+    def test_judas_sessions(self) -> None:
+        result = analyze_sessions(judas_15m_series(), engine_config(), SessionConfig())
+        _assert_golden("sessions_judas.json", result.model_dump_json())
+
+
+class TestMtfGoldens:
+    def test_aligned_uptrend_mtf(self) -> None:
+        config = engine_config(internal_swing_lookback=1, external_swing_lookback=2)
+        series = zigzag_series(MTF_UPTREND_PIVOTS, leg_bars=16, symbol="UP", bar_minutes=15)
+        result = analyze_mtf(series, ["1h", "4h"], config)
+        _assert_golden("mtf_uptrend.json", result.model_dump_json())
+
+    def test_five_day_mtf(self) -> None:
+        result = analyze_mtf(five_day_15m_series(), ["1h", "4h", "1d"], engine_config())
+        _assert_golden("mtf_five_day.json", result.model_dump_json())

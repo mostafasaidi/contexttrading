@@ -17,16 +17,22 @@ from contexttrading.analysis.structure.structure import StructureScanner
 from contexttrading.analysis.structure.trend import TrendEngine
 from contexttrading.core.config import EngineConfig
 from contexttrading.core.constants import Timeframe, TrendDirection, TrendStrength
-from contexttrading.core.errors import DataError
+from contexttrading.core.errors import DataError, InsufficientDataError
 from contexttrading.models.candle import CandleSeries
 from contexttrading.models.mtf import MTFBias, MTFResult, TimeframeContext
 from contexttrading.models.outputs import AnalysisResult, DataWindow
 
 
 def _context_for(series: CandleSeries, rank: int, config: EngineConfig) -> TimeframeContext:
-    """Structure/trend/range snapshot of one (already correct-TF) series."""
+    """Structure/trend/range snapshot of one (already correct-TF) series.
+
+    A resampled series too short for structure analysis yields an UNKNOWN
+    context (no trend, no range) instead of failing the whole MTF pass.
+    """
     weight = config.mtf_tf_weight_base**rank
-    if len(series) < config.min_candles:
+    try:
+        scan = StructureScanner(config).run(series)
+    except InsufficientDataError:
         return TimeframeContext(
             timeframe=series.timeframe,
             trend=None,
@@ -35,7 +41,6 @@ def _context_for(series: CandleSeries, rank: int, config: EngineConfig) -> Timef
             weight=weight,
             candle_count=len(series),
         )
-    scan = StructureScanner(config).run(series)
     trend = TrendEngine(config).evaluate(series, scan)
     dealing_range = analyze_dealing_range(series, config).payload.dealing_range
     return TimeframeContext(

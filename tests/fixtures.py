@@ -6,6 +6,7 @@ unit and regression tests assert exact engine behavior.
 
 from __future__ import annotations
 
+import math
 from datetime import UTC, datetime, timedelta
 from itertools import pairwise
 from typing import Any
@@ -48,12 +49,14 @@ def zigzag_records(
     leg_bars: int = 4,
     wick: float = 0.05,
     volume: float = 100.0,
+    bar_minutes: int = 1,
 ) -> list[dict[str, Any]]:
     """Linear zig-zag series through pivot closes.
 
     Pivot ``k`` sits at index ``k * leg_bars``; each leg is interpolated into
     ``leg_bars`` candles. Every bar gets ``+wick``/``-wick`` extremes, so
     pivot bars are strict local extremes for lookbacks <= ``leg_bars - 1``.
+    Bars are ``bar_minutes`` apart (default 1m).
     """
     closes = [pivots[0]]
     for a, b in pairwise(pivots):
@@ -69,7 +72,16 @@ def zigzag_records(
             h, lo = c + wick, o - wick * 0.2
         else:
             h, lo = o + wick * 0.2, c - wick
-        records.append(make_candle(i, o, h, lo, c, volume))
+        records.append(
+            {
+                "timestamp": (T0 + timedelta(minutes=i * bar_minutes)).isoformat(),
+                "open": o,
+                "high": h,
+                "low": lo,
+                "close": c,
+                "volume": volume,
+            }
+        )
     return records
 
 
@@ -79,10 +91,13 @@ def zigzag_series(
     wick: float = 0.05,
     symbol: str = "TEST",
     volume: float = 100.0,
+    bar_minutes: int = 1,
 ) -> CandleSeries:
     """CandleSeries variant of :func:`zigzag_records`."""
     return CandleSeries.from_records(
-        zigzag_records(pivots, leg_bars, wick, volume), symbol=symbol, timeframe="1m"
+        zigzag_records(pivots, leg_bars, wick, volume, bar_minutes),
+        symbol=symbol,
+        timeframe=f"{bar_minutes}m",
     )
 
 
@@ -149,3 +164,125 @@ def news_spike_series() -> CandleSeries:
     records = zigzag_records([10, 10.5, 10.2, 10.6, 10.4], leg_bars=4, volume=100.0)
     records[10] = make_candle(10, 10.5, 13.0, 10.0, 12.5, 5000.0)  # news spike
     return to_series(records, symbol="NEWS")
+
+
+# --- Phase 6: sessions / MTF fixtures (15-minute multi-day series) ------------
+
+M15_SECONDS = 15 * 60
+
+#: Clean 15m zigzag uptrend (leg_bars=16) used by MTF tests and goldens.
+MTF_UPTREND_PIVOTS: list[float] = [10, 14, 12, 16, 14, 18, 16, 20, 18, 22, 20, 24, 22, 21]
+
+
+def make_candle_15m(i: int, o: float, h: float, low: float, c: float, v: float = 100.0):
+    """One 15-minute candle record (index i from T0)."""
+    return {
+        "timestamp": (T0 + timedelta(minutes=15 * i)).isoformat(),
+        "open": o,
+        "high": h,
+        "low": low,
+        "close": c,
+        "volume": v,
+    }
+
+
+def five_day_15m_records() -> list[dict[str, Any]]:
+    """Five days of 15m candles (480 bars) with a deterministic wave path.
+
+    Composite of three sine drivers plus a slow drift — no randomness, so
+    session statistics and MTF context are golden-stable. T0 is a Monday.
+    """
+    records = []
+    price = 100.0
+    for i in range(5 * 96):
+        drift = 0.03 + 0.25 * math.sin(i / 9.0) + 0.18 * math.sin(i / 41.0)
+        o = price
+        c = price + drift
+        h = max(o, c) + 0.07 + 0.05 * abs(math.sin(i / 5.0))
+        low = min(o, c) - 0.07 - 0.05 * abs(math.cos(i / 7.0))
+        records.append(make_candle_15m(i, o, h, low, c, 100.0 + 20.0 * abs(math.sin(i / 3.0))))
+        price = c
+    return records
+
+
+def five_day_15m_series(symbol: str = "SESS") -> CandleSeries:
+    """CandleSeries variant of :func:`five_day_15m_records`."""
+    return CandleSeries.from_records(five_day_15m_records(), symbol=symbol, timeframe="15m")
+
+
+def judas_15m_records() -> list[dict[str, Any]]:
+    """Two days of 15m candles with a London-killzone sweep of the Asian high.
+
+    Day 2 Asian range (21:00 day 1 to 07:00 day 2) prints its high 104.6 at
+    02:00 (i=104). At 07:15 (i=125) — inside the London killzone — a candle
+    wicks to 105.2 and closes at 104.2: a sweep of the Asian high during
+    the London killzone, i.e. a Judas swing. London then sells off.
+    """
+    records: list[dict[str, Any]] = []
+    # Day 1 (i 0..95): gentle drift 99.5 -> ~101.4, all below 101.6.
+    price = 99.5
+    for i in range(96):
+        o = price
+        c = price + (0.03 if i % 3 else -0.01)
+        records.append(make_candle_15m(i, o, max(o, c) + 0.05, min(o, c) - 0.05, c))
+        price = c
+    # Day 2 Asian range (i 96..123): oscillate inside 103.5-104.5.
+    path = [
+        103.8,
+        103.6,
+        103.7,
+        103.9,
+        104.2,
+        104.4,
+        104.1,
+        103.9,
+        103.7,
+        103.8,
+        104.0,
+        104.3,
+        104.4,
+        104.2,
+        104.0,
+        103.8,
+        103.6,
+        103.7,
+        103.9,
+        104.1,
+        104.3,
+        104.4,
+        104.2,
+        104.0,
+        103.9,
+        103.8,
+        104.0,
+        104.2,
+    ]
+    for k, close in enumerate(path):
+        i = 96 + k
+        o = path[k - 1] if k else 103.8
+        h = max(o, close) + 0.1
+        low = min(o, close) - 0.1
+        if i == 104:  # 02:00 — Asian high prints here (unique extreme)
+            h = 104.6
+        records.append(make_candle_15m(i, o, h, low, close))
+    # London (i 124..159): sweep at 07:15, then sell off to ~102.6.
+    records.append(make_candle_15m(124, 104.2, 104.3, 103.9, 104.0))
+    records.append(make_candle_15m(125, 104.0, 105.2, 103.9, 104.2))  # Judas sweep
+    price = 104.2
+    for i in range(126, 160):
+        o = price
+        c = price - 0.05
+        records.append(make_candle_15m(i, o, max(o, c) + 0.04, min(o, c) - 0.04, c))
+        price = c
+    # New York (i 160..191): sideways drift, stays below the London high.
+    for i in range(160, 192):
+        o = price
+        c = price + (0.02 if i % 2 else -0.02)
+        records.append(make_candle_15m(i, o, max(o, c) + 0.04, min(o, c) - 0.04, c))
+        price = c
+    return records
+
+
+def judas_15m_series(symbol: str = "JUDAS") -> CandleSeries:
+    """CandleSeries variant of :func:`judas_15m_records`."""
+    return CandleSeries.from_records(judas_15m_records(), symbol=symbol, timeframe="15m")
