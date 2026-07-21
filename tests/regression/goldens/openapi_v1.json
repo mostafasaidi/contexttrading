@@ -1,0 +1,1775 @@
+{
+  "components": {
+    "schemas": {
+      "AIReportResult": {
+        "additionalProperties": false,
+        "description": "Envelope for AI-layer reports (AnalysisResult-style).\n\nUnlike the engine envelope, the subject may be a journal/performance\nperiod rather than a market series, so ``generated_from`` is optional\nand ``subject`` carries \"SYMBOL/timeframe\" or \"journal:PERIOD\".",
+        "properties": {
+          "engine_version": {
+            "default": "0.1.0",
+            "description": "contexttrading version that produced this.",
+            "title": "Engine Version",
+            "type": "string"
+          },
+          "generated_from": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/DataWindow"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Market data window when the subject is a series."
+          },
+          "module": {
+            "description": "e.g. 'ai.market_analysis'.",
+            "minLength": 1,
+            "title": "Module",
+            "type": "string"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/VersionedModel"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "subject": {
+            "description": "'SYMBOL/timeframe' or 'journal:period'.",
+            "minLength": 1,
+            "title": "Subject",
+            "type": "string"
+          }
+        },
+        "required": [
+          "module",
+          "subject",
+          "payload"
+        ],
+        "title": "AIReportResult",
+        "type": "object"
+      },
+      "AnalysisRequest": {
+        "additionalProperties": false,
+        "description": "Single-module or full-stack analysis request.",
+        "properties": {
+          "config_overrides": {
+            "additionalProperties": true,
+            "description": "Subset of EngineConfig fields; unknown keys are rejected (422).",
+            "title": "Config Overrides",
+            "type": "object"
+          },
+          "mtf_timeframes": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "HTF ladder for mtf/full-stack runs (default ['1h', '4h']).",
+            "title": "Mtf Timeframes"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "series": {
+            "$ref": "#/components/schemas/CandlesInput"
+          }
+        },
+        "required": [
+          "series"
+        ],
+        "title": "AnalysisRequest",
+        "type": "object"
+      },
+      "AnalysisResult": {
+        "additionalProperties": false,
+        "description": "Envelope wrapping every module's payload.\n\nConsumers must check both ``schema_version`` (envelope/payload contract)\nand ``engine_version`` (computation semantics) before interpreting the\npayload.",
+        "properties": {
+          "engine_version": {
+            "default": "0.1.0",
+            "description": "contexttrading version that produced this.",
+            "title": "Engine Version",
+            "type": "string"
+          },
+          "generated_from": {
+            "$ref": "#/components/schemas/DataWindow",
+            "description": "Exact input data window."
+          },
+          "module": {
+            "description": "Producing module, e.g. 'fvg'.",
+            "minLength": 1,
+            "title": "Module",
+            "type": "string"
+          },
+          "payload": {
+            "$ref": "#/components/schemas/VersionedModel",
+            "description": "Module-specific versioned payload."
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Optional run-scoped bookkeeping ID (metadata only; not part of analytical equality).",
+            "title": "Run Id"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "symbol": {
+            "description": "Instrument symbol.",
+            "minLength": 1,
+            "title": "Symbol",
+            "type": "string"
+          },
+          "timeframe": {
+            "$ref": "#/components/schemas/Timeframe",
+            "description": "Analysis timeframe."
+          }
+        },
+        "required": [
+          "module",
+          "symbol",
+          "timeframe",
+          "generated_from",
+          "payload"
+        ],
+        "title": "AnalysisResult",
+        "type": "object"
+      },
+      "CandlesInput": {
+        "additionalProperties": false,
+        "description": "Posted candle series (CandleSeries-compatible records).",
+        "properties": {
+          "candles": {
+            "description": "OHLCV records: timestamp/open/high/low/close/volume.",
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "minItems": 1,
+            "title": "Candles",
+            "type": "array"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "symbol": {
+            "minLength": 1,
+            "title": "Symbol",
+            "type": "string"
+          },
+          "timeframe": {
+            "description": "Timeframe code, e.g. '15m'.",
+            "minLength": 1,
+            "title": "Timeframe",
+            "type": "string"
+          },
+          "timezone_name": {
+            "default": "UTC",
+            "description": "Original feed timezone label.",
+            "title": "Timezone Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "timeframe",
+          "candles"
+        ],
+        "title": "CandlesInput",
+        "type": "object"
+      },
+      "ChartRequest": {
+        "additionalProperties": false,
+        "description": "Chart payload request.",
+        "properties": {
+          "config_overrides": {
+            "additionalProperties": true,
+            "title": "Config Overrides",
+            "type": "object"
+          },
+          "hidden_layers": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Hidden Layers",
+            "type": "array"
+          },
+          "persist": {
+            "default": false,
+            "description": "Store the payload in the ResultStore.",
+            "title": "Persist",
+            "type": "boolean"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "series": {
+            "$ref": "#/components/schemas/CandlesInput"
+          },
+          "shown_layers": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Shown Layers",
+            "type": "array"
+          },
+          "theme": {
+            "anyOf": [
+              {
+                "enum": [
+                  "dark",
+                  "light"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Theme"
+          }
+        },
+        "required": [
+          "series"
+        ],
+        "title": "ChartRequest",
+        "type": "object"
+      },
+      "ChartResponse": {
+        "additionalProperties": false,
+        "description": "Chart payload + optional store key.",
+        "properties": {
+          "chart": {
+            "$ref": "#/components/schemas/AnalysisResult"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "series_hash": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Store key component when persist=true.",
+            "title": "Series Hash"
+          }
+        },
+        "required": [
+          "chart"
+        ],
+        "title": "ChartResponse",
+        "type": "object"
+      },
+      "DataWindow": {
+        "additionalProperties": false,
+        "description": "The exact input-data window an analysis was generated from.\n\nTimestamps always derive from candle data (never wall-clock) per the\ndeterminism contract.",
+        "properties": {
+          "candle_count": {
+            "description": "Number of input candles.",
+            "minimum": 0.0,
+            "title": "Candle Count",
+            "type": "integer"
+          },
+          "end": {
+            "description": "Last input candle timestamp (UTC).",
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "start": {
+            "description": "First input candle timestamp (UTC).",
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "candle_count"
+        ],
+        "title": "DataWindow",
+        "type": "object"
+      },
+      "ErrorDetail": {
+        "additionalProperties": false,
+        "description": "Structured error payload inside :class:`ErrorEnvelope`.",
+        "properties": {
+          "code": {
+            "description": "CT-xxxx taxonomy code.",
+            "title": "Code",
+            "type": "string"
+          },
+          "context": {
+            "additionalProperties": true,
+            "title": "Context",
+            "type": "object"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "request_id": {
+            "title": "Request Id",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "message",
+          "request_id"
+        ],
+        "title": "ErrorDetail",
+        "type": "object"
+      },
+      "ErrorEnvelope": {
+        "additionalProperties": false,
+        "description": "The consistent error body returned by every failure path.",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorDetail"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "title": "ErrorEnvelope",
+        "type": "object"
+      },
+      "FullAnalysisResponse": {
+        "additionalProperties": false,
+        "description": "Full-stack response: module name -> versioned AnalysisResult JSON.",
+        "properties": {
+          "results": {
+            "additionalProperties": true,
+            "title": "Results",
+            "type": "object"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "results"
+        ],
+        "title": "FullAnalysisResponse",
+        "type": "object"
+      },
+      "JournalReviewRequest": {
+        "additionalProperties": false,
+        "description": "AI journal-review request.",
+        "properties": {
+          "period": {
+            "default": "",
+            "title": "Period",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trades": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "minItems": 1,
+            "title": "Trades",
+            "type": "array"
+          }
+        },
+        "required": [
+          "trades"
+        ],
+        "title": "JournalReviewRequest",
+        "type": "object"
+      },
+      "StoredResultResponse": {
+        "additionalProperties": false,
+        "description": "A persisted result with its full store key.",
+        "properties": {
+          "module": {
+            "title": "Module",
+            "type": "string"
+          },
+          "result": {
+            "additionalProperties": true,
+            "title": "Result",
+            "type": "object"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "series_hash": {
+            "title": "Series Hash",
+            "type": "string"
+          },
+          "symbol": {
+            "title": "Symbol",
+            "type": "string"
+          },
+          "timeframe": {
+            "title": "Timeframe",
+            "type": "string"
+          }
+        },
+        "required": [
+          "symbol",
+          "timeframe",
+          "module",
+          "series_hash",
+          "result"
+        ],
+        "title": "StoredResultResponse",
+        "type": "object"
+      },
+      "Timeframe": {
+        "description": "Supported candle timeframes.\n\nValues are the canonical string codes (``\"1m\"`` \u2026 ``\"1M\"``). Ordering is\nby duration: ``M1 < M5 < H1 < D1 < W1 < MN1``.",
+        "enum": [
+          "1m",
+          "3m",
+          "5m",
+          "15m",
+          "30m",
+          "1h",
+          "2h",
+          "4h",
+          "6h",
+          "8h",
+          "12h",
+          "1d",
+          "1w",
+          "1M"
+        ],
+        "title": "Timeframe",
+        "type": "string"
+      },
+      "TradeEvaluationRequest": {
+        "additionalProperties": false,
+        "description": "AI trade-evaluation request.",
+        "properties": {
+          "config_overrides": {
+            "additionalProperties": true,
+            "title": "Config Overrides",
+            "type": "object"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "series": {
+            "$ref": "#/components/schemas/CandlesInput"
+          },
+          "setup": {
+            "$ref": "#/components/schemas/TradeSetup"
+          }
+        },
+        "required": [
+          "series",
+          "setup"
+        ],
+        "title": "TradeEvaluationRequest",
+        "type": "object"
+      },
+      "TradeSetup": {
+        "additionalProperties": false,
+        "description": "Caller-supplied proposed trade (input to trade evaluation).",
+        "properties": {
+          "direction": {
+            "enum": [
+              "long",
+              "short"
+            ],
+            "title": "Direction",
+            "type": "string"
+          },
+          "entry_price": {
+            "exclusiveMinimum": 0.0,
+            "title": "Entry Price",
+            "type": "number"
+          },
+          "rationale": {
+            "default": "",
+            "maxLength": 2000,
+            "title": "Rationale",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "stop_loss": {
+            "exclusiveMinimum": 0.0,
+            "title": "Stop Loss",
+            "type": "number"
+          },
+          "take_profits": {
+            "items": {
+              "type": "number"
+            },
+            "minItems": 1,
+            "title": "Take Profits",
+            "type": "array"
+          }
+        },
+        "required": [
+          "direction",
+          "entry_price",
+          "stop_loss",
+          "take_profits"
+        ],
+        "title": "TradeSetup",
+        "type": "object"
+      },
+      "VersionedModel": {
+        "additionalProperties": false,
+        "description": "Base for all versioned, serializable models.\n\nSubclasses set ``SCHEMA_VERSION``; the ``schema_version`` field defaults\nto it and rejects mismatched values, so payloads can never silently drift\nfrom the class that validates them.",
+        "properties": {
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "title": "VersionedModel",
+        "type": "object"
+      },
+      "WeeklyReviewRequest": {
+        "additionalProperties": false,
+        "description": "AI weekly/monthly performance-review request.",
+        "properties": {
+          "period": {
+            "minLength": 1,
+            "title": "Period",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "statistics": {
+            "additionalProperties": true,
+            "minProperties": 1,
+            "title": "Statistics",
+            "type": "object"
+          },
+          "trades": {
+            "anyOf": [
+              {
+                "items": {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Trades"
+          }
+        },
+        "required": [
+          "statistics",
+          "period"
+        ],
+        "title": "WeeklyReviewRequest",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Deterministic SMC analysis engine, chart payloads, and the evidence-bound AI analyst. Every response is versioned JSON; every error is an ErrorEnvelope with a CT-xxxx code.",
+    "title": "ContextTrading",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/healthz": {
+      "get": {
+        "operationId": "healthz_healthz_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "title": "Response Healthz Healthz Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Healthz",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/readyz": {
+      "get": {
+        "operationId": "readyz_readyz_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Readyz Readyz Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Readyz",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/v1/ai/journal-review": {
+      "post": {
+        "description": "Review journal trades (statistics computed server-side, in Python).",
+        "operationId": "journal_review_v1_ai_journal_review_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JournalReviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIReportResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Malformed data (CT-1xxx)"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key (CT-7001)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unknown module or stored result (CT-1000/CT-7003)"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request exceeds the candle cap (CT-7002)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Validation or insufficient data (CT-2xxx/CT-3001)"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Engine, configuration, or unexpected failure"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider failure (CT-5xxx)"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider timeout (CT-5xxx)"
+          }
+        },
+        "summary": "Journal Review",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/v1/ai/market-analysis": {
+      "post": {
+        "description": "Full MP03 market analysis over the posted candles.",
+        "operationId": "market_analysis_v1_ai_market_analysis_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIReportResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Malformed data (CT-1xxx)"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key (CT-7001)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unknown module or stored result (CT-1000/CT-7003)"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request exceeds the candle cap (CT-7002)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Validation or insufficient data (CT-2xxx/CT-3001)"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Engine, configuration, or unexpected failure"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider failure (CT-5xxx)"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider timeout (CT-5xxx)"
+          }
+        },
+        "summary": "Market Analysis",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/v1/ai/trade-evaluation": {
+      "post": {
+        "description": "Evaluate a proposed setup against the engine context.",
+        "operationId": "trade_evaluation_v1_ai_trade_evaluation_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TradeEvaluationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIReportResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Malformed data (CT-1xxx)"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key (CT-7001)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unknown module or stored result (CT-1000/CT-7003)"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request exceeds the candle cap (CT-7002)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Validation or insufficient data (CT-2xxx/CT-3001)"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Engine, configuration, or unexpected failure"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider failure (CT-5xxx)"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider timeout (CT-5xxx)"
+          }
+        },
+        "summary": "Trade Evaluation",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/v1/ai/weekly-review": {
+      "post": {
+        "description": "Interpret provided period statistics.",
+        "operationId": "weekly_review_v1_ai_weekly_review_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WeeklyReviewRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AIReportResult"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Malformed data (CT-1xxx)"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key (CT-7001)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unknown module or stored result (CT-1000/CT-7003)"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request exceeds the candle cap (CT-7002)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Validation or insufficient data (CT-2xxx/CT-3001)"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Engine, configuration, or unexpected failure"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider failure (CT-5xxx)"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider timeout (CT-5xxx)"
+          }
+        },
+        "summary": "Weekly Review",
+        "tags": [
+          "ai"
+        ]
+      }
+    },
+    "/v1/analysis/full": {
+      "post": {
+        "description": "Run every engine module over the posted candles (fixed module order).",
+        "operationId": "run_full_v1_analysis_full_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FullAnalysisResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Malformed data (CT-1xxx)"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key (CT-7001)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unknown module or stored result (CT-1000/CT-7003)"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request exceeds the candle cap (CT-7002)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Validation or insufficient data (CT-2xxx/CT-3001)"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Engine, configuration, or unexpected failure"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider failure (CT-5xxx)"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider timeout (CT-5xxx)"
+          }
+        },
+        "summary": "Run Full",
+        "tags": [
+          "analysis"
+        ]
+      }
+    },
+    "/v1/analysis/{module}": {
+      "post": {
+        "description": "Run one engine module over the posted candles.",
+        "operationId": "run_single_v1_analysis__module__post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "module",
+            "required": true,
+            "schema": {
+              "title": "Module",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Malformed data (CT-1xxx)"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key (CT-7001)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unknown module or stored result (CT-1000/CT-7003)"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request exceeds the candle cap (CT-7002)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Validation or insufficient data (CT-2xxx/CT-3001)"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Engine, configuration, or unexpected failure"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider failure (CT-5xxx)"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider timeout (CT-5xxx)"
+          }
+        },
+        "summary": "Run Single",
+        "tags": [
+          "analysis"
+        ]
+      }
+    },
+    "/v1/charts/payload": {
+      "post": {
+        "description": "Candles -> full-stack -> renderer-ready chart payload.",
+        "operationId": "chart_payload_v1_charts_payload_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChartResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Malformed data (CT-1xxx)"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key (CT-7001)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unknown module or stored result (CT-1000/CT-7003)"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request exceeds the candle cap (CT-7002)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Validation or insufficient data (CT-2xxx/CT-3001)"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Engine, configuration, or unexpected failure"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider failure (CT-5xxx)"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider timeout (CT-5xxx)"
+          }
+        },
+        "summary": "Chart Payload",
+        "tags": [
+          "charts"
+        ]
+      }
+    },
+    "/v1/results/{symbol}/{timeframe}/{module}": {
+      "get": {
+        "description": "Fetch a persisted result by its full store key (404 when absent).\n\nSchema-version compatibility is enforced by the store\n(``SchemaVersionError`` -> 422 envelope on incompatible rows).",
+        "operationId": "get_result_v1_results__symbol___timeframe___module__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "required": true,
+            "schema": {
+              "title": "Symbol",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "timeframe",
+            "required": true,
+            "schema": {
+              "title": "Timeframe",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "module",
+            "required": true,
+            "schema": {
+              "title": "Module",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "series_hash",
+            "required": true,
+            "schema": {
+              "maxLength": 64,
+              "minLength": 8,
+              "title": "Series Hash",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StoredResultResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Malformed data (CT-1xxx)"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key (CT-7001)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unknown module or stored result (CT-1000/CT-7003)"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request exceeds the candle cap (CT-7002)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Validation or insufficient data (CT-2xxx/CT-3001)"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Engine, configuration, or unexpected failure"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider failure (CT-5xxx)"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider timeout (CT-5xxx)"
+          }
+        },
+        "summary": "Get Result",
+        "tags": [
+          "results"
+        ]
+      }
+    },
+    "/v1/stream/analysis": {
+      "post": {
+        "description": "Stream per-module results as each engine completes (NDJSON).",
+        "operationId": "stream_analysis_v1_stream_analysis_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Malformed data (CT-1xxx)"
+          },
+          "401": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Missing or invalid API key (CT-7001)"
+          },
+          "404": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Unknown module or stored result (CT-1000/CT-7003)"
+          },
+          "413": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Request exceeds the candle cap (CT-7002)"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Validation or insufficient data (CT-2xxx/CT-3001)"
+          },
+          "500": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "Engine, configuration, or unexpected failure"
+          },
+          "502": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider failure (CT-5xxx)"
+          },
+          "504": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorEnvelope"
+                }
+              }
+            },
+            "description": "AI provider timeout (CT-5xxx)"
+          }
+        },
+        "summary": "Stream Analysis",
+        "tags": [
+          "stream"
+        ]
+      }
+    }
+  },
+  "tags": [
+    {
+      "description": "Engine modules, single or full stack.",
+      "name": "analysis"
+    },
+    {
+      "description": "Renderer-ready chart payloads.",
+      "name": "charts"
+    },
+    {
+      "description": "Evidence-bound AI analyst reports.",
+      "name": "ai"
+    },
+    {
+      "description": "Persisted result retrieval.",
+      "name": "results"
+    },
+    {
+      "description": "Progressive NDJSON analysis stream.",
+      "name": "stream"
+    },
+    {
+      "description": "Health and readiness.",
+      "name": "meta"
+    }
+  ]
+}

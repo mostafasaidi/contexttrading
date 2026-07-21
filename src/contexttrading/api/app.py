@@ -183,6 +183,19 @@ def create_app(settings: Settings | None = None) -> FastAPI:
 
     from contexttrading.api.routes import ai, analysis, charts, results, stream
 
+    error_responses: dict[int | str, Any] = {
+        status: {"model": ErrorEnvelope, "description": description}
+        for status, description in (
+            (400, "Malformed data (CT-1xxx)"),
+            (401, "Missing or invalid API key (CT-7001)"),
+            (404, "Unknown module or stored result (CT-1000/CT-7003)"),
+            (413, "Request exceeds the candle cap (CT-7002)"),
+            (422, "Validation or insufficient data (CT-2xxx/CT-3001)"),
+            (500, "Engine, configuration, or unexpected failure"),
+            (502, "AI provider failure (CT-5xxx)"),
+            (504, "AI provider timeout (CT-5xxx)"),
+        )
+    }
     for module in (analysis, charts, ai, results, stream):
-        app.include_router(module.router)
+        app.include_router(module.router, responses=error_responses)
     return app

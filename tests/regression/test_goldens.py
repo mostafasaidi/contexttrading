@@ -191,3 +191,24 @@ class TestAiGoldens:
         results = full_stack_results(series, engine_config())
         report = InstitutionalAnalyst(MockProvider()).analyze_market(series, results)
         _assert_golden("ai_report_five_day.json", report.model_dump_json())
+
+
+class TestApiGoldens:
+    def test_openapi_snapshot(self, tmp_path) -> None:
+        import json as _json
+
+        from fastapi.testclient import TestClient
+
+        from contexttrading.api.app import create_app
+        from contexttrading.core.config import Settings
+
+        settings = Settings(
+            engine=engine_config(),
+            storage={"backend": "sqlite", "url": f"sqlite:///{tmp_path}/r.db"},
+            api={"auth_enabled": True, "api_keys": ["golden"]},
+            ai={"provider": "mock"},
+            _env_file=None,
+        )
+        with TestClient(create_app(settings)) as client:
+            spec = client.get("/openapi.json").json()
+        _assert_golden("openapi_v1.json", _json.dumps(spec))
