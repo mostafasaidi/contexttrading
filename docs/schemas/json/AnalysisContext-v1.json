@@ -1,0 +1,305 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "DataQualityFlags": {
+        "additionalProperties": false,
+        "description": "Deterministic data-quality assessment of the context inputs.",
+        "properties": {
+          "flags": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Flags",
+            "type": "array"
+          },
+          "level": {
+            "enum": [
+              "good",
+              "fair",
+              "poor"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "level"
+        ],
+        "title": "DataQualityFlags",
+        "type": "object"
+      },
+      "DataWindow": {
+        "additionalProperties": false,
+        "description": "The exact input-data window an analysis was generated from.\n\nTimestamps always derive from candle data (never wall-clock) per the\ndeterminism contract.",
+        "properties": {
+          "candle_count": {
+            "description": "Number of input candles.",
+            "minimum": 0,
+            "title": "Candle Count",
+            "type": "integer"
+          },
+          "end": {
+            "description": "Last input candle timestamp (UTC).",
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "start": {
+            "description": "First input candle timestamp (UTC).",
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "candle_count"
+        ],
+        "title": "DataWindow",
+        "type": "object"
+      },
+      "EvidenceEntry": {
+        "additionalProperties": false,
+        "description": "One citable object: id -> compact digest of engine-computed fields.",
+        "properties": {
+          "digest": {
+            "additionalProperties": true,
+            "title": "Digest",
+            "type": "object"
+          },
+          "id": {
+            "minLength": 1,
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "description": "Object type, e.g. 'swing', 'pool', 'factor'.",
+            "minLength": 1,
+            "title": "Kind",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind"
+        ],
+        "title": "EvidenceEntry",
+        "type": "object"
+      },
+      "TruncationEntry": {
+        "additionalProperties": false,
+        "description": "Record of one truncated category (transparency for the AI).",
+        "properties": {
+          "category": {
+            "title": "Category",
+            "type": "string"
+          },
+          "keep_rule": {
+            "minLength": 1,
+            "title": "Keep Rule",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "shown": {
+            "minimum": 0,
+            "title": "Shown",
+            "type": "integer"
+          },
+          "total": {
+            "minimum": 0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "category",
+          "shown",
+          "total",
+          "keep_rule"
+        ],
+        "title": "TruncationEntry",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Complete, compact engine state handed to the analyst LLM.",
+    "properties": {
+      "atr": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Atr"
+      },
+      "confluence": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Confluence"
+      },
+      "current_price": {
+        "exclusiveMinimum": 0,
+        "title": "Current Price",
+        "type": "number"
+      },
+      "data_quality": {
+        "$ref": "#/$defs/DataQualityFlags"
+      },
+      "evidence_index": {
+        "additionalProperties": {
+          "$ref": "#/$defs/EvidenceEntry"
+        },
+        "title": "Evidence Index",
+        "type": "object"
+      },
+      "generated_from": {
+        "$ref": "#/$defs/DataWindow"
+      },
+      "liquidity": {
+        "additionalProperties": true,
+        "title": "Liquidity",
+        "type": "object"
+      },
+      "mtf": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Mtf"
+      },
+      "premium_discount": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Premium Discount"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "sessions": {
+        "additionalProperties": true,
+        "title": "Sessions",
+        "type": "object"
+      },
+      "setup": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Proposed trade setup (trade evaluation only).",
+        "title": "Setup"
+      },
+      "structure": {
+        "additionalProperties": true,
+        "title": "Structure",
+        "type": "object"
+      },
+      "symbol": {
+        "title": "Symbol",
+        "type": "string"
+      },
+      "timeframe": {
+        "title": "Timeframe",
+        "type": "string"
+      },
+      "trend": {
+        "anyOf": [
+          {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Trend"
+      },
+      "truncation": {
+        "items": {
+          "$ref": "#/$defs/TruncationEntry"
+        },
+        "title": "Truncation",
+        "type": "array"
+      },
+      "zones_nearby": {
+        "items": {
+          "additionalProperties": true,
+          "type": "object"
+        },
+        "title": "Zones Nearby",
+        "type": "array"
+      }
+    },
+    "required": [
+      "symbol",
+      "timeframe",
+      "generated_from",
+      "current_price",
+      "data_quality"
+    ],
+    "title": "AnalysisContext",
+    "type": "object"
+  },
+  "name": "AnalysisContext",
+  "schema_version": "1.0.0"
+}

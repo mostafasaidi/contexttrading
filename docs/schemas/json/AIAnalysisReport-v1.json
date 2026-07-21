@@ -1,0 +1,578 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "AlternativeScenario": {
+        "additionalProperties": false,
+        "description": "One plausible alternative path with its trigger.",
+        "properties": {
+          "probability": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Probability",
+            "type": "string"
+          },
+          "scenario": {
+            "$ref": "#/$defs/EvidenceStatement"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trigger": {
+            "$ref": "#/$defs/EvidenceStatement"
+          }
+        },
+        "required": [
+          "scenario",
+          "probability",
+          "trigger"
+        ],
+        "title": "AlternativeScenario",
+        "type": "object"
+      },
+      "ConfidenceScore": {
+        "additionalProperties": false,
+        "description": "Confidence with a mandatory evidence-based justification.",
+        "properties": {
+          "factor_ids": {
+            "description": "Confluence factor keys the score leans on.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Factor Ids",
+            "type": "array"
+          },
+          "justification": {
+            "$ref": "#/$defs/EvidenceStatement"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "score": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Score",
+            "type": "number"
+          }
+        },
+        "required": [
+          "score",
+          "justification"
+        ],
+        "title": "ConfidenceScore",
+        "type": "object"
+      },
+      "ConfluenceNote": {
+        "additionalProperties": false,
+        "description": "One confluence observation, bound to confluence-engine factor ids.",
+        "properties": {
+          "description": {
+            "$ref": "#/$defs/EvidenceStatement"
+          },
+          "direction": {
+            "$ref": "#/$defs/TrendDirection"
+          },
+          "factor_ids": {
+            "description": "'factor:NN:name' keys from the context.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Factor Ids",
+            "type": "array"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "zone_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "ConfluenceZone id when the note is zone-based.",
+            "title": "Zone Id"
+          }
+        },
+        "required": [
+          "description",
+          "direction"
+        ],
+        "title": "ConfluenceNote",
+        "type": "object"
+      },
+      "DataQualityDeclaration": {
+        "additionalProperties": false,
+        "description": "The AI's mandatory declaration of input-data limitations.",
+        "properties": {
+          "level": {
+            "enum": [
+              "good",
+              "fair",
+              "poor"
+            ],
+            "title": "Level",
+            "type": "string"
+          },
+          "limitations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Limitations",
+            "type": "array"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "level"
+        ],
+        "title": "DataQualityDeclaration",
+        "type": "object"
+      },
+      "EvidenceStatement": {
+        "additionalProperties": false,
+        "description": "A constrained text claim with its supporting engine-object ids.",
+        "properties": {
+          "evidence_ids": {
+            "description": "Ids into the context evidence_index backing this claim.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "text": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "text"
+        ],
+        "title": "EvidenceStatement",
+        "type": "object"
+      },
+      "MarketNarrative": {
+        "additionalProperties": false,
+        "description": "MP03 narrative sections — each one an evidence-bound statement.",
+        "properties": {
+          "accumulation_distribution": {
+            "$ref": "#/$defs/EvidenceStatement"
+          },
+          "control": {
+            "$ref": "#/$defs/EvidenceStatement",
+            "description": "Which side controls the market and why."
+          },
+          "expansion_correction": {
+            "$ref": "#/$defs/EvidenceStatement"
+          },
+          "liquidity_objectives": {
+            "$ref": "#/$defs/EvidenceStatement",
+            "description": "Where resting liquidity likely sits (untapped pools, equal levels)."
+          },
+          "momentum": {
+            "$ref": "#/$defs/EvidenceStatement"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "trend_health": {
+            "$ref": "#/$defs/EvidenceStatement"
+          }
+        },
+        "required": [
+          "control",
+          "liquidity_objectives",
+          "trend_health",
+          "momentum",
+          "accumulation_distribution",
+          "expansion_correction"
+        ],
+        "title": "MarketNarrative",
+        "type": "object"
+      },
+      "ReportProvenance": {
+        "additionalProperties": false,
+        "description": "How a report was produced — prompt, provider, and validation trail.",
+        "properties": {
+          "model": {
+            "default": "",
+            "title": "Model",
+            "type": "string"
+          },
+          "prompt_name": {
+            "minLength": 1,
+            "title": "Prompt Name",
+            "type": "string"
+          },
+          "prompt_sha256": {
+            "maxLength": 64,
+            "minLength": 64,
+            "title": "Prompt Sha256",
+            "type": "string"
+          },
+          "prompt_version": {
+            "minLength": 1,
+            "title": "Prompt Version",
+            "type": "string"
+          },
+          "provider": {
+            "minLength": 1,
+            "title": "Provider",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "validation_warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Validation Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "prompt_name",
+          "prompt_version",
+          "prompt_sha256",
+          "provider"
+        ],
+        "title": "ReportProvenance",
+        "type": "object"
+      },
+      "RiskAssessment": {
+        "additionalProperties": false,
+        "description": "MP03 risk block: categorized levels + sizing + capital preservation.",
+        "properties": {
+          "capital_preservation_notes": {
+            "$ref": "#/$defs/EvidenceStatement"
+          },
+          "liquidity_risk": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Liquidity Risk",
+            "type": "string"
+          },
+          "market_risk": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Market Risk",
+            "type": "string"
+          },
+          "news_risk": {
+            "description": "'high' only from input flags, never assumed.",
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "News Risk",
+            "type": "string"
+          },
+          "position_size_suggestion": {
+            "enum": [
+              "avoid",
+              "reduced",
+              "normal"
+            ],
+            "title": "Position Size Suggestion",
+            "type": "string"
+          },
+          "risk_rationale": {
+            "$ref": "#/$defs/EvidenceStatement"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "session_risk": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Session Risk",
+            "type": "string"
+          },
+          "trend_risk": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Trend Risk",
+            "type": "string"
+          },
+          "volatility_risk": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Volatility Risk",
+            "type": "string"
+          }
+        },
+        "required": [
+          "market_risk",
+          "liquidity_risk",
+          "volatility_risk",
+          "session_risk",
+          "news_risk",
+          "trend_risk",
+          "position_size_suggestion",
+          "risk_rationale",
+          "capital_preservation_notes"
+        ],
+        "title": "RiskAssessment",
+        "type": "object"
+      },
+      "TradeEvaluation": {
+        "additionalProperties": false,
+        "description": "MP03 trade evaluation — every judgment evidence-bound.",
+        "properties": {
+          "alternative_entries": {
+            "items": {
+              "$ref": "#/$defs/EvidenceStatement"
+            },
+            "title": "Alternative Entries",
+            "type": "array"
+          },
+          "confluence_alignment": {
+            "$ref": "#/$defs/EvidenceStatement"
+          },
+          "entry_quality": {
+            "enum": [
+              "poor",
+              "fair",
+              "good",
+              "excellent"
+            ],
+            "title": "Entry Quality",
+            "type": "string"
+          },
+          "invalidation": {
+            "$ref": "#/$defs/EvidenceStatement",
+            "description": "Conditions that void the setup, citing structure/liquidity objects."
+          },
+          "overall": {
+            "$ref": "#/$defs/EvidenceStatement"
+          },
+          "probability": {
+            "enum": [
+              "low",
+              "medium",
+              "high"
+            ],
+            "title": "Probability",
+            "type": "string"
+          },
+          "rr_assessment": {
+            "$ref": "#/$defs/EvidenceStatement",
+            "description": "Interpretation of the caller-provided reward/risk only — never recomputed."
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "stop_loss_quality": {
+            "enum": [
+              "poor",
+              "fair",
+              "good",
+              "excellent"
+            ],
+            "title": "Stop Loss Quality",
+            "type": "string"
+          },
+          "take_profit_quality": {
+            "enum": [
+              "poor",
+              "fair",
+              "good",
+              "excellent"
+            ],
+            "title": "Take Profit Quality",
+            "type": "string"
+          },
+          "timing": {
+            "$ref": "#/$defs/EvidenceStatement"
+          }
+        },
+        "required": [
+          "entry_quality",
+          "stop_loss_quality",
+          "take_profit_quality",
+          "rr_assessment",
+          "confluence_alignment",
+          "timing",
+          "probability",
+          "invalidation",
+          "overall"
+        ],
+        "title": "TradeEvaluation",
+        "type": "object"
+      },
+      "TrendDirection": {
+        "description": "Directional state of price, a candle, or a structure leg.",
+        "enum": [
+          "bullish",
+          "bearish",
+          "ranging",
+          "unknown"
+        ],
+        "title": "TrendDirection",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "description": "MP03 market-analysis report (all required sections).",
+    "properties": {
+      "action_items": {
+        "items": {
+          "$ref": "#/$defs/EvidenceStatement"
+        },
+        "title": "Action Items",
+        "type": "array"
+      },
+      "alternative_scenarios": {
+        "items": {
+          "$ref": "#/$defs/AlternativeScenario"
+        },
+        "title": "Alternative Scenarios",
+        "type": "array"
+      },
+      "bias": {
+        "$ref": "#/$defs/TrendDirection"
+      },
+      "bias_rationale": {
+        "$ref": "#/$defs/EvidenceStatement"
+      },
+      "confidence_score": {
+        "$ref": "#/$defs/ConfidenceScore"
+      },
+      "confluences": {
+        "items": {
+          "$ref": "#/$defs/ConfluenceNote"
+        },
+        "title": "Confluences",
+        "type": "array"
+      },
+      "data_quality": {
+        "$ref": "#/$defs/DataQualityDeclaration"
+      },
+      "evidence_citations": {
+        "description": "Flat union of every cited evidence id.",
+        "items": {
+          "type": "string"
+        },
+        "title": "Evidence Citations",
+        "type": "array"
+      },
+      "executive_summary": {
+        "$ref": "#/$defs/EvidenceStatement"
+      },
+      "market_narrative": {
+        "$ref": "#/$defs/MarketNarrative"
+      },
+      "provenance": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/ReportProvenance"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Filled by the analyst pipeline, not the provider."
+      },
+      "risk_assessment": {
+        "$ref": "#/$defs/RiskAssessment"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "trade_evaluation": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/TradeEvaluation"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      },
+      "weaknesses": {
+        "description": "Contradictory evidence and gaps in the bull/bear case.",
+        "items": {
+          "$ref": "#/$defs/EvidenceStatement"
+        },
+        "title": "Weaknesses",
+        "type": "array"
+      }
+    },
+    "required": [
+      "executive_summary",
+      "market_narrative",
+      "bias",
+      "bias_rationale",
+      "risk_assessment",
+      "confidence_score",
+      "data_quality"
+    ],
+    "title": "AIAnalysisReport",
+    "type": "object"
+  },
+  "name": "AIAnalysisReport",
+  "schema_version": "1.0.0"
+}

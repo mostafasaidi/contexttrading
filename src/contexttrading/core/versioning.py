@@ -36,6 +36,9 @@ SCHEMA_VERSION_CONFLUENCE: str = "1.0.0"
 # Phase-7b/8 model schema versions (visualization).
 SCHEMA_VERSION_VISUALIZATION: str = "1.0.0"
 
+#: AI layer (Phase 8): analysis context + structured AI reports.
+SCHEMA_VERSION_AI: str = "1.0.0"
+
 #: Registry of all current schema versions, keyed by logical model name.
 CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "AnalysisResult": SCHEMA_VERSION_ENVELOPE,
@@ -84,6 +87,26 @@ CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "LayerPayload": SCHEMA_VERSION_VISUALIZATION,
     "ChartTheme": SCHEMA_VERSION_VISUALIZATION,
     "ChartPayload": SCHEMA_VERSION_VISUALIZATION,
+    "EvidenceEntry": SCHEMA_VERSION_AI,
+    "TruncationEntry": SCHEMA_VERSION_AI,
+    "DataQualityFlags": SCHEMA_VERSION_AI,
+    "AnalysisContext": SCHEMA_VERSION_AI,
+    "JournalContext": SCHEMA_VERSION_AI,
+    "EvidenceStatement": SCHEMA_VERSION_AI,
+    "ReportProvenance": SCHEMA_VERSION_AI,
+    "DataQualityDeclaration": SCHEMA_VERSION_AI,
+    "MarketNarrative": SCHEMA_VERSION_AI,
+    "ConfluenceNote": SCHEMA_VERSION_AI,
+    "RiskAssessment": SCHEMA_VERSION_AI,
+    "TradeSetup": SCHEMA_VERSION_AI,
+    "TradeEvaluation": SCHEMA_VERSION_AI,
+    "AlternativeScenario": SCHEMA_VERSION_AI,
+    "ConfidenceScore": SCHEMA_VERSION_AI,
+    "DisciplineFlag": SCHEMA_VERSION_AI,
+    "AIAnalysisReport": SCHEMA_VERSION_AI,
+    "JournalReviewReport": SCHEMA_VERSION_AI,
+    "PerformanceReviewReport": SCHEMA_VERSION_AI,
+    "AIReportResult": SCHEMA_VERSION_AI,
 }
 
 

@@ -113,6 +113,18 @@ class AIProviderError(ContextTradingError):
     default_code = "CT-5000"
 
 
+class AIResponseError(AIProviderError):
+    """Provider output is not valid JSON / does not match the schema."""
+
+    default_code = "CT-5001"
+
+
+class CitationError(AIProviderError):
+    """AI cited evidence ids that do not exist in the context (fabrication)."""
+
+    default_code = "CT-5002"
+
+
 class BacktestError(ContextTradingError):
     """Backtest replay, fill, or accounting failures."""
 

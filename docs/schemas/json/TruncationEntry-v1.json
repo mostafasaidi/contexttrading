@@ -1,0 +1,44 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "additionalProperties": false,
+    "description": "Record of one truncated category (transparency for the AI).",
+    "properties": {
+      "category": {
+        "title": "Category",
+        "type": "string"
+      },
+      "keep_rule": {
+        "minLength": 1,
+        "title": "Keep Rule",
+        "type": "string"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "shown": {
+        "minimum": 0,
+        "title": "Shown",
+        "type": "integer"
+      },
+      "total": {
+        "minimum": 0,
+        "title": "Total",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "category",
+      "shown",
+      "total",
+      "keep_rule"
+    ],
+    "title": "TruncationEntry",
+    "type": "object"
+  },
+  "name": "TruncationEntry",
+  "schema_version": "1.0.0"
+}

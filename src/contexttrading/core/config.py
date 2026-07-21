@@ -379,18 +379,34 @@ class StorageConfig(BaseModel):
 
 
 class AIConfig(BaseModel):
-    """Explain-only AI layer configuration (Phase 9)."""
+    """Explain-only AI layer configuration (Phase 8).
+
+    Secrets are never stored here: ``api_key_env`` names the environment
+    variable that holds the provider key. Env layering works through
+    ``Settings`` (e.g. ``CT_AI__PROVIDER=openai``).
+    """
 
     model_config = ConfigDict(extra="forbid")
 
-    provider: Literal["none", "openai", "anthropic", "local"] = "none"
+    provider: Literal["none", "mock", "openai", "anthropic", "local"] = "none"
     model: str = ""
     api_key_env: str = Field(
         default="CT_AI_API_KEY",
         description="Name of the env var holding the provider key (never the key itself).",
     )
+    base_url: str = Field(
+        default="", description="Optional endpoint override (self-hosted/local providers)."
+    )
+    temperature: float = Field(default=0.0, ge=0, le=2)
+    max_tokens: int = Field(default=4096, ge=1)
     max_retries: int = Field(default=2, ge=0, le=10)
     timeout_seconds: float = Field(default=30.0, gt=0)
+    proximity_atr: float = Field(
+        default=3.0, gt=0, description="Zones within this many ATRs of price are 'nearby'."
+    )
+    max_objects_per_category: int = Field(
+        default=10, ge=1, description="Context truncation cap per object category."
+    )
 
 
 class VisualizationConfig(BaseModel):
