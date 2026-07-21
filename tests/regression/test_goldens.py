@@ -14,6 +14,7 @@ from pathlib import Path
 
 import pytest
 
+from contexttrading.analysis.fvg import analyze_fvg
 from contexttrading.analysis.liquidity import analyze_liquidity
 from contexttrading.analysis.premium_discount import analyze_dealing_range
 from contexttrading.analysis.structure import analyze_structure, analyze_trend
@@ -25,6 +26,7 @@ from tests.fixtures import (
     uptrend_series,
     v_reversal_series,
 )
+from tests.fvg_fixtures import inversion_series, nested_fvg_records
 
 GOLDENS_DIR = Path(__file__).parent / "goldens"
 UPDATE = os.environ.get("CT_UPDATE_GOLDENS") == "1"
@@ -72,3 +74,17 @@ class TestDealingRangeGoldens:
     def test_uptrend_dealing_range(self) -> None:
         result = analyze_dealing_range(uptrend_series(), engine_config())
         _assert_golden("dealing_range_uptrend.json", result.model_dump_json())
+
+
+class TestFvgGoldens:
+    def test_uptrend_fvg(self) -> None:
+        result = analyze_fvg(uptrend_series(), engine_config())
+        _assert_golden("fvg_uptrend.json", result.model_dump_json())
+
+    def test_nested_fvg(self) -> None:
+        result = analyze_fvg(to_series(nested_fvg_records(), symbol="NEST"), engine_config())
+        _assert_golden("fvg_nested.json", result.model_dump_json())
+
+    def test_inversion_fvg(self) -> None:
+        result = analyze_fvg(inversion_series(), engine_config())
+        _assert_golden("fvg_inversion.json", result.model_dump_json())

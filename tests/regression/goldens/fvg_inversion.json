@@ -1,0 +1,71 @@
+{
+  "engine_version": "0.1.0",
+  "generated_from": {
+    "candle_count": 7,
+    "end": "2024-01-01T00:06:00Z",
+    "schema_version": "1.0.0",
+    "start": "2024-01-01T00:00:00Z"
+  },
+  "module": "fvg",
+  "payload": {
+    "counts_by_direction": {
+      "bullish": 1
+    },
+    "counts_by_status": {
+      "violated": 1
+    },
+    "fvgs": [
+      {
+        "age": 3,
+        "direction": "bullish",
+        "displacement_margin_atr": null,
+        "filled_index": 5,
+        "first_touch_index": 4,
+        "formation_end_index": 2,
+        "formation_start_index": 0,
+        "formed_at": "2024-01-01T00:01:00Z",
+        "gap_atr": null,
+        "gap_percent": 0.04878048780487805,
+        "gap_size": 0.5,
+        "id": "fvg_62363fd4d967fc34b43365da",
+        "inversion_index": 6,
+        "is_inverse": true,
+        "is_nested": false,
+        "label": null,
+        "layer": "default",
+        "linked_break_id": null,
+        "max_fill_fraction": 1.0,
+        "middle_index": 1,
+        "parent_fvg_id": null,
+        "priority": 0,
+        "rank": 1,
+        "schema_version": "1.0.0",
+        "stack_group_id": null,
+        "status": "violated",
+        "strength": 0.31888961789878967,
+        "style": {
+          "color": "#22ab94",
+          "fill": true,
+          "layer": "fvg.zones",
+          "line_style": "dotted",
+          "line_width": 1.0,
+          "opacity": 0.3,
+          "priority": 8,
+          "render_type": "box",
+          "schema_version": "1.0.0",
+          "tooltip": "inverse bullish fvg",
+          "visible": true
+        },
+        "touches": 2,
+        "zone_bottom": 10.0,
+        "zone_top": 10.5
+      }
+    ],
+    "schema_version": "1.0.0",
+    "total_count": 1
+  },
+  "run_id": null,
+  "schema_version": "1.0.0",
+  "symbol": "INV",
+  "timeframe": "1m"
+}
