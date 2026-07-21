@@ -1,0 +1,238 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "LiquidityPoolKind": {
+        "description": "Formation that creates a liquidity pool.",
+        "enum": [
+          "equal_highs",
+          "equal_lows",
+          "swing_high",
+          "swing_low",
+          "session_high",
+          "session_low",
+          "previous_day_high",
+          "previous_day_low"
+        ],
+        "title": "LiquidityPoolKind",
+        "type": "string"
+      },
+      "LiquiditySide": {
+        "description": "Side of the book where resting liquidity sits.",
+        "enum": [
+          "buyside",
+          "sellside"
+        ],
+        "title": "LiquiditySide",
+        "type": "string"
+      },
+      "RenderType": {
+        "description": "Render primitives an analysis object can map to.",
+        "enum": [
+          "line",
+          "area",
+          "box",
+          "marker",
+          "label",
+          "histogram",
+          "candles"
+        ],
+        "title": "RenderType",
+        "type": "string"
+      },
+      "VisualStyle": {
+        "additionalProperties": false,
+        "description": "Renderer-agnostic drawing style for one analysis object.",
+        "properties": {
+          "color": {
+            "description": "Primary color as '#rgb', '#rrggbb', or '#rrggbbaa'.",
+            "title": "Color",
+            "type": "string"
+          },
+          "fill": {
+            "default": false,
+            "description": "Fill the shape (boxes/areas).",
+            "title": "Fill",
+            "type": "boolean"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Named layer for grouping/toggling.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "description": "Stroke width in pixels.",
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "opacity": {
+            "default": 1.0,
+            "description": "Fill/line opacity.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Z-order/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "render_type": {
+            "$ref": "#/$defs/RenderType",
+            "default": "box"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "tooltip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hover text (renderer-formatted).",
+            "title": "Tooltip"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "color"
+        ],
+        "title": "VisualStyle",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "A Judas-swing event: a session level swept during an opposing killzone.\n\nPatterns (deterministic):\n    - Asian-range high/low swept during the London killzone;\n    - London high/low swept during the New York killzones.\nThe underlying stop-run is a normal :class:`LiquiditySweep` against a\nsession-derived pool; this object adds the session semantics.",
+    "properties": {
+      "candle_index": {
+        "description": "Index of the sweeping candle.",
+        "minimum": 0,
+        "title": "Candle Index",
+        "type": "integer"
+      },
+      "id": {
+        "default": "",
+        "description": "Deterministic content-hash ID.",
+        "title": "Id",
+        "type": "string"
+      },
+      "label": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Optional human-facing label.",
+        "title": "Label"
+      },
+      "layer": {
+        "default": "default",
+        "description": "Render/grouping layer.",
+        "title": "Layer",
+        "type": "string"
+      },
+      "linked_sweep_id": {
+        "description": "ID of the underlying LiquiditySweep.",
+        "minLength": 1,
+        "title": "Linked Sweep Id",
+        "type": "string"
+      },
+      "priority": {
+        "default": 0,
+        "description": "Render/selection priority (higher wins).",
+        "title": "Priority",
+        "type": "integer"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "side": {
+        "$ref": "#/$defs/LiquiditySide",
+        "description": "BUYSIDE sweep of a high, SELLSIDE of a low."
+      },
+      "style": {
+        "$ref": "#/$defs/VisualStyle"
+      },
+      "sweeping_window": {
+        "description": "Killzone active at the sweep.",
+        "minLength": 1,
+        "title": "Sweeping Window",
+        "type": "string"
+      },
+      "swept_group": {
+        "description": "Level origin: 'asia' range or a session name.",
+        "minLength": 1,
+        "title": "Swept Group",
+        "type": "string"
+      },
+      "swept_level_kind": {
+        "$ref": "#/$defs/LiquidityPoolKind",
+        "description": "SESSION_HIGH / SESSION_LOW / PREVIOUS_DAY_HIGH / PREVIOUS_DAY_LOW."
+      },
+      "swept_price": {
+        "description": "Swept level price.",
+        "exclusiveMinimum": 0,
+        "title": "Swept Price",
+        "type": "number"
+      },
+      "timestamp": {
+        "description": "Sweeping candle timestamp (UTC).",
+        "format": "date-time",
+        "title": "Timestamp",
+        "type": "string"
+      }
+    },
+    "required": [
+      "swept_group",
+      "swept_level_kind",
+      "swept_price",
+      "side",
+      "sweeping_window",
+      "candle_index",
+      "timestamp",
+      "linked_sweep_id"
+    ],
+    "title": "SessionSweep",
+    "type": "object"
+  },
+  "name": "SessionSweep",
+  "schema_version": "1.0.0"
+}

@@ -1,0 +1,519 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "DealingRange": {
+        "additionalProperties": false,
+        "description": "The active dealing range with equilibrium, OTE, and price location.\n\nFor a BULLISH range the dealing range spans the last external swing low\n→ swing high of the active leg; OTE is the ``ote_fib_lower..ote_fib_upper``\nretracement *below* the high (buy zone in discount). For BEARISH it is\nmirrored above the low (sell zone in premium).",
+        "properties": {
+          "direction": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "Trend the range serves (BULLISH or BEARISH)."
+          },
+          "discount_style": {
+            "$ref": "#/$defs/VisualStyle"
+          },
+          "equilibrium": {
+            "description": "50% of the range.",
+            "exclusiveMinimum": 0,
+            "title": "Equilibrium",
+            "type": "number"
+          },
+          "equilibrium_style": {
+            "$ref": "#/$defs/VisualStyle"
+          },
+          "high": {
+            "description": "Range upper bound (external swing high).",
+            "exclusiveMinimum": 0,
+            "title": "High",
+            "type": "number"
+          },
+          "high_swing_id": {
+            "minLength": 1,
+            "title": "High Swing Id",
+            "type": "string"
+          },
+          "low": {
+            "description": "Range lower bound (external swing low).",
+            "exclusiveMinimum": 0,
+            "title": "Low",
+            "type": "number"
+          },
+          "low_swing_id": {
+            "minLength": 1,
+            "title": "Low Swing Id",
+            "type": "string"
+          },
+          "ote_fibs": {
+            "description": "Fib retracements used for the OTE zone.",
+            "maxItems": 2,
+            "minItems": 2,
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "title": "Ote Fibs",
+            "type": "array"
+          },
+          "ote_high": {
+            "description": "OTE zone upper price bound.",
+            "exclusiveMinimum": 0,
+            "title": "Ote High",
+            "type": "number"
+          },
+          "ote_low": {
+            "description": "OTE zone lower price bound.",
+            "exclusiveMinimum": 0,
+            "title": "Ote Low",
+            "type": "number"
+          },
+          "ote_style": {
+            "$ref": "#/$defs/VisualStyle"
+          },
+          "premium_style": {
+            "$ref": "#/$defs/VisualStyle"
+          },
+          "price_location": {
+            "$ref": "#/$defs/PriceLocation",
+            "description": "PREMIUM / DISCOUNT / EQUILIBRIUM."
+          },
+          "reference_price": {
+            "description": "Price being located (last close).",
+            "exclusiveMinimum": 0,
+            "title": "Reference Price",
+            "type": "number"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "required": [
+          "high",
+          "low",
+          "high_swing_id",
+          "low_swing_id",
+          "direction",
+          "equilibrium",
+          "ote_low",
+          "ote_high",
+          "ote_fibs",
+          "reference_price",
+          "price_location"
+        ],
+        "title": "DealingRange",
+        "type": "object"
+      },
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "MTFBias": {
+        "additionalProperties": false,
+        "description": "Aggregated multi-timeframe bias.\n\nStrength rule (deterministic):\n    - STRONG: every context with a known trend agrees with the bias\n      (and at least two contexts exist);\n    - MODERATE: weighted agreement share >= ``mtf_moderate_share``;\n    - WEAK: otherwise.\n\n``htf_influence`` is the weighted share of higher-timeframe contexts\nwhose direction opposes the base-timeframe trend (0 when they all agree).",
+        "properties": {
+          "agreement_share": {
+            "description": "Weighted share of contexts aligned with the bias.",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Agreement Share",
+            "type": "number"
+          },
+          "conflict_notes": {
+            "description": "Deterministic notes for adjacent timeframe pairs that disagree.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Conflict Notes",
+            "type": "array"
+          },
+          "direction": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "Weighted-majority direction."
+          },
+          "htf_influence": {
+            "description": "Weighted share of HTF contexts opposing the base-TF trend.",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Htf Influence",
+            "type": "number"
+          },
+          "recommended_execution_timeframe": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/Timeframe"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Lowest timeframe aligned with the bias; None when the base timeframe conflicts with it."
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "strength": {
+            "$ref": "#/$defs/TrendStrength",
+            "description": "STRONG / MODERATE / WEAK per the rule above."
+          }
+        },
+        "required": [
+          "direction",
+          "strength",
+          "agreement_share",
+          "htf_influence"
+        ],
+        "title": "MTFBias",
+        "type": "object"
+      },
+      "MarketPhase": {
+        "description": "Wyckoff-style market phase from range/overlap heuristics.",
+        "enum": [
+          "accumulation",
+          "distribution",
+          "expansion",
+          "consolidation"
+        ],
+        "title": "MarketPhase",
+        "type": "string"
+      },
+      "PriceLocation": {
+        "description": "Where a reference price sits inside a dealing range.",
+        "enum": [
+          "premium",
+          "discount",
+          "equilibrium"
+        ],
+        "title": "PriceLocation",
+        "type": "string"
+      },
+      "RenderType": {
+        "description": "Render primitives an analysis object can map to.",
+        "enum": [
+          "line",
+          "area",
+          "box",
+          "marker",
+          "label",
+          "histogram",
+          "candles"
+        ],
+        "title": "RenderType",
+        "type": "string"
+      },
+      "Timeframe": {
+        "description": "Supported candle timeframes.\n\nValues are the canonical string codes (``\"1m\"`` … ``\"1M\"``). Ordering is\nby duration: ``M1 < M5 < H1 < D1 < W1 < MN1``.",
+        "enum": [
+          "1m",
+          "3m",
+          "5m",
+          "15m",
+          "30m",
+          "1h",
+          "2h",
+          "4h",
+          "6h",
+          "8h",
+          "12h",
+          "1d",
+          "1w",
+          "1M"
+        ],
+        "title": "Timeframe",
+        "type": "string"
+      },
+      "TimeframeContext": {
+        "additionalProperties": false,
+        "description": "Structure/trend snapshot of one timeframe in an MTF pass.",
+        "properties": {
+          "candle_count": {
+            "description": "Candles in the (resampled) series.",
+            "minimum": 0,
+            "title": "Candle Count",
+            "type": "integer"
+          },
+          "dealing_range": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/DealingRange"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Active dealing range on this timeframe, if any."
+          },
+          "direction": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "Trend direction (UNKNOWN when no trend)."
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "timeframe": {
+            "$ref": "#/$defs/Timeframe",
+            "description": "Timeframe of the (resampled) series."
+          },
+          "trend": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/TrendState"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Trend state, or None when the resampled series is below ``min_candles`` (direction is UNKNOWN then)."
+          },
+          "weight": {
+            "description": "Aggregation weight: ``mtf_tf_weight_base ** rank`` (rank 0 = base).",
+            "exclusiveMinimum": 0,
+            "title": "Weight",
+            "type": "number"
+          }
+        },
+        "required": [
+          "timeframe",
+          "direction",
+          "weight",
+          "candle_count"
+        ],
+        "title": "TimeframeContext",
+        "type": "object"
+      },
+      "TrendDirection": {
+        "description": "Directional state of price, a candle, or a structure leg.",
+        "enum": [
+          "bullish",
+          "bearish",
+          "ranging",
+          "unknown"
+        ],
+        "title": "TrendDirection",
+        "type": "string"
+      },
+      "TrendState": {
+        "additionalProperties": false,
+        "description": "Composite trend assessment produced by the TrendEngine.",
+        "properties": {
+          "bos_follow_through": {
+            "anyOf": [
+              {
+                "maximum": 1,
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Fraction of confirmed BOS that were STRONG.",
+            "title": "Bos Follow Through"
+          },
+          "confidence_basis": {
+            "description": "Deterministic evidence tags, e.g. 'hh_hl_sequence', 'strong_bos:3/4'.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Confidence Basis",
+            "type": "array"
+          },
+          "direction": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "Active external trend."
+          },
+          "external_trend": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "Trend from external swing sequence."
+          },
+          "impulse_correction_ratio": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Mean impulse magnitude / mean correction magnitude (ATRs).",
+            "title": "Impulse Correction Ratio"
+          },
+          "internal_trend": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "Trend from internal swing sequence."
+          },
+          "market_phase": {
+            "$ref": "#/$defs/MarketPhase",
+            "description": "Wyckoff-style phase from range/overlap."
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "strength": {
+            "$ref": "#/$defs/TrendStrength",
+            "description": "From leg statistics and BOS follow-through."
+          }
+        },
+        "required": [
+          "direction",
+          "external_trend",
+          "internal_trend",
+          "strength",
+          "market_phase"
+        ],
+        "title": "TrendState",
+        "type": "object"
+      },
+      "TrendStrength": {
+        "description": "Qualitative trend strength from leg statistics and follow-through.",
+        "enum": [
+          "strong",
+          "moderate",
+          "weak"
+        ],
+        "title": "TrendStrength",
+        "type": "string"
+      },
+      "VisualStyle": {
+        "additionalProperties": false,
+        "description": "Renderer-agnostic drawing style for one analysis object.",
+        "properties": {
+          "color": {
+            "description": "Primary color as '#rgb', '#rrggbb', or '#rrggbbaa'.",
+            "title": "Color",
+            "type": "string"
+          },
+          "fill": {
+            "default": false,
+            "description": "Fill the shape (boxes/areas).",
+            "title": "Fill",
+            "type": "boolean"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Named layer for grouping/toggling.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "description": "Stroke width in pixels.",
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "opacity": {
+            "default": 1.0,
+            "description": "Fill/line opacity.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Z-order/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "render_type": {
+            "$ref": "#/$defs/RenderType",
+            "default": "box"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "tooltip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hover text (renderer-formatted).",
+            "title": "Tooltip"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "color"
+        ],
+        "title": "VisualStyle",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Payload of the MTF module.",
+    "properties": {
+      "base_timeframe": {
+        "$ref": "#/$defs/Timeframe",
+        "description": "Timeframe of the input series (rank 0)."
+      },
+      "bias": {
+        "$ref": "#/$defs/MTFBias"
+      },
+      "contexts": {
+        "description": "Base timeframe first, then ascending HTFs.",
+        "items": {
+          "$ref": "#/$defs/TimeframeContext"
+        },
+        "title": "Contexts",
+        "type": "array"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      }
+    },
+    "required": [
+      "base_timeframe",
+      "bias"
+    ],
+    "title": "MTFResult",
+    "type": "object"
+  },
+  "name": "MTFResult",
+  "schema_version": "1.0.0"
+}

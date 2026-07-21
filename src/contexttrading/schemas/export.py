@@ -31,6 +31,7 @@ from contexttrading.models.liquidity import (
     LiquidityResult,
     LiquiditySweep,
 )
+from contexttrading.models.mtf import MTFBias, MTFResult, TimeframeContext
 from contexttrading.models.orderblock import (
     BreakerBlock,
     MitigationBlock,
@@ -39,6 +40,7 @@ from contexttrading.models.orderblock import (
 )
 from contexttrading.models.outputs import AnalysisResult, DataWindow
 from contexttrading.models.range import DealingRange, DealingRangeResult
+from contexttrading.models.session import SessionResult, SessionStats, SessionSweep
 from contexttrading.models.structure import (
     Leg,
     MarketStructureResult,
@@ -77,6 +79,12 @@ EXPORTED_MODELS: tuple[type[BaseModel], ...] = (
     OrderBlockResult,
     SupplyDemandZone,
     SupplyDemandResult,
+    SessionStats,
+    SessionSweep,
+    SessionResult,
+    TimeframeContext,
+    MTFBias,
+    MTFResult,
 )
 
 

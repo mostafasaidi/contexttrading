@@ -26,6 +26,10 @@ SCHEMA_VERSION_FVG: str = "1.0.0"
 SCHEMA_VERSION_ORDERBLOCK: str = "1.0.0"
 SCHEMA_VERSION_SUPPLYDEMAND: str = "1.0.0"
 
+# Phase-6 model schema versions.
+SCHEMA_VERSION_SESSION: str = "1.0.0"
+SCHEMA_VERSION_MTF: str = "1.0.0"
+
 #: Registry of all current schema versions, keyed by logical model name.
 CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "AnalysisResult": SCHEMA_VERSION_ENVELOPE,
@@ -54,6 +58,12 @@ CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "OrderBlockResult": SCHEMA_VERSION_ORDERBLOCK,
     "SupplyDemandZone": SCHEMA_VERSION_SUPPLYDEMAND,
     "SupplyDemandResult": SCHEMA_VERSION_SUPPLYDEMAND,
+    "SessionStats": SCHEMA_VERSION_SESSION,
+    "SessionSweep": SCHEMA_VERSION_SESSION,
+    "SessionResult": SCHEMA_VERSION_SESSION,
+    "TimeframeContext": SCHEMA_VERSION_MTF,
+    "MTFBias": SCHEMA_VERSION_MTF,
+    "MTFResult": SCHEMA_VERSION_MTF,
 }
 
 

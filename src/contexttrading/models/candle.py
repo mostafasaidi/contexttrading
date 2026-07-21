@@ -310,23 +310,28 @@ class CandleSeries:
                 },
             )
 
-    # -- resampling (contract for Phase 3+) -------------------------------------
+    # -- resampling -------------------------------------------------------------
 
-    def resample(self, target: Timeframe | str) -> CandleSeries:
-        """Resample to a higher timeframe.
+    def resample(self, target: Timeframe | str, *, include_incomplete: bool = True) -> CandleSeries:
+        """Resample to a higher timeframe (downsampling only).
 
-        Only upsampling (target duration strictly greater than the current
-        timeframe) will be supported. Implemented in Phase 3 alongside the
-        structure engine; the signature is the stable contract.
+        Delegates to :func:`contexttrading.analysis.mtf.resample_series`;
+        see that function for anchoring and aggregation rules. The import is
+        lazy to keep the models layer dependency-free.
 
         Args:
             target: Target timeframe (must be larger than the current one).
+            include_incomplete: Keep the still-forming last bar.
+
+        Returns:
+            A new :class:`CandleSeries` at the target timeframe.
 
         Raises:
-            NotImplementedError: Always, until Phase 3 lands.
+            DataError: On upsampling or same-timeframe requests.
         """
-        _ = Timeframe.parse(target) if isinstance(target, str) else target
-        raise NotImplementedError("CandleSeries.resample lands in Phase 3")
+        from contexttrading.analysis.mtf.resample import resample_series
+
+        return resample_series(self, target, include_incomplete=include_incomplete)
 
     # -- serialization ------------------------------------------------------------
 

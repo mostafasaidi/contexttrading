@@ -225,13 +225,17 @@ class TestGaps:
 
 
 class TestResampleContract:
-    def test_resample_not_implemented(self, series: CandleSeries) -> None:
-        with pytest.raises(NotImplementedError, match="Phase 3"):
-            series.resample(Timeframe.M5)
+    def test_resample_upsampling_rejected(self, series: CandleSeries) -> None:
+        with pytest.raises(DataError, match="strictly higher"):
+            series.resample(series.timeframe)
+
+    def test_resample_delegates_to_mtf(self, series: CandleSeries) -> None:
+        resampled = series.resample(Timeframe.M5)
+        assert resampled.timeframe is Timeframe.M5
+        assert resampled.symbol == series.symbol
 
     def test_resample_accepts_string(self, series: CandleSeries) -> None:
-        with pytest.raises(NotImplementedError):
-            series.resample("5m")
+        assert series.resample("5m").timeframe is Timeframe.M5
 
 
 class TestSerialization:

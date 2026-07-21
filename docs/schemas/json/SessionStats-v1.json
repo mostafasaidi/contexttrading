@@ -1,0 +1,293 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "RenderType": {
+        "description": "Render primitives an analysis object can map to.",
+        "enum": [
+          "line",
+          "area",
+          "box",
+          "marker",
+          "label",
+          "histogram",
+          "candles"
+        ],
+        "title": "RenderType",
+        "type": "string"
+      },
+      "TrendDirection": {
+        "description": "Directional state of price, a candle, or a structure leg.",
+        "enum": [
+          "bullish",
+          "bearish",
+          "ranging",
+          "unknown"
+        ],
+        "title": "TrendDirection",
+        "type": "string"
+      },
+      "VisualStyle": {
+        "additionalProperties": false,
+        "description": "Renderer-agnostic drawing style for one analysis object.",
+        "properties": {
+          "color": {
+            "description": "Primary color as '#rgb', '#rrggbb', or '#rrggbbaa'.",
+            "title": "Color",
+            "type": "string"
+          },
+          "fill": {
+            "default": false,
+            "description": "Fill the shape (boxes/areas).",
+            "title": "Fill",
+            "type": "boolean"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Named layer for grouping/toggling.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "description": "Stroke width in pixels.",
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "opacity": {
+            "default": 1.0,
+            "description": "Fill/line opacity.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Z-order/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "render_type": {
+            "$ref": "#/$defs/RenderType",
+            "default": "box"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "tooltip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hover text (renderer-formatted).",
+            "title": "Tooltip"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "color"
+        ],
+        "title": "VisualStyle",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Statistics of one session instance (window x calendar date).",
+    "properties": {
+      "candle_count": {
+        "description": "Candles inside the window.",
+        "minimum": 1,
+        "title": "Candle Count",
+        "type": "integer"
+      },
+      "close": {
+        "description": "Close of the last candle.",
+        "exclusiveMinimum": 0,
+        "title": "Close",
+        "type": "number"
+      },
+      "direction": {
+        "$ref": "#/$defs/TrendDirection",
+        "description": "BULLISH/BEARISH from close vs open; RANGING when the body is below session_doji_body_fraction of the range."
+      },
+      "end_time": {
+        "description": "Timestamp of the last candle (UTC).",
+        "format": "date-time",
+        "title": "End Time",
+        "type": "string"
+      },
+      "forms_day_high": {
+        "default": false,
+        "description": "True when this instance printed the calendar-day high.",
+        "title": "Forms Day High",
+        "type": "boolean"
+      },
+      "forms_day_low": {
+        "default": false,
+        "description": "True when this instance printed the calendar-day low.",
+        "title": "Forms Day Low",
+        "type": "boolean"
+      },
+      "high": {
+        "description": "Highest high inside the window.",
+        "exclusiveMinimum": 0,
+        "title": "High",
+        "type": "number"
+      },
+      "high_index": {
+        "description": "Candle index where the high formed.",
+        "minimum": 0,
+        "title": "High Index",
+        "type": "integer"
+      },
+      "id": {
+        "default": "",
+        "description": "Deterministic content-hash ID.",
+        "title": "Id",
+        "type": "string"
+      },
+      "is_killzone": {
+        "default": false,
+        "description": "True for kill-zone windows.",
+        "title": "Is Killzone",
+        "type": "boolean"
+      },
+      "label": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Optional human-facing label.",
+        "title": "Label"
+      },
+      "layer": {
+        "default": "default",
+        "description": "Render/grouping layer.",
+        "title": "Layer",
+        "type": "string"
+      },
+      "low": {
+        "description": "Lowest low inside the window.",
+        "exclusiveMinimum": 0,
+        "title": "Low",
+        "type": "number"
+      },
+      "low_index": {
+        "description": "Candle index where the low formed.",
+        "minimum": 0,
+        "title": "Low Index",
+        "type": "integer"
+      },
+      "open": {
+        "description": "Open of the first candle.",
+        "exclusiveMinimum": 0,
+        "title": "Open",
+        "type": "number"
+      },
+      "priority": {
+        "default": 0,
+        "description": "Render/selection priority (higher wins).",
+        "title": "Priority",
+        "type": "integer"
+      },
+      "range_atr": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Session range in ATRs at the session end (None if unknown).",
+        "title": "Range Atr"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "session": {
+        "description": "Window name from SessionConfig.",
+        "minLength": 1,
+        "title": "Session",
+        "type": "string"
+      },
+      "start_time": {
+        "description": "Timestamp of the first candle (UTC).",
+        "format": "date-time",
+        "title": "Start Time",
+        "type": "string"
+      },
+      "style": {
+        "$ref": "#/$defs/VisualStyle"
+      },
+      "trading_date": {
+        "description": "Calendar date (in the session timezone) of the instance's start bar.",
+        "format": "date",
+        "title": "Trading Date",
+        "type": "string"
+      },
+      "volume": {
+        "description": "Accumulated volume.",
+        "minimum": 0,
+        "title": "Volume",
+        "type": "number"
+      }
+    },
+    "required": [
+      "session",
+      "trading_date",
+      "start_time",
+      "end_time",
+      "open",
+      "high",
+      "low",
+      "close",
+      "high_index",
+      "low_index",
+      "candle_count",
+      "volume",
+      "direction"
+    ],
+    "title": "SessionStats",
+    "type": "object"
+  },
+  "name": "SessionStats",
+  "schema_version": "1.0.0"
+}
