@@ -1,6 +1,6 @@
 # ContextTrading — Build State (pause checkpoint)
 
-> Saved 2026-07-22 (end of AI analyst layer). Resume point for the next session.
+> Saved 2026-07-22 (end of REST API service). Resume point for the next session.
 > This file tracks the autonomous build driven by MASTER PROMPTS 01–04.
 > Delete or archive when the project reaches production-ready status.
 
@@ -31,8 +31,8 @@
 | 7. Confluence engine (weighted deterministic scoring, explainable factors, confluence zones) | ✅ DONE |
 | 8. Visualization & storage (render primitives, mappers, chart serializer, reference frontend, SQLite result store) | ✅ DONE |
 | 9. AI analyst layer (prompts, context builder, providers, citation enforcement, structured reports) | ✅ DONE |
-| 10. REST API service (FastAPI, analyze/AI endpoints, schema endpoints, docs/api/) | ⬅️ NEXT |
-| 11. Backtesting (replay, statistics, metrics, optimization) | pending |
+| 10. REST API service (FastAPI, analyze/AI endpoints, schema endpoints, docs/api/) | ✅ DONE |
+| 11. Backtesting (replay, statistics, metrics, optimization) | ⬅️ NEXT |
 | 12. Examples, polish, performance (examples/, benchmarks, docs completion, PostgreSQL/Redis stores) | pending |
 | 13. Release hardening (PyPI, Docker, security review, v1.0 schema freeze) | pending |
 
@@ -40,12 +40,12 @@
 
 - Work is delegated to a **coder subagent, resumed across runs**: resume id = `agent-0` (it holds full context of Phases 1–3 and the conventions). Resume it with the Phase-4 task; if resume is unavailable, spawn a fresh coder subagent and point it at this file + `docs/` + `docs/architecture/determinism.md` + `docs/guides/developer-guide.md`.
 - Each run: implement one phase → full unit/property/golden/integration tests → ruff + black clean → logical conventional commits.
-- TodoList mirrors the 12 phases (Phase 6 = in_progress).
+- TodoList mirrors the 12 phases (Phase 11 = in_progress).
 
-## Current verified state (end of AI analyst layer)
+## Current verified state (end of REST API service)
 
-- **653 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD/resampling/confluence, 23 byte-exact regression goldens in `tests/regression/goldens/` incl. 2 full-stack chart goldens — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 41 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
-- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests · Phase 6: `82ff12e` session engine · `2a0591b` resampling + MTF context · `94cd231` tests · Phase 7: `3c6a1b8` confluence engine · `19f2829` tests · Phase 8: `bb3c621` primitives + mappers · `fdac1b0` chart serializer + schema exports · `e2931af` SQLite result store · `5044dd3` reference frontend + demo payload · `f4268b0` tests · AI layer: `a649745` report models + config · `d4d87ec` prompt assets + registry · `230606b` context builders · `6002ef0` providers · `a689ce5` validation + analyst pipeline · `312f167` tests.
+- **699 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD/resampling/confluence, 24 byte-exact regression goldens in `tests/regression/goldens/` incl. 2 full-stack chart goldens + `openapi_v1.json` API spec snapshot — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 45 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
+- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests · Phase 6: `82ff12e` session engine · `2a0591b` resampling + MTF context · `94cd231` tests · Phase 7: `3c6a1b8` confluence engine · `19f2829` tests · Phase 8: `bb3c621` primitives + mappers · `fdac1b0` chart serializer + schema exports · `e2931af` SQLite result store · `5044dd3` reference frontend + demo payload · `f4268b0` tests · AI layer: `a649745` report models + config · `d4d87ec` prompt assets + registry · `230606b` context builders · `6002ef0` providers · `a689ce5` validation + analyst pipeline · `312f167` tests · REST API: `1e67c5b` shared pipeline orchestration · `f9cf4b9` wire models + auth + config + thread-safe store · `6c0a90b` app factory + all v1 routes · `7ddb49a` tests + OpenAPI golden.
 
 ## Phase 5 decisions (for Phase 6+ reuse)
 
@@ -85,13 +85,26 @@
 - `data/store.py`: SQLite `ResultStore` keyed `(symbol, timeframe, module, series_hash)`, INSERT OR REPLACE; `hash_series` = sha256 over canonical records; load validates `is_compatible(stored, current)` → `SchemaVersionError` (CT-2001), storage failures → `DataError` (CT-1000). `PAYLOAD_MODELS` maps all 11 module names (incl. `chart`) to payload classes for typed round-trips. PostgreSQL/Redis deferred to Phase 11.
 - Shared test helper `tests/fixtures.py::full_stack_results(series, config, mtf_timeframes=("1h","4h"))` runs all 10 analyzers once — used by visualization unit/property/golden/integration tests.
 
-## Phase 9 brief (ready to hand to the coder subagent)
+## Phase 10 decisions (REST API, for reuse)
 
-REST API service (roadmap Phase 10; MP04 calls it Phase 9):
-- FastAPI app exposing the engine + AI analyst over HTTP: analyze endpoints (run modules over posted candles), chart-payload endpoint, AI endpoints (`/ai/market-analysis`, `/ai/trade-evaluation`, `/ai/journal-review`, `/ai/performance-review`), schema endpoints serving `docs/schemas/json/`, health/version endpoints.
-- Reuse everything: `full_stack_results`-style orchestration, `build_chart_payload`, `InstitutionalAnalyst` with `provider_from_config(Settings().ai)`; API errors map to the CT-xxxx taxonomy (`APIError` CT-7000 exists; `APIConfig` exists in core/config.py).
-- Request/response models are versioned pydantic models (schema export); no ad-hoc dicts. Deterministic: same request body → same response body.
-- Tests: FastAPI TestClient (no network), contract tests per endpoint, error-mapping tests, golden response for a fixture series. Docs: `docs/modules/api.md` + `docs/api/`.
+- `analysis/pipeline.py` is the single orchestration source: `MODULE_ORDER` (10 modules), `MODULE_SLUGS` (URL slug -> key; "premium-discount" -> "premium_discount"), `run_module` (accepts slug or key), `run_full_stack`. `tests/fixtures.py::full_stack_results` delegates to it. `/v1/analysis/full` is registered BEFORE `/{module}` so "full" never matches the path param.
+- Error envelope everywhere: `ErrorEnvelope{schema_version, error:{code,message,context,request_id}}` — also for 404/422/500; no FastAPI default bodies leak. Status mapping in `app._status_for`; deviation: `InsufficientDataError` (CT-3001) -> 422 (client data problem), other CT-3xxx -> 500. `AIProviderError` -> 502, or 504 only when "timeout" appears in the message. AI not configured (`provider="none"`) -> `ConfigurationError` CT-4000 -> 500.
+- Auth: `X-API-Key` header, `hmac.compare_digest`, keys from `CT_API__API_KEYS` (comma-separated string or JSON array). `auth_enabled=False` opens everything; `allow_anonymous=True` passes missing keys (bad keys still 401). /healthz + /readyz always open.
+- Wire models in `api/models.py` (`SCHEMA_VERSION_API="1.0.0"`, 10 models registered + exported). `config_overrides` merge via `EngineConfig.model_validate` -> unknown keys raise core `ValidationError` CT-2000 -> 422. Candle cap `max_candles_per_request` (20000) -> `RequestTooLargeError` CT-7002 -> 413. No byte-size limit; rate limiting documented as reverse-proxy concern.
+- Streaming = NDJSON (`application/x-ndjson`), NOT SSE: finite response, trivially parsed by any HTTP client. Lines in `MODULE_ORDER` + terminal `{"module":"done","modules","candle_count"}`. Streamed results == full-stack results (tested).
+- `ResultStore` made thread-safe (`check_same_thread=False` + lock) and gained `ping()` for /readyz. Persist happens only via `charts/payload?persist=true`; retrieval requires `series_hash` query param.
+- OpenAPI spec is golden-tested (`openapi_v1.json`); `ErrorEnvelope` is attached to every v1 route via router-level `responses` so it appears in components.
+- Docker: image CMD runs uvicorn with `--factory`; compose `api` service is default-on with `apidata:/data` SQLite volume; postgres/redis stay in the "later" profile (Phase 12).
+
+## Phase 11 brief (ready to hand to the coder subagent)
+
+Backtesting (roadmap Phase 11):
+- Event-driven deterministic replay: walk a CandleSeries bar by bar, feed the engine through the existing module entrypoints (never re-implement detection), and simulate a strategy contract (entries from confluence/setup signals, exits via SL/TP/time).
+- Realistic fills & costs: configurable spread, commission, slippage models (fixed/bps), no lookahead — decisions at bar close, fills at next bar open (configurable).
+- Outputs as versioned models: trade list (entry/exit/prices/pnl/MAE/MFE + evidence ids), equity curve, drawdown series, statistics (win rate, profit factor, expectancy, Sharpe/Sortino, max DD) — all computed in Python, schema-exported.
+- Seeded determinism: same series + config + seed -> byte-identical backtest result; golden tests; property tests (no negative prices, equity consistency).
+- API wiring (optional but desired): `/v1/backtest` POST endpoint reusing the Phase-10 envelope/auth patterns.
+- Docs: `docs/modules/backtesting.md` + index row.
 
 ## AI-layer decisions (Phase 9 in roadmap numbering, for reuse)
 

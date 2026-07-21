@@ -1,21 +1,22 @@
-# Compose skeleton. Services are enabled progressively in later phases:
-#  - api:       FastAPI service (Phase 9)
-#  - postgres:  durable storage (Phase 8)
-#  - redis:     cache / pub-sub (Phase 8)
-# Keep everything disabled-by-default until the corresponding phase lands.
+# Compose wiring. The api service runs by default with a SQLite result
+# store on a named volume; postgres/redis stay behind the "later" profile
+# until Phase 12 (durable storage / cache).
 
 services:
   api:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    profiles: ["later"]
     ports:
       - "8000:8000"
     environment:
       CT_API__HOST: 0.0.0.0
       CT_API__PORT: "8000"
-    depends_on: []
+      CT_API__API_KEYS: ${CT_API__API_KEYS:-dev-key}
+      CT_AI__PROVIDER: ${CT_AI__PROVIDER:-none}
+      CT_STORAGE__URL: sqlite:////data/results.db
+    volumes:
+      - apidata:/data
 
   postgres:
     image: postgres:16-alpine
@@ -32,4 +33,5 @@ services:
     profiles: ["later"]
 
 volumes:
+  apidata:
   pgdata:

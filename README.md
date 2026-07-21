@@ -109,6 +109,18 @@ Export the JSON schemas every module speaks:
 python -m contexttrading.schemas.export        # writes docs/schemas/json/*.json
 ```
 
+Run the REST API (engine + AI analyst over HTTP, API-key auth):
+
+```bash
+export CT_API__API_KEYS=dev-key
+uvicorn contexttrading.api.app:create_app --factory --port 8000
+curl -X POST localhost:8000/v1/analysis/full \
+  -H "X-API-Key: dev-key" -H "Content-Type: application/json" -d @candles.json
+```
+
+See [docs/api/README.md](docs/api/README.md) for endpoints, the error
+envelope, streaming, and Docker Compose.
+
 ## Documentation
 
 - [Architecture overview](docs/architecture/overview.md) — the 9 layers and their boundaries
