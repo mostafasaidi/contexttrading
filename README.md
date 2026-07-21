@@ -37,7 +37,8 @@ LLM in front of.
 | Market structure | ✅ Phase 3 | Swings, legs, BOS/CHoCH (internal/external, major/minor, strong/weak/false), protected levels, TrendEngine |
 | Liquidity | ✅ Phase 3 | Equal highs/lows, pools, sweep/grab/stop-hunt with monotonic pool status |
 | FVG | ✅ Phase 4 | 3-candle imbalance, nested/stacked, inverse FVG, mitigation lifecycle, strength ranking |
-| Order blocks | 🔜 Phase 5 | Order blocks, breaker blocks, mitigation |
+| Order blocks | ✅ Phase 5 | Displacement-anchored OBs, breaker blocks, mitigation blocks, refinement |
+| Supply/demand | ✅ Phase 5 | RBD/DBR zones, OB-derived zones, dedupe, deterministic strength |
 | Premium/discount | ✅ Phase 3 | Dealing range, equilibrium, OTE zone, price location |
 | Sessions & MTF | 🔜 Phase 6 | Killzones, multi-timeframe trend |
 | Confluence | 🔜 Phase 7 | Weighted, deterministic confluence scoring |

@@ -26,8 +26,8 @@
 | 2. Core models, JSON schemas, config, validation, logging, errors | ✅ DONE |
 | 3. Market structure engine (swings, BOS/CHoCH, trend, liquidity, EQH/EQL, premium/discount, indicators) | ✅ DONE |
 | 4. FVG engine (detection, nested/stacked, inverse, mitigation lifecycle, strength ranking) | ✅ DONE |
-| 5. Order block engine (OB, breaker, mitigation blocks, supply/demand, validation) | ⬅️ NEXT |
-| 6. Session engine (Sydney, Tokyo, London, NY, kill zones) + MTF context | pending |
+| 5. Order block engine (OB, breaker, mitigation blocks, supply/demand, validation) | ✅ DONE |
+| 6. Session engine (Sydney, Tokyo, London, NY, kill zones) + MTF context | ⬅️ NEXT |
 | 7. Visualization engine (TradingView Lightweight Charts objects/rendering) | pending |
 | 8. AI layer (context builder, narrative, trade eval, risk, journal, reports, prompts) | pending |
 | 9. REST API (FastAPI, OpenAPI, auth, endpoints, streaming) | pending |
@@ -39,20 +39,22 @@
 
 - Work is delegated to a **coder subagent, resumed across runs**: resume id = `agent-0` (it holds full context of Phases 1–3 and the conventions). Resume it with the Phase-4 task; if resume is unavailable, spawn a fresh coder subagent and point it at this file + `docs/` + `docs/architecture/determinism.md` + `docs/guides/developer-guide.md`.
 - Each run: implement one phase → full unit/property/golden/integration tests → ruff + black clean → logical conventional commits.
-- TodoList mirrors the 12 phases (Phase 5 = in_progress).
+- TodoList mirrors the 12 phases (Phase 6 = in_progress).
 
-## Current verified state (end of Phase 4)
+## Current verified state (end of Phase 5)
 
-- **359 tests passing** (unit incl. hypothesis property tests for swings + FVG, 9 byte-exact regression goldens in `tests/regression/goldens/` — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 13 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
-- Key commits: `41cbac1` scaffolding · `3d0c2fb` docs · `4957d46` core · `c349a84` models · `fcbea0f` refactor StrEnum/PEP695 · `3462ca4` phase-3 enums/thresholds · `b138a50`+`51a0058` indicators · `46afa5b` structure engine · `e3ccce3`+`dfd7987` tests · `ffe805c` schema exports + module docs · Phase 4: "feat(analysis): add FVG detection engine" / "feat(analysis): add FVG inversion and mitigation lifecycle" / "test(analysis): add FVG unit/property/golden tests" / "docs: document FVG engine".
+- **419 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD, 12 byte-exact regression goldens in `tests/regression/goldens/` — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 23 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
+- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests.
 
-## Phase 4 decisions (for Phase 5+ reuse)
+## Phase 5 decisions (for Phase 6+ reuse)
 
-- FVG lifecycle reuses the shared `MitigationStatus` enum: UNMITIGATED=untouched, PARTIALLY_MITIGATED=partial, MITIGATED=filled (wick suffices), VIOLATED=inverted (close-through only; terminal). MITIGATED is NOT terminal — a wick-filled zone can still invert later.
-- Chronological first-touch pattern: single pass updates registered states per candle, registers new objects at their confirmation candle — same pattern Phase 5 order blocks should follow.
-- Nested parenting = chronological snapshot of still-active containers at registration; stacked grouping = pure geometry (transitive chaining within `fvg_stacked_lookback`, groups of 1 excluded, group id = content hash of root member).
-- Strength = weighted sum (gap ATR capped, displacement link, freshness, exp age decay, struct bonus), clamped [0,1]; weights in EngineConfig; rank = sort by (-strength, formation_end_index).
-- FVG `is_inverse` (VIOLATED) is the input Phase 5 breaker-block logic should consume.
+- OB anchors: last opposite-close candle before a confirmed break (single-candle; cluster merging deliberately dropped — trend legs are contiguous same-sign runs). Origin = REVERSAL iff the linked break is a CHoCH. Lifecycle starts at break_index + 1 (the break candle belongs to the departure).
+- Refinement: zone height > `ob_refine_atr_multiple` x ATR (strict) → refined zone = extreme `ob_refine_wick_fraction`; mitigation level = refined midpoint (50% rule), else far boundary.
+- Breaker = VIOLATED OB + confirmed counter-direction break within `breaker_confirm_lookback`; flips direction, keeps zone, lifecycle from flip+1.
+- Mitigation blocks anchor on STOP_HUNT/GRAB sweeps; origin = candle at the last opposite external swing before the sweep; `failed_swing_id` = first member swing of the swept pool (equal-level pools store [level.id, *swing_ids]).
+- SD zones: OB-derived (over the active/refined zone) + RBD/DBR pattern zones at reversal swings (base = 1..`sd_max_base_candles` small-body candles ending AT the swing; departure = impulse leg >= `sd_departure_atr_multiple` x ATR; actionable at leg end + external lookback, else skipped). Duplicate = overlap/min(heights) >= 0.8 vs an OB zone.
+- SD lifecycle is its own enum (`SDZoneStatus` FRESH/TESTED/MITIGATED/BROKEN) — unlike blocks, MITIGATED is terminal there; BROKEN (close-through) beats MITIGATED on the same candle.
+- External swings with lookback L need index >= L (fixtures must place the first swing at index >= external lookback).
 
 ## Conventions Phase 4+ MUST follow (established in Phases 1–3)
 
@@ -65,13 +67,13 @@
 - Docs per module in `docs/modules/`: Purpose/Responsibilities/Inputs/Outputs/Dependencies/Examples/Testing/Limitations; update `docs/roadmap.md`.
 - Note: `PoolStatus` includes `BROKEN` (deviation from MP02 list, deliberate); MTF context moved to Phase 6 with sessions.
 
-## Phase 5 brief (ready to hand to the coder subagent)
+## Phase 6 brief (ready to hand to the coder subagent)
 
-Order block engine under `src/contexttrading/analysis/orderblocks/`:
-- Reuse `StructureScanner` — OBs anchor on the last opposite-direction candle(s) before a displacement BOS; never recompute structure.
-- Follow the Phase-4 patterns: chronological first-touch lifecycle with the shared `MitigationStatus` enum, deterministic strength scoring with weights in EngineConfig, `AnalysisObject` content-hash IDs, schema slot + export, goldens + property + integration tests.
-- Breaker blocks consume FVG `is_inverse`/VIOLATED semantics already established; mitigation blocks mirror with the opposite anchor leg.
-- Docs: `docs/modules/orderblocks.md`; commits mirroring the Phase-4 four-commit split.
+Session engine + MTF context under `src/contexttrading/analysis/sessions/`:
+- `SessionConfig` already exists (timezone-validated windows; `SessionName` enum in constants). Session windows are wall-clock — keep determinism by deriving everything from candle timestamps only (UTC-aware), never `now()`.
+- Session high/low pools: `LiquidityPoolKind` already has SESSION_HIGH/SESSION_LOW/PREVIOUS_DAY_HIGH/PREVIOUS_DAY_LOW slots — feed them into the existing pool/sweep machinery rather than building a parallel lifecycle.
+- MTF context: resample `CandleSeries` to higher timeframes deterministically (aggregate, no lookahead), run `StructureScanner` per timeframe, align trends; the engine already supports any series.
+- Follow established patterns: chronological lifecycle, content-hash IDs, schema slots + export, unit/property/golden/integration tests, docs in `docs/modules/sessions.md`.
 
 ## User preferences observed
 
