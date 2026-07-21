@@ -58,7 +58,6 @@ from contexttrading.models.ai import (
     TradeEvaluation,
     TradeSetup,
 )
-from contexttrading.models.base import VersionedModel
 from contexttrading.models.backtest import (
     BacktestResult,
     BacktestStatistics,
@@ -71,6 +70,7 @@ from contexttrading.models.backtest import (
     WalkForwardFold,
     WalkForwardResult,
 )
+from contexttrading.models.base import VersionedModel
 from contexttrading.models.candle import Candle, GapWindow
 from contexttrading.models.confluence import (
     ConfluenceResult,

@@ -17,7 +17,6 @@ from contexttrading.core.versioning import SCHEMA_VERSION_BACKTEST
 from contexttrading.models.base import VersionedModel
 from contexttrading.models.outputs import DataWindow
 
-
 #: Why a position was closed.
 
 ExitReasonLiteral = Literal["stop_loss", "take_profit", "signal", "end_of_data"]
