@@ -42,6 +42,9 @@ SCHEMA_VERSION_AI: str = "1.0.0"
 #: REST API layer: versioned request/response models.
 SCHEMA_VERSION_API: str = "1.0.0"
 
+#: Backtesting layer: replay/execution/statistics/optimization outputs.
+SCHEMA_VERSION_BACKTEST: str = "1.0.0"
+
 #: Registry of all current schema versions, keyed by logical model name.
 CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "AnalysisResult": SCHEMA_VERSION_ENVELOPE,
@@ -120,6 +123,16 @@ CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "WeeklyReviewRequest": SCHEMA_VERSION_API,
     "StoredResultResponse": SCHEMA_VERSION_API,
     "ErrorEnvelope": SCHEMA_VERSION_API,
+    "OrderIntent": SCHEMA_VERSION_BACKTEST,
+    "TradeRecord": SCHEMA_VERSION_BACKTEST,
+    "EquityPoint": SCHEMA_VERSION_BACKTEST,
+    "DrawdownInfo": SCHEMA_VERSION_BACKTEST,
+    "BacktestStatistics": SCHEMA_VERSION_BACKTEST,
+    "BacktestResult": SCHEMA_VERSION_BACKTEST,
+    "OptimizationEntry": SCHEMA_VERSION_BACKTEST,
+    "OptimizationResult": SCHEMA_VERSION_BACKTEST,
+    "WalkForwardFold": SCHEMA_VERSION_BACKTEST,
+    "WalkForwardResult": SCHEMA_VERSION_BACKTEST,
 }
 
 

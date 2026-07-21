@@ -466,6 +466,65 @@ class LoggingConfig(BaseModel):
     json_output: bool = Field(default=False, description="Emit single-line JSON log records.")
 
 
+class BacktestConfig(BaseModel):
+    """Backtesting replay/execution/statistics configuration (Phase 11).
+
+    All fill, cost, and sizing behavior is config-driven and deterministic.
+    Defaults are deliberately conservative (SL-first intrabar ambiguity is a
+    fixed execution rule, not a config flag — see ``backtesting.execution``).
+    """
+
+    model_config = ConfigDict(extra="forbid")
+
+    initial_equity: float = Field(default=100_000.0, gt=0)
+    position_sizing: Literal["risk_percent", "fixed_units"] = Field(
+        default="risk_percent",
+        description="risk_percent: units = equity*risk%/|entry-SL|; fixed_units: constant.",
+    )
+    risk_percent: float = Field(
+        default=1.0, gt=0, le=100, description="Equity % risked per trade (risk_percent mode)."
+    )
+    fixed_units: float = Field(default=1.0, gt=0, description="Size for fixed_units mode.")
+    commission_bps: float = Field(
+        default=1.0, ge=0, description="Commission per side, bps of notional."
+    )
+    spread_bps: float = Field(
+        default=1.0, ge=0, description="Full bid/ask spread in bps; half applied per fill."
+    )
+    slippage_bps: float = Field(
+        default=1.0, ge=0, description="Adverse slippage on market and stop fills (not limits)."
+    )
+    warmup_bars: int = Field(
+        default=50, ge=0, description="No decisions before this bar close (engine warm-up)."
+    )
+    recompute_interval: int = Field(
+        default=1,
+        ge=1,
+        description="Re-run engine modules every N bars; strategies see the latest results.",
+    )
+    window_bars: int | None = Field(
+        default=None,
+        ge=20,
+        description="Rolling engine window; None = full prefix from bar 0 (recommended).",
+    )
+    eod_close: bool = Field(
+        default=True, description="Close any open position at the final bar close."
+    )
+    breakeven_after_r: float | None = Field(
+        default=None,
+        gt=0,
+        description="Move SL to entry once MFE reaches this many R (None disables).",
+    )
+    min_trades: int = Field(
+        default=30, ge=1, description="Below this, statistics_reliable is False."
+    )
+    optimization_overfit_threshold: float = Field(
+        default=0.5,
+        ge=0,
+        description="Walk-forward: test objective degradation beyond this fraction -> overfit.",
+    )
+
+
 class Settings(BaseSettings):
     """Root application settings composed of per-subsystem sections."""
 
@@ -484,6 +543,7 @@ class Settings(BaseSettings):
     ai: AIConfig = Field(default_factory=AIConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     visualization: VisualizationConfig = Field(default_factory=VisualizationConfig)
+    backtest: BacktestConfig = Field(default_factory=BacktestConfig)
 
     @classmethod
     def from_file(cls, path: str | Path, **overrides: Any) -> Settings:

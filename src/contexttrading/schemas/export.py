@@ -59,6 +59,18 @@ from contexttrading.models.ai import (
     TradeSetup,
 )
 from contexttrading.models.base import VersionedModel
+from contexttrading.models.backtest import (
+    BacktestResult,
+    BacktestStatistics,
+    DrawdownInfo,
+    EquityPoint,
+    OptimizationEntry,
+    OptimizationResult,
+    OrderIntent,
+    TradeRecord,
+    WalkForwardFold,
+    WalkForwardResult,
+)
 from contexttrading.models.candle import Candle, GapWindow
 from contexttrading.models.confluence import (
     ConfluenceResult,
@@ -185,6 +197,16 @@ EXPORTED_MODELS: tuple[type[BaseModel], ...] = (
     WeeklyReviewRequest,
     StoredResultResponse,
     ErrorEnvelope,
+    OrderIntent,
+    TradeRecord,
+    EquityPoint,
+    DrawdownInfo,
+    BacktestStatistics,
+    BacktestResult,
+    OptimizationEntry,
+    OptimizationResult,
+    WalkForwardFold,
+    WalkForwardResult,
 )
 
 

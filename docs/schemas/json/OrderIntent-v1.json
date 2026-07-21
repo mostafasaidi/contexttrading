@@ -1,0 +1,126 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "TrendDirection": {
+        "description": "Directional state of price, a candle, or a structure leg.",
+        "enum": [
+          "bullish",
+          "bearish",
+          "ranging",
+          "unknown"
+        ],
+        "title": "TrendDirection",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "description": "A strategy's instruction to the execution layer.\n\nCreated at the close of bar ``created_index`` using only data up to that\nbar; the execution layer attempts the fill on the NEXT bar (never the\ndecision bar). Unfilled limit/stop intents expire after that bar.",
+    "properties": {
+      "created_index": {
+        "description": "Decision bar index (fill next bar).",
+        "minimum": 0,
+        "title": "Created Index",
+        "type": "integer"
+      },
+      "direction": {
+        "$ref": "#/$defs/TrendDirection",
+        "description": "BULLISH = long entry, BEARISH = short entry; ignored for close."
+      },
+      "evidence_ids": {
+        "description": "Engine object ids behind the decision (must resolve in window results).",
+        "items": {
+          "type": "string"
+        },
+        "title": "Evidence Ids",
+        "type": "array"
+      },
+      "kind": {
+        "description": "market | limit | stop | close.",
+        "enum": [
+          "market",
+          "limit",
+          "stop",
+          "close"
+        ],
+        "title": "Kind",
+        "type": "string"
+      },
+      "price": {
+        "anyOf": [
+          {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Trigger price for limit/stop kinds.",
+        "title": "Price"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "size_units": {
+        "anyOf": [
+          {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Explicit size; None -> sized from risk config via SL distance.",
+        "title": "Size Units"
+      },
+      "stop_loss": {
+        "anyOf": [
+          {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Stop Loss"
+      },
+      "tag": {
+        "default": "",
+        "description": "Free-form strategy label for grouping.",
+        "title": "Tag",
+        "type": "string"
+      },
+      "take_profit": {
+        "anyOf": [
+          {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Take Profit"
+      }
+    },
+    "required": [
+      "kind",
+      "direction",
+      "created_index"
+    ],
+    "title": "OrderIntent",
+    "type": "object"
+  },
+  "name": "OrderIntent",
+  "schema_version": "1.0.0"
+}

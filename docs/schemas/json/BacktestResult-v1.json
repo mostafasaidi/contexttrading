@@ -1,0 +1,608 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "BacktestStatistics": {
+        "additionalProperties": false,
+        "description": "Aggregate performance metrics over the closed trades + equity curve.\n\nSharpe/Sortino use per-bar returns of the mark-to-market equity curve,\nannualized by ``annualization_factor`` (bars per calendar year from the\ntimeframe, 365.25 days). Risk-free rate is 0 (configurable later).\nCalmar = annualized return / max drawdown %. ``statistics_reliable`` is\nFalse when total_trades < BacktestConfig.min_trades.",
+        "properties": {
+          "annualization_factor": {
+            "description": "Bars per calendar year.",
+            "exclusiveMinimum": 0,
+            "title": "Annualization Factor",
+            "type": "number"
+          },
+          "avg_loss": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Absolute mean losing net PnL.",
+            "title": "Avg Loss"
+          },
+          "avg_win": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Avg Win"
+          },
+          "calmar": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "None when max drawdown is 0.",
+            "title": "Calmar"
+          },
+          "expectancy_currency": {
+            "description": "Mean net PnL per trade.",
+            "title": "Expectancy Currency",
+            "type": "number"
+          },
+          "expectancy_r": {
+            "description": "Mean R-multiple per trade.",
+            "title": "Expectancy R",
+            "type": "number"
+          },
+          "exposure_pct": {
+            "description": "Fraction of bars in a position.",
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Exposure Pct",
+            "type": "number"
+          },
+          "gross_loss": {
+            "description": "Absolute value of summed losing net PnL.",
+            "minimum": 0,
+            "title": "Gross Loss",
+            "type": "number"
+          },
+          "gross_profit": {
+            "minimum": 0,
+            "title": "Gross Profit",
+            "type": "number"
+          },
+          "losses": {
+            "minimum": 0,
+            "title": "Losses",
+            "type": "integer"
+          },
+          "max_consecutive_losses": {
+            "minimum": 0,
+            "title": "Max Consecutive Losses",
+            "type": "integer"
+          },
+          "max_consecutive_wins": {
+            "minimum": 0,
+            "title": "Max Consecutive Wins",
+            "type": "integer"
+          },
+          "max_drawdown_abs": {
+            "minimum": 0,
+            "title": "Max Drawdown Abs",
+            "type": "number"
+          },
+          "max_drawdown_pct": {
+            "minimum": 0,
+            "title": "Max Drawdown Pct",
+            "type": "number"
+          },
+          "net_pnl": {
+            "title": "Net Pnl",
+            "type": "number"
+          },
+          "payoff_ratio": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "avg_win / avg_loss.",
+            "title": "Payoff Ratio"
+          },
+          "profit_factor": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "gross_profit / gross_loss; None when no losses.",
+            "title": "Profit Factor"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "sharpe": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "None when returns have zero std.",
+            "title": "Sharpe"
+          },
+          "sortino": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "None when no downside returns.",
+            "title": "Sortino"
+          },
+          "statistics_reliable": {
+            "description": "total_trades >= config.min_trades; below that, metrics are noise.",
+            "title": "Statistics Reliable",
+            "type": "boolean"
+          },
+          "total_trades": {
+            "minimum": 0,
+            "title": "Total Trades",
+            "type": "integer"
+          },
+          "win_rate": {
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Win Rate",
+            "type": "number"
+          },
+          "wins": {
+            "minimum": 0,
+            "title": "Wins",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_trades",
+          "wins",
+          "losses",
+          "win_rate",
+          "gross_profit",
+          "gross_loss",
+          "net_pnl",
+          "expectancy_currency",
+          "expectancy_r",
+          "max_consecutive_wins",
+          "max_consecutive_losses",
+          "max_drawdown_abs",
+          "max_drawdown_pct",
+          "exposure_pct",
+          "annualization_factor",
+          "statistics_reliable"
+        ],
+        "title": "BacktestStatistics",
+        "type": "object"
+      },
+      "DataWindow": {
+        "additionalProperties": false,
+        "description": "The exact input-data window an analysis was generated from.\n\nTimestamps always derive from candle data (never wall-clock) per the\ndeterminism contract.",
+        "properties": {
+          "candle_count": {
+            "description": "Number of input candles.",
+            "minimum": 0,
+            "title": "Candle Count",
+            "type": "integer"
+          },
+          "end": {
+            "description": "Last input candle timestamp (UTC).",
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "start": {
+            "description": "First input candle timestamp (UTC).",
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "candle_count"
+        ],
+        "title": "DataWindow",
+        "type": "object"
+      },
+      "EquityPoint": {
+        "additionalProperties": false,
+        "description": "Mark-to-market equity at one bar close.",
+        "properties": {
+          "bar_index": {
+            "minimum": 0,
+            "title": "Bar Index",
+            "type": "integer"
+          },
+          "closed_equity": {
+            "description": "Realized equity after the last closed trade.",
+            "title": "Closed Equity",
+            "type": "number"
+          },
+          "equity": {
+            "description": "closed_equity + open PnL at this close.",
+            "title": "Equity",
+            "type": "number"
+          },
+          "in_position": {
+            "title": "In Position",
+            "type": "boolean"
+          },
+          "open_pnl": {
+            "description": "Unrealized PnL of the open position (0 when flat).",
+            "title": "Open Pnl",
+            "type": "number"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "timestamp": {
+            "format": "date-time",
+            "title": "Timestamp",
+            "type": "string"
+          }
+        },
+        "required": [
+          "bar_index",
+          "timestamp",
+          "equity",
+          "closed_equity",
+          "open_pnl",
+          "in_position"
+        ],
+        "title": "EquityPoint",
+        "type": "object"
+      },
+      "Timeframe": {
+        "description": "Supported candle timeframes.\n\nValues are the canonical string codes (``\"1m\"`` … ``\"1M\"``). Ordering is\nby duration: ``M1 < M5 < H1 < D1 < W1 < MN1``.",
+        "enum": [
+          "1m",
+          "3m",
+          "5m",
+          "15m",
+          "30m",
+          "1h",
+          "2h",
+          "4h",
+          "6h",
+          "8h",
+          "12h",
+          "1d",
+          "1w",
+          "1M"
+        ],
+        "title": "Timeframe",
+        "type": "string"
+      },
+      "TradeRecord": {
+        "additionalProperties": false,
+        "description": "One round-trip position, filled under the execution/cost rules.",
+        "properties": {
+          "commission_paid": {
+            "description": "Entry + exit commission.",
+            "minimum": 0,
+            "title": "Commission Paid",
+            "type": "number"
+          },
+          "direction": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "BULLISH = long, BEARISH = short."
+          },
+          "entry_index": {
+            "minimum": 0,
+            "title": "Entry Index",
+            "type": "integer"
+          },
+          "entry_price": {
+            "description": "Fill price after spread/slippage.",
+            "exclusiveMinimum": 0,
+            "title": "Entry Price",
+            "type": "number"
+          },
+          "entry_timestamp": {
+            "format": "date-time",
+            "title": "Entry Timestamp",
+            "type": "string"
+          },
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Evidence Ids",
+            "type": "array"
+          },
+          "exit_index": {
+            "minimum": 0,
+            "title": "Exit Index",
+            "type": "integer"
+          },
+          "exit_price": {
+            "description": "Fill price after spread/slippage.",
+            "exclusiveMinimum": 0,
+            "title": "Exit Price",
+            "type": "number"
+          },
+          "exit_reason": {
+            "enum": [
+              "stop_loss",
+              "take_profit",
+              "signal",
+              "end_of_data"
+            ],
+            "title": "Exit Reason",
+            "type": "string"
+          },
+          "exit_timestamp": {
+            "format": "date-time",
+            "title": "Exit Timestamp",
+            "type": "string"
+          },
+          "gross_pnl": {
+            "description": "Price PnL before commission.",
+            "title": "Gross Pnl",
+            "type": "number"
+          },
+          "holding_bars": {
+            "description": "exit_index - entry_index.",
+            "minimum": 0,
+            "title": "Holding Bars",
+            "type": "integer"
+          },
+          "initial_risk_distance": {
+            "description": "|entry - initial stop| in price; the 1R unit.",
+            "exclusiveMinimum": 0,
+            "title": "Initial Risk Distance",
+            "type": "number"
+          },
+          "mae_price": {
+            "description": "Max adverse excursion in price while holding (intrabar path).",
+            "minimum": 0,
+            "title": "Mae Price",
+            "type": "number"
+          },
+          "mae_r": {
+            "description": "MAE in initial-risk units.",
+            "minimum": 0,
+            "title": "Mae R",
+            "type": "number"
+          },
+          "mfe_price": {
+            "description": "Max favorable excursion in price.",
+            "minimum": 0,
+            "title": "Mfe Price",
+            "type": "number"
+          },
+          "mfe_r": {
+            "description": "MFE in initial-risk units.",
+            "minimum": 0,
+            "title": "Mfe R",
+            "type": "number"
+          },
+          "net_pnl": {
+            "description": "gross_pnl - commission_paid.",
+            "title": "Net Pnl",
+            "type": "number"
+          },
+          "r_multiple": {
+            "description": "Price-based R: sign*(exit-entry)/initial_risk_distance (gross of costs).",
+            "title": "R Multiple",
+            "type": "number"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "sequence": {
+            "description": "Closed-trade sequence number (0-based).",
+            "minimum": 0,
+            "title": "Sequence",
+            "type": "integer"
+          },
+          "size_units": {
+            "exclusiveMinimum": 0,
+            "title": "Size Units",
+            "type": "number"
+          },
+          "stop_loss": {
+            "description": "Stop at exit time (breakeven may move it).",
+            "exclusiveMinimum": 0,
+            "title": "Stop Loss",
+            "type": "number"
+          },
+          "tag": {
+            "default": "",
+            "title": "Tag",
+            "type": "string"
+          },
+          "take_profit": {
+            "anyOf": [
+              {
+                "exclusiveMinimum": 0,
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Take Profit"
+          }
+        },
+        "required": [
+          "sequence",
+          "direction",
+          "entry_index",
+          "entry_timestamp",
+          "entry_price",
+          "exit_index",
+          "exit_timestamp",
+          "exit_price",
+          "size_units",
+          "stop_loss",
+          "initial_risk_distance",
+          "exit_reason",
+          "gross_pnl",
+          "commission_paid",
+          "net_pnl",
+          "r_multiple",
+          "mae_price",
+          "mfe_price",
+          "mae_r",
+          "mfe_r",
+          "holding_bars"
+        ],
+        "title": "TradeRecord",
+        "type": "object"
+      },
+      "TrendDirection": {
+        "description": "Directional state of price, a candle, or a structure leg.",
+        "enum": [
+          "bullish",
+          "bearish",
+          "ranging",
+          "unknown"
+        ],
+        "title": "TrendDirection",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Complete backtest output: config echo, trades, equity, statistics.",
+    "properties": {
+      "backtest_config": {
+        "additionalProperties": true,
+        "description": "Effective BacktestConfig dump used for the run (determinism echo).",
+        "title": "Backtest Config",
+        "type": "object"
+      },
+      "engine_version": {
+        "description": "contexttrading version that produced this.",
+        "title": "Engine Version",
+        "type": "string"
+      },
+      "equity_curve": {
+        "items": {
+          "$ref": "#/$defs/EquityPoint"
+        },
+        "title": "Equity Curve",
+        "type": "array"
+      },
+      "generated_from": {
+        "$ref": "#/$defs/DataWindow"
+      },
+      "module": {
+        "default": "backtest",
+        "title": "Module",
+        "type": "string"
+      },
+      "run_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Metadata only; not analytical.",
+        "title": "Run Id"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "statistics": {
+        "$ref": "#/$defs/BacktestStatistics"
+      },
+      "strategy": {
+        "description": "Strategy registry name.",
+        "minLength": 1,
+        "title": "Strategy",
+        "type": "string"
+      },
+      "strategy_params": {
+        "additionalProperties": true,
+        "title": "Strategy Params",
+        "type": "object"
+      },
+      "symbol": {
+        "minLength": 1,
+        "title": "Symbol",
+        "type": "string"
+      },
+      "timeframe": {
+        "$ref": "#/$defs/Timeframe"
+      },
+      "trades": {
+        "items": {
+          "$ref": "#/$defs/TradeRecord"
+        },
+        "title": "Trades",
+        "type": "array"
+      }
+    },
+    "required": [
+      "symbol",
+      "timeframe",
+      "engine_version",
+      "strategy",
+      "generated_from",
+      "backtest_config",
+      "statistics"
+    ],
+    "title": "BacktestResult",
+    "type": "object"
+  },
+  "name": "BacktestResult",
+  "schema_version": "1.0.0"
+}

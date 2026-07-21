@@ -1,0 +1,213 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "additionalProperties": false,
+    "description": "Aggregate performance metrics over the closed trades + equity curve.\n\nSharpe/Sortino use per-bar returns of the mark-to-market equity curve,\nannualized by ``annualization_factor`` (bars per calendar year from the\ntimeframe, 365.25 days). Risk-free rate is 0 (configurable later).\nCalmar = annualized return / max drawdown %. ``statistics_reliable`` is\nFalse when total_trades < BacktestConfig.min_trades.",
+    "properties": {
+      "annualization_factor": {
+        "description": "Bars per calendar year.",
+        "exclusiveMinimum": 0,
+        "title": "Annualization Factor",
+        "type": "number"
+      },
+      "avg_loss": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Absolute mean losing net PnL.",
+        "title": "Avg Loss"
+      },
+      "avg_win": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Avg Win"
+      },
+      "calmar": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "None when max drawdown is 0.",
+        "title": "Calmar"
+      },
+      "expectancy_currency": {
+        "description": "Mean net PnL per trade.",
+        "title": "Expectancy Currency",
+        "type": "number"
+      },
+      "expectancy_r": {
+        "description": "Mean R-multiple per trade.",
+        "title": "Expectancy R",
+        "type": "number"
+      },
+      "exposure_pct": {
+        "description": "Fraction of bars in a position.",
+        "maximum": 1,
+        "minimum": 0,
+        "title": "Exposure Pct",
+        "type": "number"
+      },
+      "gross_loss": {
+        "description": "Absolute value of summed losing net PnL.",
+        "minimum": 0,
+        "title": "Gross Loss",
+        "type": "number"
+      },
+      "gross_profit": {
+        "minimum": 0,
+        "title": "Gross Profit",
+        "type": "number"
+      },
+      "losses": {
+        "minimum": 0,
+        "title": "Losses",
+        "type": "integer"
+      },
+      "max_consecutive_losses": {
+        "minimum": 0,
+        "title": "Max Consecutive Losses",
+        "type": "integer"
+      },
+      "max_consecutive_wins": {
+        "minimum": 0,
+        "title": "Max Consecutive Wins",
+        "type": "integer"
+      },
+      "max_drawdown_abs": {
+        "minimum": 0,
+        "title": "Max Drawdown Abs",
+        "type": "number"
+      },
+      "max_drawdown_pct": {
+        "minimum": 0,
+        "title": "Max Drawdown Pct",
+        "type": "number"
+      },
+      "net_pnl": {
+        "title": "Net Pnl",
+        "type": "number"
+      },
+      "payoff_ratio": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "avg_win / avg_loss.",
+        "title": "Payoff Ratio"
+      },
+      "profit_factor": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "gross_profit / gross_loss; None when no losses.",
+        "title": "Profit Factor"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "sharpe": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "None when returns have zero std.",
+        "title": "Sharpe"
+      },
+      "sortino": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "None when no downside returns.",
+        "title": "Sortino"
+      },
+      "statistics_reliable": {
+        "description": "total_trades >= config.min_trades; below that, metrics are noise.",
+        "title": "Statistics Reliable",
+        "type": "boolean"
+      },
+      "total_trades": {
+        "minimum": 0,
+        "title": "Total Trades",
+        "type": "integer"
+      },
+      "win_rate": {
+        "maximum": 1,
+        "minimum": 0,
+        "title": "Win Rate",
+        "type": "number"
+      },
+      "wins": {
+        "minimum": 0,
+        "title": "Wins",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "total_trades",
+      "wins",
+      "losses",
+      "win_rate",
+      "gross_profit",
+      "gross_loss",
+      "net_pnl",
+      "expectancy_currency",
+      "expectancy_r",
+      "max_consecutive_wins",
+      "max_consecutive_losses",
+      "max_drawdown_abs",
+      "max_drawdown_pct",
+      "exposure_pct",
+      "annualization_factor",
+      "statistics_reliable"
+    ],
+    "title": "BacktestStatistics",
+    "type": "object"
+  },
+  "name": "BacktestStatistics",
+  "schema_version": "1.0.0"
+}

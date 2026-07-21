@@ -1,0 +1,56 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "additionalProperties": false,
+    "description": "Mark-to-market equity at one bar close.",
+    "properties": {
+      "bar_index": {
+        "minimum": 0,
+        "title": "Bar Index",
+        "type": "integer"
+      },
+      "closed_equity": {
+        "description": "Realized equity after the last closed trade.",
+        "title": "Closed Equity",
+        "type": "number"
+      },
+      "equity": {
+        "description": "closed_equity + open PnL at this close.",
+        "title": "Equity",
+        "type": "number"
+      },
+      "in_position": {
+        "title": "In Position",
+        "type": "boolean"
+      },
+      "open_pnl": {
+        "description": "Unrealized PnL of the open position (0 when flat).",
+        "title": "Open Pnl",
+        "type": "number"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "timestamp": {
+        "format": "date-time",
+        "title": "Timestamp",
+        "type": "string"
+      }
+    },
+    "required": [
+      "bar_index",
+      "timestamp",
+      "equity",
+      "closed_equity",
+      "open_pnl",
+      "in_position"
+    ],
+    "title": "EquityPoint",
+    "type": "object"
+  },
+  "name": "EquityPoint",
+  "schema_version": "1.0.0"
+}

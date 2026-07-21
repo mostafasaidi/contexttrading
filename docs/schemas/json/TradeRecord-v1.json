@@ -1,0 +1,200 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "TrendDirection": {
+        "description": "Directional state of price, a candle, or a structure leg.",
+        "enum": [
+          "bullish",
+          "bearish",
+          "ranging",
+          "unknown"
+        ],
+        "title": "TrendDirection",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "description": "One round-trip position, filled under the execution/cost rules.",
+    "properties": {
+      "commission_paid": {
+        "description": "Entry + exit commission.",
+        "minimum": 0,
+        "title": "Commission Paid",
+        "type": "number"
+      },
+      "direction": {
+        "$ref": "#/$defs/TrendDirection",
+        "description": "BULLISH = long, BEARISH = short."
+      },
+      "entry_index": {
+        "minimum": 0,
+        "title": "Entry Index",
+        "type": "integer"
+      },
+      "entry_price": {
+        "description": "Fill price after spread/slippage.",
+        "exclusiveMinimum": 0,
+        "title": "Entry Price",
+        "type": "number"
+      },
+      "entry_timestamp": {
+        "format": "date-time",
+        "title": "Entry Timestamp",
+        "type": "string"
+      },
+      "evidence_ids": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Evidence Ids",
+        "type": "array"
+      },
+      "exit_index": {
+        "minimum": 0,
+        "title": "Exit Index",
+        "type": "integer"
+      },
+      "exit_price": {
+        "description": "Fill price after spread/slippage.",
+        "exclusiveMinimum": 0,
+        "title": "Exit Price",
+        "type": "number"
+      },
+      "exit_reason": {
+        "enum": [
+          "stop_loss",
+          "take_profit",
+          "signal",
+          "end_of_data"
+        ],
+        "title": "Exit Reason",
+        "type": "string"
+      },
+      "exit_timestamp": {
+        "format": "date-time",
+        "title": "Exit Timestamp",
+        "type": "string"
+      },
+      "gross_pnl": {
+        "description": "Price PnL before commission.",
+        "title": "Gross Pnl",
+        "type": "number"
+      },
+      "holding_bars": {
+        "description": "exit_index - entry_index.",
+        "minimum": 0,
+        "title": "Holding Bars",
+        "type": "integer"
+      },
+      "initial_risk_distance": {
+        "description": "|entry - initial stop| in price; the 1R unit.",
+        "exclusiveMinimum": 0,
+        "title": "Initial Risk Distance",
+        "type": "number"
+      },
+      "mae_price": {
+        "description": "Max adverse excursion in price while holding (intrabar path).",
+        "minimum": 0,
+        "title": "Mae Price",
+        "type": "number"
+      },
+      "mae_r": {
+        "description": "MAE in initial-risk units.",
+        "minimum": 0,
+        "title": "Mae R",
+        "type": "number"
+      },
+      "mfe_price": {
+        "description": "Max favorable excursion in price.",
+        "minimum": 0,
+        "title": "Mfe Price",
+        "type": "number"
+      },
+      "mfe_r": {
+        "description": "MFE in initial-risk units.",
+        "minimum": 0,
+        "title": "Mfe R",
+        "type": "number"
+      },
+      "net_pnl": {
+        "description": "gross_pnl - commission_paid.",
+        "title": "Net Pnl",
+        "type": "number"
+      },
+      "r_multiple": {
+        "description": "Price-based R: sign*(exit-entry)/initial_risk_distance (gross of costs).",
+        "title": "R Multiple",
+        "type": "number"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "sequence": {
+        "description": "Closed-trade sequence number (0-based).",
+        "minimum": 0,
+        "title": "Sequence",
+        "type": "integer"
+      },
+      "size_units": {
+        "exclusiveMinimum": 0,
+        "title": "Size Units",
+        "type": "number"
+      },
+      "stop_loss": {
+        "description": "Stop at exit time (breakeven may move it).",
+        "exclusiveMinimum": 0,
+        "title": "Stop Loss",
+        "type": "number"
+      },
+      "tag": {
+        "default": "",
+        "title": "Tag",
+        "type": "string"
+      },
+      "take_profit": {
+        "anyOf": [
+          {
+            "exclusiveMinimum": 0,
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Take Profit"
+      }
+    },
+    "required": [
+      "sequence",
+      "direction",
+      "entry_index",
+      "entry_timestamp",
+      "entry_price",
+      "exit_index",
+      "exit_timestamp",
+      "exit_price",
+      "size_units",
+      "stop_loss",
+      "initial_risk_distance",
+      "exit_reason",
+      "gross_pnl",
+      "commission_paid",
+      "net_pnl",
+      "r_multiple",
+      "mae_price",
+      "mfe_price",
+      "mae_r",
+      "mfe_r",
+      "holding_bars"
+    ],
+    "title": "TradeRecord",
+    "type": "object"
+  },
+  "name": "TradeRecord",
+  "schema_version": "1.0.0"
+}
