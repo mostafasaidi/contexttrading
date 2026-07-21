@@ -1,0 +1,176 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "AnalysisResult": {
+        "additionalProperties": false,
+        "description": "Envelope wrapping every module's payload.\n\nConsumers must check both ``schema_version`` (envelope/payload contract)\nand ``engine_version`` (computation semantics) before interpreting the\npayload.",
+        "properties": {
+          "engine_version": {
+            "default": "0.1.0",
+            "description": "contexttrading version that produced this.",
+            "title": "Engine Version",
+            "type": "string"
+          },
+          "generated_from": {
+            "$ref": "#/$defs/DataWindow",
+            "description": "Exact input data window."
+          },
+          "module": {
+            "description": "Producing module, e.g. 'fvg'.",
+            "minLength": 1,
+            "title": "Module",
+            "type": "string"
+          },
+          "payload": {
+            "$ref": "#/$defs/VersionedModel",
+            "description": "Module-specific versioned payload."
+          },
+          "run_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional run-scoped bookkeeping ID (metadata only; not part of analytical equality).",
+            "title": "Run Id"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "symbol": {
+            "description": "Instrument symbol.",
+            "minLength": 1,
+            "title": "Symbol",
+            "type": "string"
+          },
+          "timeframe": {
+            "$ref": "#/$defs/Timeframe",
+            "description": "Analysis timeframe."
+          }
+        },
+        "required": [
+          "module",
+          "symbol",
+          "timeframe",
+          "generated_from",
+          "payload"
+        ],
+        "title": "AnalysisResult",
+        "type": "object"
+      },
+      "DataWindow": {
+        "additionalProperties": false,
+        "description": "The exact input-data window an analysis was generated from.\n\nTimestamps always derive from candle data (never wall-clock) per the\ndeterminism contract.",
+        "properties": {
+          "candle_count": {
+            "description": "Number of input candles.",
+            "minimum": 0,
+            "title": "Candle Count",
+            "type": "integer"
+          },
+          "end": {
+            "description": "Last input candle timestamp (UTC).",
+            "format": "date-time",
+            "title": "End",
+            "type": "string"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "start": {
+            "description": "First input candle timestamp (UTC).",
+            "format": "date-time",
+            "title": "Start",
+            "type": "string"
+          }
+        },
+        "required": [
+          "start",
+          "end",
+          "candle_count"
+        ],
+        "title": "DataWindow",
+        "type": "object"
+      },
+      "Timeframe": {
+        "description": "Supported candle timeframes.\n\nValues are the canonical string codes (``\"1m\"`` … ``\"1M\"``). Ordering is\nby duration: ``M1 < M5 < H1 < D1 < W1 < MN1``.",
+        "enum": [
+          "1m",
+          "3m",
+          "5m",
+          "15m",
+          "30m",
+          "1h",
+          "2h",
+          "4h",
+          "6h",
+          "8h",
+          "12h",
+          "1d",
+          "1w",
+          "1M"
+        ],
+        "title": "Timeframe",
+        "type": "string"
+      },
+      "VersionedModel": {
+        "additionalProperties": false,
+        "description": "Base for all versioned, serializable models.\n\nSubclasses set ``SCHEMA_VERSION``; the ``schema_version`` field defaults\nto it and rejects mismatched values, so payloads can never silently drift\nfrom the class that validates them.",
+        "properties": {
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          }
+        },
+        "title": "VersionedModel",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Chart payload + optional store key.",
+    "properties": {
+      "chart": {
+        "$ref": "#/$defs/AnalysisResult"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "series_hash": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Store key component when persist=true.",
+        "title": "Series Hash"
+      }
+    },
+    "required": [
+      "chart"
+    ],
+    "title": "ChartResponse",
+    "type": "object"
+  },
+  "name": "ChartResponse",
+  "schema_version": "1.0.0"
+}

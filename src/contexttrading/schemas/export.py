@@ -28,6 +28,18 @@ from contexttrading.ai.context import (
     JournalContext,
     TruncationEntry,
 )
+from contexttrading.api.models import (
+    AnalysisRequest,
+    CandlesInput,
+    ChartRequest,
+    ChartResponse,
+    ErrorEnvelope,
+    FullAnalysisResponse,
+    JournalReviewRequest,
+    StoredResultResponse,
+    TradeEvaluationRequest,
+    WeeklyReviewRequest,
+)
 from contexttrading.core.versioning import major_of
 from contexttrading.models.ai import (
     AIAnalysisReport,
@@ -163,6 +175,16 @@ EXPORTED_MODELS: tuple[type[BaseModel], ...] = (
     DataQualityFlags,
     AnalysisContext,
     JournalContext,
+    CandlesInput,
+    AnalysisRequest,
+    FullAnalysisResponse,
+    ChartRequest,
+    ChartResponse,
+    TradeEvaluationRequest,
+    JournalReviewRequest,
+    WeeklyReviewRequest,
+    StoredResultResponse,
+    ErrorEnvelope,
 )
 
 
