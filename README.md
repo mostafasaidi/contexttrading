@@ -121,6 +121,28 @@ curl -X POST localhost:8000/v1/analysis/full \
 See [docs/api/README.md](docs/api/README.md) for endpoints, the error
 envelope, streaming, and Docker Compose.
 
+## Backtesting
+
+Deterministic, no-lookahead backtesting over any CandleSeries. Strategies
+decide at bar close on engine output only; fills happen on the next bar
+with configurable spread/slippage/commission:
+
+```python
+from contexttrading.backtesting import SMCPullbackStrategy, run_backtest
+from contexttrading.core.config import BacktestConfig
+
+result = run_backtest(series, SMCPullbackStrategy(), backtest_config=BacktestConfig())
+print(result.statistics.net_pnl, result.statistics.sharpe)
+for trade in result.trades:
+    print(trade.exit_reason, trade.r_multiple, trade.evidence_ids)
+```
+
+Grid search and anchored walk-forward optimization live in
+`backtesting.optimize`; the reference SMC pullback strategy demonstrates
+evidence-bound entries (every trade links to the engine objects behind
+it). HTTP: `POST /v1/backtest`. Full contract:
+[docs/modules/backtesting.md](docs/modules/backtesting.md).
+
 ## Documentation
 
 - [Architecture overview](docs/architecture/overview.md) — the 9 layers and their boundaries

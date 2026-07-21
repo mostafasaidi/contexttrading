@@ -43,6 +43,7 @@ curl -H "X-API-Key: $KEY" ...
 | `/v1/ai/journal-review` | POST | Review posted journal trades |
 | `/v1/ai/weekly-review` | POST | Review posted performance statistics |
 | `/v1/stream/analysis` | POST | NDJSON stream: one line per module + a `done` line |
+| `/v1/backtest` | POST | Deterministic no-lookahead backtest (`smc_pullback` registry) |
 
 Request bodies share the same shape: `{"series": {"symbol", "timeframe",
 "candles": [...]}}` plus optional `config_overrides` (merged onto the

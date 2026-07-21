@@ -1,6 +1,6 @@
 # ContextTrading — Build State (pause checkpoint)
 
-> Saved 2026-07-22 (end of REST API service). Resume point for the next session.
+> Saved 2026-07-22 (end of backtesting). Resume point for the next session.
 > This file tracks the autonomous build driven by MASTER PROMPTS 01–04.
 > Delete or archive when the project reaches production-ready status.
 
@@ -32,8 +32,8 @@
 | 8. Visualization & storage (render primitives, mappers, chart serializer, reference frontend, SQLite result store) | ✅ DONE |
 | 9. AI analyst layer (prompts, context builder, providers, citation enforcement, structured reports) | ✅ DONE |
 | 10. REST API service (FastAPI, analyze/AI endpoints, schema endpoints, docs/api/) | ✅ DONE |
-| 11. Backtesting (replay, statistics, metrics, optimization) | ⬅️ NEXT |
-| 12. Examples, polish, performance (examples/, benchmarks, docs completion, PostgreSQL/Redis stores) | pending |
+| 11. Backtesting (replay, statistics, metrics, optimization) | ✅ DONE |
+| 12. Examples, polish, performance (examples/, benchmarks, docs completion, PostgreSQL/Redis stores) | ⬅️ NEXT |
 | 13. Release hardening (PyPI, Docker, security review, v1.0 schema freeze) | pending |
 
 ## Build mechanics (how to resume)
@@ -42,10 +42,10 @@
 - Each run: implement one phase → full unit/property/golden/integration tests → ruff + black clean → logical conventional commits.
 - TodoList mirrors the 12 phases (Phase 11 = in_progress).
 
-## Current verified state (end of REST API service)
+## Current verified state (end of backtesting)
 
-- **699 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD/resampling/confluence, 24 byte-exact regression goldens in `tests/regression/goldens/` incl. 2 full-stack chart goldens + `openapi_v1.json` API spec snapshot — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 45 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
-- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests · Phase 6: `82ff12e` session engine · `2a0591b` resampling + MTF context · `94cd231` tests · Phase 7: `3c6a1b8` confluence engine · `19f2829` tests · Phase 8: `bb3c621` primitives + mappers · `fdac1b0` chart serializer + schema exports · `e2931af` SQLite result store · `5044dd3` reference frontend + demo payload · `f4268b0` tests · AI layer: `a649745` report models + config · `d4d87ec` prompt assets + registry · `230606b` context builders · `6002ef0` providers · `a689ce5` validation + analyst pipeline · `312f167` tests · REST API: `1e67c5b` shared pipeline orchestration · `f9cf4b9` wire models + auth + config + thread-safe store · `6c0a90b` app factory + all v1 routes · `7ddb49a` tests + OpenAPI golden.
+- **785 tests passing** (unit incl. hypothesis property tests for swings/FVG/OB/SD/resampling/confluence/backtest invariants, 26 byte-exact regression goldens in `tests/regression/goldens/` incl. chart goldens, `openapi_v1.json`, 2 backtest goldens — regenerate only with `CT_UPDATE_GOLDENS=1` + schema version bump, 50 integration on a 2,000-candle seeded dataset), ruff clean, black clean.
+- Key commits: `41cbac1` scaffolding · `4957d46` core · `46afa5b` structure engine · `ffe805c` phase-3 schemas/docs · Phase 4: `aedbed5`/`f733a90`/`5cb8d9a`/`09ae472` · Phase 5: `f292d13` order block engine · `a5150ea` supply/demand engine · `a2b2325` detection fixes · `1d7a2d7` tests · Phase 6: `82ff12e` session engine · `2a0591b` resampling + MTF context · `94cd231` tests · Phase 7: `3c6a1b8` confluence engine · `19f2829` tests · Phase 8: `bb3c621` primitives + mappers · `fdac1b0` chart serializer + schema exports · `e2931af` SQLite result store · `5044dd3` reference frontend + demo payload · `f4268b0` tests · AI layer: `a649745` report models + config · `d4d87ec` prompt assets + registry · `230606b` context builders · `6002ef0` providers · `a689ce5` validation + analyst pipeline · `312f167` tests · REST API: `1e67c5b` shared pipeline orchestration · `f9cf4b9` wire models + auth + config + thread-safe store · `6c0a90b` app factory + all v1 routes · `7ddb49a` tests + OpenAPI golden · `d989926` docs · Backtesting: `be6ec4e` models + config · `87dc194` execution + replay · `7dc3c68` statistics + SMC strategy · `b623ef4` grid + walk-forward · `469cc8a` /v1/backtest endpoint · `c0c7790` engine edge fixes · `6d8ff7e`/`7a5018f` tests · `a5c3e06` calmar overflow fix.
 
 ## Phase 5 decisions (for Phase 6+ reuse)
 
@@ -96,15 +96,24 @@
 - OpenAPI spec is golden-tested (`openapi_v1.json`); `ErrorEnvelope` is attached to every v1 route via router-level `responses` so it appears in components.
 - Docker: image CMD runs uvicorn with `--factory`; compose `api` service is default-on with `apidata:/data` SQLite volume; postgres/redis stay in the "later" profile (Phase 12).
 
-## Phase 11 brief (ready to hand to the coder subagent)
+## Phase 11 decisions (backtesting, for reuse)
 
-Backtesting (roadmap Phase 11):
-- Event-driven deterministic replay: walk a CandleSeries bar by bar, feed the engine through the existing module entrypoints (never re-implement detection), and simulate a strategy contract (entries from confluence/setup signals, exits via SL/TP/time).
-- Realistic fills & costs: configurable spread, commission, slippage models (fixed/bps), no lookahead — decisions at bar close, fills at next bar open (configurable).
-- Outputs as versioned models: trade list (entry/exit/prices/pnl/MAE/MFE + evidence ids), equity curve, drawdown series, statistics (win rate, profit factor, expectancy, Sharpe/Sortino, max DD) — all computed in Python, schema-exported.
-- Seeded determinism: same series + config + seed -> byte-identical backtest result; golden tests; property tests (no negative prices, equity consistency).
-- API wiring (optional but desired): `/v1/backtest` POST endpoint reusing the Phase-10 envelope/auth patterns.
-- Docs: `docs/modules/backtesting.md` + index row.
+- Replay contract: decisions at bar CLOSE i, fills on bar i+1 (open for market/close; range touch for limit/stop with ties-fills conservative); intents expire after one bar; one position at a time; entries REQUIRE stop_loss; `created_index == bar_index` validated. No-lookahead is proven by a construction test (truncated-at-T run == full run on shared bars).
+- Fill/cost rules: half-spread per fill; slippage on market+stop fills only (limits never slip); SL-first intrabar ambiguity (fixed rule); gap-through SL fills at the open; TP gap at open fills at open (chronological); a position can stop out on its own fill bar (holding_bars=0). Sizing: risk_percent via SL distance (default) or fixed_units; breakeven_after_r optional.
+- Statistics: bar-return Sharpe/Sortino with calendar annualization (365.25d / timeframe); Calmar in log space with overflow guard (None on absurd extrapolation — found by hypothesis); statistics_reliable < min_trades (30).
+- Optimization: cartesian product in declared key order; dotted paths engine./backtest./strategy.; leaderboard objective-desc, None last, declaration-index tie-break; anchored walk-forward with overfit flag at `optimization_overfit_threshold` (0.5). No parallelism.
+- SMC pullback strategy: zone-in-value rule — zone in DISCOUNT of the CONFIRMED dealing range, or above it entirely (fresh BOS leg; the confirmed range lags active legs — documented in docs/modules/backtesting.md). TP = nearest untapped opposing pool else tp_r_multiple fallback from decision close.
+- Engine edges fixed along the way (`c0c7790`): classify_legs skipped same-bar high/low alternations (Leg duration=0 crash on resampled MTF series); run_module now forwards mtf_timeframes to analyze_confluence (was silently using the default ladder).
+- Performance reality: full-prefix replay is O(n^2) (confluence ≈ 2/3 of per-bar cost; it re-runs all modules internally without exposing payloads). Tests use recompute_interval + window_bars; incremental engine updates and payload-sharing confluence are Phase-12 candidates.
+
+## Phase 12 brief (ready to hand to the coder subagent)
+
+Examples, polish, performance (roadmap Phase 12):
+- `examples/`: runnable scripts (basic engine usage, full-stack analysis, chart payload render, backtest + optimization walkthrough) with README; keep them smoke-tested in CI (cheap subset).
+- Benchmarks: `tests/benchmark/` or `benchmarks/` — engine module timings vs dataset size (100/1k/10k bars), replay throughput; document baseline numbers; no hard perf gates yet.
+- Performance work (optional, correctness-safe): confluence payload-sharing (accept pre-computed module results), replay prefix-caching of engine results, profile-guided hotspots.
+- Storage: PostgreSQL/Redis `ResultStore` adapters behind the existing store interface (decision: implement postgres, defer redis unless trivial); compose wiring moves them out of the "later" profile.
+- Docs completion: examples cross-links, any remaining gaps vs the 4 master prompts; DX polish (Makefile or task runner?).
 
 ## AI-layer decisions (Phase 9 in roadmap numbering, for reuse)
 

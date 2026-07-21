@@ -24,3 +24,4 @@ notes, determinism notes, and migration history.
 | data.store | [visualization.md](visualization.md#result-store-datastore) | 8 ✅ |
 | ai (analyst layer) | [ai-layer.md](ai-layer.md) | 9 ✅ |
 | api (REST service) | [api.md](api.md) | 10 ✅ |
+| backtesting | [backtesting.md](backtesting.md) | 11 ✅ |

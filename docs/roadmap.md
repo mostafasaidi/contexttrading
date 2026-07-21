@@ -12,8 +12,8 @@
 | 8 | Visualization & storage | Lightweight-Charts chart payloads + reference frontend, SQLite result store (Plotly renderer dropped — payload is renderer-agnostic; PostgreSQL/Redis deferred to Phase 12) | ✅ Done |
 | 9 | AI analyst layer | Versioned prompts, deterministic context builder, provider abstraction, citation enforcement, evidence-bound structured reports | ✅ Done |
 | 10 | API service | FastAPI service, analyze/AI endpoints, schema endpoints, `docs/api/` | ✅ Done |
-| 11 | Backtesting | Event-driven replay, fills/costs, equity + reports, seeded determinism | ⬜ Next |
-| 12 | Examples, polish, performance | `examples/`, benchmarks, docs completion, DX polish, PostgreSQL/Redis store adapters | ⬜ |
+| 11 | Backtesting | Event-driven replay, fills/costs, equity + reports, seeded determinism | ✅ Done |
+| 12 | Examples, polish, performance | `examples/`, benchmarks, docs completion, DX polish, PostgreSQL/Redis store adapters | ⬜ Next |
 | 13 | Release hardening | Packaging to PyPI, Docker images, security review, v1.0 schema freeze | ⬜ |
 
 ## Principles governing the roadmap
