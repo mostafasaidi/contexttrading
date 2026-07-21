@@ -6,6 +6,7 @@ from collections.abc import Callable
 from typing import Any
 
 from fastapi import APIRouter, Depends, Request
+from pydantic import ValidationError as PydanticValidationError
 
 from contexttrading.api.auth import require_api_key
 from contexttrading.api.deps import build_engine_config, build_series, settings_of
@@ -40,9 +41,15 @@ def backtest(request: Request, body: BacktestRequest) -> BacktestResult:
         )
     series = build_series(body.series, settings)
     engine_config = build_engine_config(settings, body.engine_overrides)
-    backtest_config = BacktestConfig.model_validate(
-        {**settings.backtest.model_dump(), **body.backtest_overrides}
-    )
+    try:
+        backtest_config = BacktestConfig.model_validate(
+            {**settings.backtest.model_dump(), **body.backtest_overrides}
+        )
+    except PydanticValidationError as exc:
+        raise ValidationError(
+            "Invalid backtest config overrides",
+            context={"error": str(exc)[:500]},
+        ) from exc
     return run_backtest(
         series,
         factory(body.strategy_params),

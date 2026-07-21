@@ -29,10 +29,12 @@ import itertools
 from collections.abc import Callable, Sequence
 from typing import Any
 
+from pydantic import ValidationError as PydanticValidationError
+
 from contexttrading.backtesting.replay import Strategy, run_backtest
 from contexttrading.core.config import BacktestConfig, EngineConfig
 from contexttrading.core.constants import Timeframe
-from contexttrading.core.errors import BacktestError
+from contexttrading.core.errors import BacktestError, ValidationError
 from contexttrading.models.backtest import (
     OptimizationEntry,
     OptimizationResult,
@@ -87,8 +89,16 @@ def _apply_params(
         k.split(".", 1)[1]: v for k, v in combo.items() if k.startswith("backtest.")
     }
     strategy_params = {k.split(".", 1)[1]: v for k, v in combo.items() if k.startswith("strategy.")}
-    engine = EngineConfig.model_validate({**engine_config.model_dump(), **engine_updates})
-    backtest = BacktestConfig.model_validate({**backtest_config.model_dump(), **backtest_updates})
+    try:
+        engine = EngineConfig.model_validate({**engine_config.model_dump(), **engine_updates})
+        backtest = BacktestConfig.model_validate(
+            {**backtest_config.model_dump(), **backtest_updates}
+        )
+    except PydanticValidationError as exc:
+        raise ValidationError(
+            "Invalid optimization parameter value",
+            context={"combo": combo, "detail": str(exc)[:500]},
+        ) from exc
     return engine, backtest, strategy_params
 
 

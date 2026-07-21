@@ -212,3 +212,28 @@ class TestApiGoldens:
         with TestClient(create_app(settings)) as client:
             spec = client.get("/openapi.json").json()
         _assert_golden("openapi_v1.json", _json.dumps(spec))
+
+
+class TestBacktestGoldens:
+    def test_smc_pullback_five_day(self) -> None:
+        from contexttrading.backtesting import SMCPullbackStrategy, run_backtest
+        from contexttrading.core.config import BacktestConfig
+
+        result = run_backtest(
+            five_day_15m_series(),
+            SMCPullbackStrategy(),
+            engine_config(),
+            BacktestConfig(
+                warmup_bars=30, min_trades=1, recompute_interval=4, window_bars=240
+            ),
+        )
+        _assert_golden("backtest_smc_five_day.json", result.model_dump_json())
+
+    def test_statistics_fixed_trade_list(self) -> None:
+        from contexttrading.backtesting.statistics import compute_statistics
+        from contexttrading.core.config import BacktestConfig
+        from contexttrading.core.constants import Timeframe
+        from tests.unit.backtesting.test_statistics import CURVE, TRADES
+
+        result = compute_statistics(TRADES, CURVE, BacktestConfig(min_trades=3), Timeframe.M1)
+        _assert_golden("backtest_statistics.json", result.model_dump_json())

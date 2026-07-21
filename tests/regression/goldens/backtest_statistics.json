@@ -1,0 +1,31 @@
+{
+  "annualization_factor": 525960.0,
+  "avg_loss": 75.0,
+  "avg_win": 250.0,
+  "calmar": 3.3170059008913757e+202,
+  "drawdown": {
+    "max_drawdown_abs": 100.0,
+    "max_drawdown_pct": 0.000998003992015968,
+    "peak_index": 1,
+    "schema_version": "1.0.0",
+    "trough_index": 2
+  },
+  "expectancy_currency": 87.5,
+  "expectancy_r": 0.875,
+  "exposure_pct": 0.0,
+  "gross_loss": 150.0,
+  "gross_profit": 500.0,
+  "losses": 2,
+  "max_consecutive_losses": 1,
+  "max_consecutive_wins": 1,
+  "net_pnl": 350.0,
+  "payoff_ratio": 3.3333333333333335,
+  "profit_factor": 3.3333333333333335,
+  "schema_version": "1.0.0",
+  "sharpe": 329.07929466306797,
+  "sortino": 1138.2115775237667,
+  "statistics_reliable": true,
+  "total_trades": 4,
+  "win_rate": 0.5,
+  "wins": 2
+}

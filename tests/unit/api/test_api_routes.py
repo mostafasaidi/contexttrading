@@ -148,6 +148,7 @@ class TestOpenApi:
         "/v1/ai/weekly-review",
         "/v1/results/{symbol}/{timeframe}/{module}",
         "/v1/stream/analysis",
+        "/v1/backtest",
         "/healthz",
         "/readyz",
     )
