@@ -19,6 +19,9 @@ SCHEMA_VERSION_STRUCTURE: str = "1.0.0"
 SCHEMA_VERSION_LIQUIDITY: str = "1.0.0"
 SCHEMA_VERSION_RANGE: str = "1.0.0"
 
+# Phase-4 model schema versions.
+SCHEMA_VERSION_FVG: str = "1.0.0"
+
 #: Registry of all current schema versions, keyed by logical model name.
 CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "AnalysisResult": SCHEMA_VERSION_ENVELOPE,
@@ -39,6 +42,8 @@ CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "LiquidityResult": SCHEMA_VERSION_LIQUIDITY,
     "DealingRange": SCHEMA_VERSION_RANGE,
     "DealingRangeResult": SCHEMA_VERSION_RANGE,
+    "FVG": SCHEMA_VERSION_FVG,
+    "FVGResult": SCHEMA_VERSION_FVG,
 }
 
 

@@ -1,0 +1,400 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "MitigationStatus": {
+        "description": "Lifecycle of a zone with respect to price revisits.",
+        "enum": [
+          "unmitigated",
+          "partially_mitigated",
+          "mitigated",
+          "violated"
+        ],
+        "title": "MitigationStatus",
+        "type": "string"
+      },
+      "RenderType": {
+        "description": "Render primitives an analysis object can map to.",
+        "enum": [
+          "line",
+          "area",
+          "box",
+          "marker",
+          "label",
+          "histogram",
+          "candles"
+        ],
+        "title": "RenderType",
+        "type": "string"
+      },
+      "TrendDirection": {
+        "description": "Directional state of price, a candle, or a structure leg.",
+        "enum": [
+          "bullish",
+          "bearish",
+          "ranging",
+          "unknown"
+        ],
+        "title": "TrendDirection",
+        "type": "string"
+      },
+      "VisualStyle": {
+        "additionalProperties": false,
+        "description": "Renderer-agnostic drawing style for one analysis object.",
+        "properties": {
+          "color": {
+            "description": "Primary color as '#rgb', '#rrggbb', or '#rrggbbaa'.",
+            "title": "Color",
+            "type": "string"
+          },
+          "fill": {
+            "default": false,
+            "description": "Fill the shape (boxes/areas).",
+            "title": "Fill",
+            "type": "boolean"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Named layer for grouping/toggling.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "description": "Stroke width in pixels.",
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "opacity": {
+            "default": 1.0,
+            "description": "Fill/line opacity.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Z-order/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "render_type": {
+            "$ref": "#/$defs/RenderType",
+            "default": "box"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "tooltip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hover text (renderer-formatted).",
+            "title": "Tooltip"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "color"
+        ],
+        "title": "VisualStyle",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "A fair value gap with classification, lifecycle, and strength.",
+    "properties": {
+      "age": {
+        "description": "Candles from formation_end to fill or series end.",
+        "minimum": 0,
+        "title": "Age",
+        "type": "integer"
+      },
+      "direction": {
+        "$ref": "#/$defs/TrendDirection",
+        "description": "BULLISH or BEARISH imbalance."
+      },
+      "displacement_margin_atr": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "margin_atr of the linked structure break.",
+        "title": "Displacement Margin Atr"
+      },
+      "filled_index": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Filled Index"
+      },
+      "first_touch_index": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "First Touch Index"
+      },
+      "formation_end_index": {
+        "description": "Index of candle i+1 (confirmation).",
+        "minimum": 0,
+        "title": "Formation End Index",
+        "type": "integer"
+      },
+      "formation_start_index": {
+        "description": "Index of candle i-1.",
+        "minimum": 0,
+        "title": "Formation Start Index",
+        "type": "integer"
+      },
+      "formed_at": {
+        "description": "Middle candle timestamp (UTC).",
+        "format": "date-time",
+        "title": "Formed At",
+        "type": "string"
+      },
+      "gap_atr": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Gap size in ATRs at the middle candle (None in warmup).",
+        "title": "Gap Atr"
+      },
+      "gap_percent": {
+        "description": "Gap size as a fraction of the zone mid.",
+        "exclusiveMinimum": 0,
+        "title": "Gap Percent",
+        "type": "number"
+      },
+      "gap_size": {
+        "description": "zone_top - zone_bottom.",
+        "exclusiveMinimum": 0,
+        "title": "Gap Size",
+        "type": "number"
+      },
+      "id": {
+        "default": "",
+        "description": "Deterministic content-hash ID.",
+        "title": "Id",
+        "type": "string"
+      },
+      "inversion_index": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Candle index where price closed through the far side.",
+        "title": "Inversion Index"
+      },
+      "is_inverse": {
+        "default": false,
+        "title": "Is Inverse",
+        "type": "boolean"
+      },
+      "is_nested": {
+        "default": false,
+        "title": "Is Nested",
+        "type": "boolean"
+      },
+      "label": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Optional human-facing label.",
+        "title": "Label"
+      },
+      "layer": {
+        "default": "default",
+        "description": "Render/grouping layer.",
+        "title": "Layer",
+        "type": "string"
+      },
+      "linked_break_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "StructureBreak at the middle candle, if any.",
+        "title": "Linked Break Id"
+      },
+      "max_fill_fraction": {
+        "default": 0.0,
+        "maximum": 1,
+        "minimum": 0,
+        "title": "Max Fill Fraction",
+        "type": "number"
+      },
+      "middle_index": {
+        "description": "Index of the displacement candle i.",
+        "minimum": 0,
+        "title": "Middle Index",
+        "type": "integer"
+      },
+      "parent_fvg_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Containing older unfilled same-direction FVG.",
+        "title": "Parent Fvg Id"
+      },
+      "priority": {
+        "default": 0,
+        "description": "Render/selection priority (higher wins).",
+        "title": "Priority",
+        "type": "integer"
+      },
+      "rank": {
+        "default": 0,
+        "description": "1 = strongest within the result.",
+        "minimum": 0,
+        "title": "Rank",
+        "type": "integer"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "stack_group_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Shared ID for stacked (overlapping/adjacent) FVGs.",
+        "title": "Stack Group Id"
+      },
+      "status": {
+        "$ref": "#/$defs/MitigationStatus",
+        "default": "unmitigated"
+      },
+      "strength": {
+        "description": "Deterministic strength score in [0,1].",
+        "maximum": 1,
+        "minimum": 0,
+        "title": "Strength",
+        "type": "number"
+      },
+      "style": {
+        "$ref": "#/$defs/VisualStyle"
+      },
+      "touches": {
+        "default": 0,
+        "description": "Candles that traded into the zone.",
+        "minimum": 0,
+        "title": "Touches",
+        "type": "integer"
+      },
+      "zone_bottom": {
+        "description": "Lower zone boundary.",
+        "exclusiveMinimum": 0,
+        "title": "Zone Bottom",
+        "type": "number"
+      },
+      "zone_top": {
+        "description": "Upper zone boundary.",
+        "exclusiveMinimum": 0,
+        "title": "Zone Top",
+        "type": "number"
+      }
+    },
+    "required": [
+      "direction",
+      "zone_bottom",
+      "zone_top",
+      "formation_start_index",
+      "middle_index",
+      "formation_end_index",
+      "formed_at",
+      "gap_size",
+      "gap_percent",
+      "age",
+      "strength"
+    ],
+    "title": "FVG",
+    "type": "object"
+  },
+  "name": "FVG",
+  "schema_version": "1.0.0"
+}

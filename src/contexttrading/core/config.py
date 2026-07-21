@@ -89,6 +89,39 @@ class EngineConfig(BaseModel):
         default=0.79, gt=0, lt=1, description="OTE zone far fib retracement."
     )
 
+    # -- fair value gaps ---------------------------------------------------------------
+    fvg_min_atr_fraction: float = Field(
+        default=0.05,
+        ge=0,
+        description="Minimum FVG gap size in ATRs (skipped during ATR warmup).",
+    )
+    fvg_stacked_lookback: int = Field(
+        default=5,
+        ge=1,
+        description="Max candles between same-direction FVGs to link them as stacked.",
+    )
+    fvg_strength_half_life: int = Field(
+        default=50, ge=1, description="Candles for the age-decay half-life in scoring."
+    )
+    fvg_gap_atr_cap: float = Field(
+        default=3.0, gt=0, description="Gap ATR-multiple at which the gap score saturates."
+    )
+    fvg_weight_gap: float = Field(
+        default=0.35, ge=0, le=1, description="Strength weight: gap size component."
+    )
+    fvg_weight_displacement: float = Field(
+        default=0.25, ge=0, le=1, description="Strength weight: displacement linkage."
+    )
+    fvg_weight_freshness: float = Field(
+        default=0.15, ge=0, le=1, description="Strength weight: mitigation freshness."
+    )
+    fvg_weight_age: float = Field(
+        default=0.15, ge=0, le=1, description="Strength weight: age decay."
+    )
+    fvg_weight_structure: float = Field(
+        default=0.10, ge=0, le=1, description="Strength weight: nested/stacked bonus."
+    )
+
     # -- trend / market phase -----------------------------------------------------------
     phase_lookback: int = Field(
         default=20, ge=2, description="Bars inspected for market-phase heuristics."

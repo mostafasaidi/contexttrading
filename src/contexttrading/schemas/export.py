@@ -24,6 +24,7 @@ from contexttrading import __version__ as ENGINE_VERSION
 from contexttrading.core.versioning import major_of
 from contexttrading.models.base import VersionedModel
 from contexttrading.models.candle import Candle, GapWindow
+from contexttrading.models.fvg import FVG, FVGResult
 from contexttrading.models.liquidity import (
     EqualLevel,
     LiquidityPool,
@@ -61,6 +62,8 @@ EXPORTED_MODELS: tuple[type[BaseModel], ...] = (
     LiquidityResult,
     DealingRange,
     DealingRangeResult,
+    FVG,
+    FVGResult,
 )
 
 
