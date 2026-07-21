@@ -30,6 +30,9 @@ SCHEMA_VERSION_SUPPLYDEMAND: str = "1.0.0"
 SCHEMA_VERSION_SESSION: str = "1.0.0"
 SCHEMA_VERSION_MTF: str = "1.0.0"
 
+# Phase-7 model schema versions.
+SCHEMA_VERSION_CONFLUENCE: str = "1.0.0"
+
 #: Registry of all current schema versions, keyed by logical model name.
 CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "AnalysisResult": SCHEMA_VERSION_ENVELOPE,
@@ -64,6 +67,9 @@ CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "TimeframeContext": SCHEMA_VERSION_MTF,
     "MTFBias": SCHEMA_VERSION_MTF,
     "MTFResult": SCHEMA_VERSION_MTF,
+    "FactorContribution": SCHEMA_VERSION_CONFLUENCE,
+    "ConfluenceZone": SCHEMA_VERSION_CONFLUENCE,
+    "ConfluenceResult": SCHEMA_VERSION_CONFLUENCE,
 }
 
 

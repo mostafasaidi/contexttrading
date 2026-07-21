@@ -24,6 +24,11 @@ from contexttrading import __version__ as ENGINE_VERSION
 from contexttrading.core.versioning import major_of
 from contexttrading.models.base import VersionedModel
 from contexttrading.models.candle import Candle, GapWindow
+from contexttrading.models.confluence import (
+    ConfluenceResult,
+    ConfluenceZone,
+    FactorContribution,
+)
 from contexttrading.models.fvg import FVG, FVGResult
 from contexttrading.models.liquidity import (
     EqualLevel,
@@ -85,6 +90,9 @@ EXPORTED_MODELS: tuple[type[BaseModel], ...] = (
     TimeframeContext,
     MTFBias,
     MTFResult,
+    FactorContribution,
+    ConfluenceZone,
+    ConfluenceResult,
 )
 
 

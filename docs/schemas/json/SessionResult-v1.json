@@ -689,7 +689,7 @@
           }
         ],
         "default": null,
-        "description": "Window that most often forms the day high (ties: first by count).",
+        "description": "Window that most often forms the day high (ties: first alphabetically).",
         "title": "Dominant High Session"
       },
       "dominant_low_session": {

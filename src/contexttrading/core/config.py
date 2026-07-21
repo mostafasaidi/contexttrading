@@ -224,6 +224,50 @@ class EngineConfig(BaseModel):
         "least MODERATE (STRONG requires full agreement).",
     )
 
+    # -- confluence ------------------------------------------------------------------
+    conf_weight_trend: float = Field(
+        default=1.0, ge=0, description="Confluence weight: external trend direction."
+    )
+    conf_weight_mtf: float = Field(
+        default=1.5, ge=0, description="Confluence weight: MTF bias alignment."
+    )
+    conf_weight_structure: float = Field(
+        default=1.0, ge=0, description="Confluence weight: recent BOS/CHoCH direction."
+    )
+    conf_weight_liquidity: float = Field(
+        default=1.0, ge=0, description="Confluence weight: recent sweep direction."
+    )
+    conf_weight_premium_discount: float = Field(
+        default=0.5, ge=0, description="Confluence weight: premium/discount location."
+    )
+    conf_weight_fvg: float = Field(
+        default=1.0, ge=0, description="Confluence weight: nearby active FVGs."
+    )
+    conf_weight_orderblock: float = Field(
+        default=1.0, ge=0, description="Confluence weight: nearby valid order blocks."
+    )
+    conf_weight_supplydemand: float = Field(
+        default=1.0, ge=0, description="Confluence weight: nearby fresh supply/demand zones."
+    )
+    conf_weight_session: float = Field(
+        default=0.5, ge=0, description="Confluence weight: recent Judas-swing evidence."
+    )
+    conf_structure_lookback: int = Field(
+        default=5, ge=1, description="Confirmed breaks inspected for the structure factor."
+    )
+    conf_sweep_lookback: int = Field(
+        default=5, ge=1, description="Recent sweeps/Judas events inspected."
+    )
+    conf_proximity_atr: float = Field(
+        default=1.0,
+        ge=0,
+        description="Max distance from the last close (in ATRs) for a zone to count "
+        "as nearby evidence (0 = price must be inside the zone).",
+    )
+    conf_zone_min_factors: int = Field(
+        default=2, ge=1, description="Min distinct factor kinds forming a confluence zone."
+    )
+
     # -- trend / market phase -----------------------------------------------------------
     phase_lookback: int = Field(
         default=20, ge=2, description="Bars inspected for market-phase heuristics."

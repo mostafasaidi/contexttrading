@@ -2,6 +2,11 @@
 
 from contexttrading.models.base import AnalysisObject, VersionedModel
 from contexttrading.models.candle import Candle, CandleSeries, GapWindow
+from contexttrading.models.confluence import (
+    ConfluenceResult,
+    ConfluenceZone,
+    FactorContribution,
+)
 from contexttrading.models.fvg import FVG, FVGResult
 from contexttrading.models.liquidity import (
     EqualLevel,
@@ -37,11 +42,14 @@ __all__ = [
     "BreakerBlock",
     "Candle",
     "CandleSeries",
+    "ConfluenceResult",
+    "ConfluenceZone",
     "DataWindow",
     "DealingRange",
     "DealingRangeResult",
     "EqualLevel",
     "FVGResult",
+    "FactorContribution",
     "GapWindow",
     "Leg",
     "LineStyle",
