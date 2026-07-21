@@ -1,0 +1,833 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "BlockOrigin": {
+        "description": "Whether a block anchors a trend-continuation leg or a reversal.",
+        "enum": [
+          "continuation",
+          "reversal"
+        ],
+        "title": "BlockOrigin",
+        "type": "string"
+      },
+      "BreakerBlock": {
+        "additionalProperties": false,
+        "description": "A violated order block whose role flipped after a confirming break.",
+        "properties": {
+          "actionable_from_index": {
+            "description": "Lifecycle scan starts at this candle index.",
+            "minimum": 0,
+            "title": "Actionable From Index",
+            "type": "integer"
+          },
+          "age": {
+            "description": "Candles from actionable_from to mitigation/violation or series end.",
+            "minimum": 0,
+            "title": "Age",
+            "type": "integer"
+          },
+          "candle_index": {
+            "description": "Index of the anchor candle.",
+            "minimum": 0,
+            "title": "Candle Index",
+            "type": "integer"
+          },
+          "confirming_break_id": {
+            "description": "Counter-direction break confirming the role flip.",
+            "minLength": 1,
+            "title": "Confirming Break Id",
+            "type": "string"
+          },
+          "direction": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "BULLISH (demand) or BEARISH (supply)."
+          },
+          "first_touch_index": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "First Touch Index"
+          },
+          "flip_index": {
+            "description": "Candle that closed through the source OB.",
+            "minimum": 0,
+            "title": "Flip Index",
+            "type": "integer"
+          },
+          "formed_at": {
+            "description": "Anchor candle timestamp (UTC).",
+            "format": "date-time",
+            "title": "Formed At",
+            "type": "string"
+          },
+          "id": {
+            "default": "",
+            "description": "Deterministic content-hash ID.",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_consumed": {
+            "default": false,
+            "description": "Mitigated and price departed the zone (sticky).",
+            "title": "Is Consumed",
+            "type": "boolean"
+          },
+          "is_valid": {
+            "default": true,
+            "description": "Literal: status is UNMITIGATED (unmitigated & unviolated).",
+            "title": "Is Valid",
+            "type": "boolean"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional human-facing label.",
+            "title": "Label"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Render/grouping layer.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "max_penetration_fraction": {
+            "default": 0.0,
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Max Penetration Fraction",
+            "type": "number"
+          },
+          "mitigation_index": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Candle that traded through the mitigation threshold.",
+            "title": "Mitigation Index"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Render/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "source_order_block_id": {
+            "minLength": 1,
+            "title": "Source Order Block Id",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/$defs/MitigationStatus",
+            "default": "unmitigated"
+          },
+          "style": {
+            "$ref": "#/$defs/VisualStyle"
+          },
+          "touches": {
+            "default": 0,
+            "minimum": 0,
+            "title": "Touches",
+            "type": "integer"
+          },
+          "violation_index": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Candle that closed through the far side.",
+            "title": "Violation Index"
+          },
+          "zone_bottom": {
+            "description": "Lower zone boundary.",
+            "exclusiveMinimum": 0,
+            "title": "Zone Bottom",
+            "type": "number"
+          },
+          "zone_top": {
+            "description": "Upper zone boundary.",
+            "exclusiveMinimum": 0,
+            "title": "Zone Top",
+            "type": "number"
+          }
+        },
+        "required": [
+          "direction",
+          "zone_bottom",
+          "zone_top",
+          "candle_index",
+          "formed_at",
+          "actionable_from_index",
+          "age",
+          "source_order_block_id",
+          "flip_index",
+          "confirming_break_id"
+        ],
+        "title": "BreakerBlock",
+        "type": "object"
+      },
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "MitigationBlock": {
+        "additionalProperties": false,
+        "description": "Origin candle of a failed leg that swept liquidity without a BOS.",
+        "properties": {
+          "actionable_from_index": {
+            "description": "Lifecycle scan starts at this candle index.",
+            "minimum": 0,
+            "title": "Actionable From Index",
+            "type": "integer"
+          },
+          "age": {
+            "description": "Candles from actionable_from to mitigation/violation or series end.",
+            "minimum": 0,
+            "title": "Age",
+            "type": "integer"
+          },
+          "candle_index": {
+            "description": "Index of the anchor candle.",
+            "minimum": 0,
+            "title": "Candle Index",
+            "type": "integer"
+          },
+          "direction": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "BULLISH (demand) or BEARISH (supply)."
+          },
+          "failed_swing_id": {
+            "description": "Swing backing the swept pool that was never broken.",
+            "minLength": 1,
+            "title": "Failed Swing Id",
+            "type": "string"
+          },
+          "first_touch_index": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "First Touch Index"
+          },
+          "formed_at": {
+            "description": "Anchor candle timestamp (UTC).",
+            "format": "date-time",
+            "title": "Formed At",
+            "type": "string"
+          },
+          "id": {
+            "default": "",
+            "description": "Deterministic content-hash ID.",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_consumed": {
+            "default": false,
+            "description": "Mitigated and price departed the zone (sticky).",
+            "title": "Is Consumed",
+            "type": "boolean"
+          },
+          "is_valid": {
+            "default": true,
+            "description": "Literal: status is UNMITIGATED (unmitigated & unviolated).",
+            "title": "Is Valid",
+            "type": "boolean"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional human-facing label.",
+            "title": "Label"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Render/grouping layer.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "linked_sweep_id": {
+            "description": "LiquiditySweep of the failed move.",
+            "minLength": 1,
+            "title": "Linked Sweep Id",
+            "type": "string"
+          },
+          "max_penetration_fraction": {
+            "default": 0.0,
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Max Penetration Fraction",
+            "type": "number"
+          },
+          "mitigation_index": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Candle that traded through the mitigation threshold.",
+            "title": "Mitigation Index"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Render/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/$defs/MitigationStatus",
+            "default": "unmitigated"
+          },
+          "style": {
+            "$ref": "#/$defs/VisualStyle"
+          },
+          "touches": {
+            "default": 0,
+            "minimum": 0,
+            "title": "Touches",
+            "type": "integer"
+          },
+          "violation_index": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Candle that closed through the far side.",
+            "title": "Violation Index"
+          },
+          "zone_bottom": {
+            "description": "Lower zone boundary.",
+            "exclusiveMinimum": 0,
+            "title": "Zone Bottom",
+            "type": "number"
+          },
+          "zone_top": {
+            "description": "Upper zone boundary.",
+            "exclusiveMinimum": 0,
+            "title": "Zone Top",
+            "type": "number"
+          }
+        },
+        "required": [
+          "direction",
+          "zone_bottom",
+          "zone_top",
+          "candle_index",
+          "formed_at",
+          "actionable_from_index",
+          "age",
+          "linked_sweep_id",
+          "failed_swing_id"
+        ],
+        "title": "MitigationBlock",
+        "type": "object"
+      },
+      "MitigationStatus": {
+        "description": "Lifecycle of a zone with respect to price revisits.",
+        "enum": [
+          "unmitigated",
+          "partially_mitigated",
+          "mitigated",
+          "violated"
+        ],
+        "title": "MitigationStatus",
+        "type": "string"
+      },
+      "OrderBlock": {
+        "additionalProperties": false,
+        "description": "The last opposite-close candle (cluster) before a displacement BOS.",
+        "properties": {
+          "actionable_from_index": {
+            "description": "Lifecycle scan starts at this candle index.",
+            "minimum": 0,
+            "title": "Actionable From Index",
+            "type": "integer"
+          },
+          "age": {
+            "description": "Candles from actionable_from to mitigation/violation or series end.",
+            "minimum": 0,
+            "title": "Age",
+            "type": "integer"
+          },
+          "body_bottom": {
+            "description": "Lower body boundary of the OB candle.",
+            "exclusiveMinimum": 0,
+            "title": "Body Bottom",
+            "type": "number"
+          },
+          "body_top": {
+            "description": "Upper body boundary of the OB candle.",
+            "exclusiveMinimum": 0,
+            "title": "Body Top",
+            "type": "number"
+          },
+          "candle_index": {
+            "description": "Index of the anchor candle.",
+            "minimum": 0,
+            "title": "Candle Index",
+            "type": "integer"
+          },
+          "cluster_start_index": {
+            "description": "First candle of the same-sign cluster (== candle_index if single).",
+            "minimum": 0,
+            "title": "Cluster Start Index",
+            "type": "integer"
+          },
+          "direction": {
+            "$ref": "#/$defs/TrendDirection",
+            "description": "BULLISH (demand) or BEARISH (supply)."
+          },
+          "displacement_margin_atr": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "margin_atr of the linked break.",
+            "title": "Displacement Margin Atr"
+          },
+          "first_touch_index": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "First Touch Index"
+          },
+          "formed_at": {
+            "description": "Anchor candle timestamp (UTC).",
+            "format": "date-time",
+            "title": "Formed At",
+            "type": "string"
+          },
+          "id": {
+            "default": "",
+            "description": "Deterministic content-hash ID.",
+            "title": "Id",
+            "type": "string"
+          },
+          "is_consumed": {
+            "default": false,
+            "description": "Mitigated and price departed the zone (sticky).",
+            "title": "Is Consumed",
+            "type": "boolean"
+          },
+          "is_refined": {
+            "default": false,
+            "title": "Is Refined",
+            "type": "boolean"
+          },
+          "is_valid": {
+            "default": true,
+            "description": "Literal: status is UNMITIGATED (unmitigated & unviolated).",
+            "title": "Is Valid",
+            "type": "boolean"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Optional human-facing label.",
+            "title": "Label"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Render/grouping layer.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "linked_break_id": {
+            "description": "StructureBreak that produced the OB.",
+            "minLength": 1,
+            "title": "Linked Break Id",
+            "type": "string"
+          },
+          "max_penetration_fraction": {
+            "default": 0.0,
+            "maximum": 1,
+            "minimum": 0,
+            "title": "Max Penetration Fraction",
+            "type": "number"
+          },
+          "mitigation_index": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Candle that traded through the mitigation threshold.",
+            "title": "Mitigation Index"
+          },
+          "origin": {
+            "$ref": "#/$defs/BlockOrigin",
+            "description": "CONTINUATION (BOS with trend) or REVERSAL (at CHoCH)."
+          },
+          "overlapping_fvg_ids": {
+            "description": "FVGs whose zone intersects this OB zone.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Overlapping Fvg Ids",
+            "type": "array"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Render/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "refined_bottom": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Refined zone lower bound (extreme wick fraction).",
+            "title": "Refined Bottom"
+          },
+          "refined_top": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Refined zone upper bound.",
+            "title": "Refined Top"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/$defs/MitigationStatus",
+            "default": "unmitigated"
+          },
+          "style": {
+            "$ref": "#/$defs/VisualStyle"
+          },
+          "touches": {
+            "default": 0,
+            "minimum": 0,
+            "title": "Touches",
+            "type": "integer"
+          },
+          "violation_index": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Candle that closed through the far side.",
+            "title": "Violation Index"
+          },
+          "volume_zscore": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Volume z-score of the OB candle (None when undefined).",
+            "title": "Volume Zscore"
+          },
+          "zone_bottom": {
+            "description": "Lower zone boundary.",
+            "exclusiveMinimum": 0,
+            "title": "Zone Bottom",
+            "type": "number"
+          },
+          "zone_top": {
+            "description": "Upper zone boundary.",
+            "exclusiveMinimum": 0,
+            "title": "Zone Top",
+            "type": "number"
+          }
+        },
+        "required": [
+          "direction",
+          "zone_bottom",
+          "zone_top",
+          "candle_index",
+          "formed_at",
+          "actionable_from_index",
+          "age",
+          "body_bottom",
+          "body_top",
+          "cluster_start_index",
+          "origin",
+          "linked_break_id"
+        ],
+        "title": "OrderBlock",
+        "type": "object"
+      },
+      "RenderType": {
+        "description": "Render primitives an analysis object can map to.",
+        "enum": [
+          "line",
+          "area",
+          "box",
+          "marker",
+          "label",
+          "histogram",
+          "candles"
+        ],
+        "title": "RenderType",
+        "type": "string"
+      },
+      "TrendDirection": {
+        "description": "Directional state of price, a candle, or a structure leg.",
+        "enum": [
+          "bullish",
+          "bearish",
+          "ranging",
+          "unknown"
+        ],
+        "title": "TrendDirection",
+        "type": "string"
+      },
+      "VisualStyle": {
+        "additionalProperties": false,
+        "description": "Renderer-agnostic drawing style for one analysis object.",
+        "properties": {
+          "color": {
+            "description": "Primary color as '#rgb', '#rrggbb', or '#rrggbbaa'.",
+            "title": "Color",
+            "type": "string"
+          },
+          "fill": {
+            "default": false,
+            "description": "Fill the shape (boxes/areas).",
+            "title": "Fill",
+            "type": "boolean"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Named layer for grouping/toggling.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "description": "Stroke width in pixels.",
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "opacity": {
+            "default": 1.0,
+            "description": "Fill/line opacity.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Z-order/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "render_type": {
+            "$ref": "#/$defs/RenderType",
+            "default": "box"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "tooltip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hover text (renderer-formatted).",
+            "title": "Tooltip"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "color"
+        ],
+        "title": "VisualStyle",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "description": "Payload of the order block module.",
+    "properties": {
+      "breaker_blocks": {
+        "items": {
+          "$ref": "#/$defs/BreakerBlock"
+        },
+        "title": "Breaker Blocks",
+        "type": "array"
+      },
+      "counts_by_direction": {
+        "additionalProperties": {
+          "type": "integer"
+        },
+        "title": "Counts By Direction",
+        "type": "object"
+      },
+      "counts_by_status": {
+        "additionalProperties": {
+          "type": "integer"
+        },
+        "title": "Counts By Status",
+        "type": "object"
+      },
+      "mitigation_blocks": {
+        "items": {
+          "$ref": "#/$defs/MitigationBlock"
+        },
+        "title": "Mitigation Blocks",
+        "type": "array"
+      },
+      "order_blocks": {
+        "items": {
+          "$ref": "#/$defs/OrderBlock"
+        },
+        "title": "Order Blocks",
+        "type": "array"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "total_count": {
+        "minimum": 0,
+        "title": "Total Count",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "total_count"
+    ],
+    "title": "OrderBlockResult",
+    "type": "object"
+  },
+  "name": "OrderBlockResult",
+  "schema_version": "1.0.0"
+}

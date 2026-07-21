@@ -31,6 +31,12 @@ from contexttrading.models.liquidity import (
     LiquidityResult,
     LiquiditySweep,
 )
+from contexttrading.models.orderblock import (
+    BreakerBlock,
+    MitigationBlock,
+    OrderBlock,
+    OrderBlockResult,
+)
 from contexttrading.models.outputs import AnalysisResult, DataWindow
 from contexttrading.models.range import DealingRange, DealingRangeResult
 from contexttrading.models.structure import (
@@ -41,6 +47,7 @@ from contexttrading.models.structure import (
     TrendResult,
     TrendState,
 )
+from contexttrading.models.supplydemand import SupplyDemandResult, SupplyDemandZone
 from contexttrading.models.visualization import VisualStyle
 
 #: Every model whose schema is part of the public contract.
@@ -64,6 +71,12 @@ EXPORTED_MODELS: tuple[type[BaseModel], ...] = (
     DealingRangeResult,
     FVG,
     FVGResult,
+    OrderBlock,
+    BreakerBlock,
+    MitigationBlock,
+    OrderBlockResult,
+    SupplyDemandZone,
+    SupplyDemandResult,
 )
 
 

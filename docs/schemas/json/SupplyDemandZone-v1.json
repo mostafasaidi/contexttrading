@@ -1,0 +1,373 @@
+{
+  "engine_version": "0.1.0",
+  "json_schema": {
+    "$defs": {
+      "LineStyle": {
+        "description": "Stroke styles understood by both Plotly and Lightweight Charts.",
+        "enum": [
+          "solid",
+          "dashed",
+          "dotted"
+        ],
+        "title": "LineStyle",
+        "type": "string"
+      },
+      "RenderType": {
+        "description": "Render primitives an analysis object can map to.",
+        "enum": [
+          "line",
+          "area",
+          "box",
+          "marker",
+          "label",
+          "histogram",
+          "candles"
+        ],
+        "title": "RenderType",
+        "type": "string"
+      },
+      "SDZoneStatus": {
+        "description": "Lifecycle of a supply/demand zone.\n\n``FRESH`` → ``TESTED`` (re-entered, not broken) → terminal ``MITIGATED``\n(traded through the base) or ``BROKEN`` (closed through the base).",
+        "enum": [
+          "fresh",
+          "tested",
+          "mitigated",
+          "broken"
+        ],
+        "title": "SDZoneStatus",
+        "type": "string"
+      },
+      "VisualStyle": {
+        "additionalProperties": false,
+        "description": "Renderer-agnostic drawing style for one analysis object.",
+        "properties": {
+          "color": {
+            "description": "Primary color as '#rgb', '#rrggbb', or '#rrggbbaa'.",
+            "title": "Color",
+            "type": "string"
+          },
+          "fill": {
+            "default": false,
+            "description": "Fill the shape (boxes/areas).",
+            "title": "Fill",
+            "type": "boolean"
+          },
+          "layer": {
+            "default": "default",
+            "description": "Named layer for grouping/toggling.",
+            "title": "Layer",
+            "type": "string"
+          },
+          "line_style": {
+            "$ref": "#/$defs/LineStyle",
+            "default": "solid"
+          },
+          "line_width": {
+            "default": 1.0,
+            "description": "Stroke width in pixels.",
+            "exclusiveMinimum": 0,
+            "title": "Line Width",
+            "type": "number"
+          },
+          "opacity": {
+            "default": 1.0,
+            "description": "Fill/line opacity.",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "title": "Opacity",
+            "type": "number"
+          },
+          "priority": {
+            "default": 0,
+            "description": "Z-order/selection priority (higher wins).",
+            "title": "Priority",
+            "type": "integer"
+          },
+          "render_type": {
+            "$ref": "#/$defs/RenderType",
+            "default": "box"
+          },
+          "schema_version": {
+            "default": "1.0.0",
+            "description": "Version of this model's schema ('major.minor.patch').",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "tooltip": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "description": "Hover text (renderer-formatted).",
+            "title": "Tooltip"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "color"
+        ],
+        "title": "VisualStyle",
+        "type": "object"
+      },
+      "ZoneType": {
+        "description": "Kinds of price zones the engine can emit.",
+        "enum": [
+          "order_block",
+          "breaker_block",
+          "fair_value_gap",
+          "inversion_fvg",
+          "supply",
+          "demand",
+          "liquidity_pool",
+          "premium",
+          "discount",
+          "equilibrium"
+        ],
+        "title": "ZoneType",
+        "type": "string"
+      }
+    },
+    "additionalProperties": false,
+    "description": "A supply or demand zone with lifecycle, cross-links, and strength.",
+    "properties": {
+      "actionable_from_index": {
+        "description": "Lifecycle scan starts here (departure confirmation).",
+        "minimum": 0,
+        "title": "Actionable From Index",
+        "type": "integer"
+      },
+      "age": {
+        "description": "Candles from actionable_from to resolution/series end.",
+        "minimum": 0,
+        "title": "Age",
+        "type": "integer"
+      },
+      "base_end_index": {
+        "description": "Last base candle.",
+        "minimum": 0,
+        "title": "Base End Index",
+        "type": "integer"
+      },
+      "base_start_index": {
+        "description": "First base candle.",
+        "minimum": 0,
+        "title": "Base Start Index",
+        "type": "integer"
+      },
+      "broken_index": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Candle that closed through the base.",
+        "title": "Broken Index"
+      },
+      "departure_atr_multiple": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Departure magnitude in ATRs (None during warmup).",
+        "title": "Departure Atr Multiple"
+      },
+      "departure_leg_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Impulse leg confirming departure (None for OB-derived).",
+        "title": "Departure Leg Id"
+      },
+      "first_touch_index": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "First Touch Index"
+      },
+      "formed_at": {
+        "description": "Base end timestamp (UTC).",
+        "format": "date-time",
+        "title": "Formed At",
+        "type": "string"
+      },
+      "id": {
+        "default": "",
+        "description": "Deterministic content-hash ID.",
+        "title": "Id",
+        "type": "string"
+      },
+      "is_duplicate": {
+        "default": false,
+        "description": "Pattern zone ~identical to an order block zone.",
+        "title": "Is Duplicate",
+        "type": "boolean"
+      },
+      "kind": {
+        "$ref": "#/$defs/ZoneType",
+        "description": "SUPPLY or DEMAND."
+      },
+      "label": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Optional human-facing label.",
+        "title": "Label"
+      },
+      "layer": {
+        "default": "default",
+        "description": "Render/grouping layer.",
+        "title": "Layer",
+        "type": "string"
+      },
+      "linked_order_block_id": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Source order block for OB-derived zones.",
+        "title": "Linked Order Block Id"
+      },
+      "mean_base_body_atr": {
+        "anyOf": [
+          {
+            "type": "number"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Mean base-candle body in ATRs (tightness input).",
+        "title": "Mean Base Body Atr"
+      },
+      "mitigated_index": {
+        "anyOf": [
+          {
+            "minimum": 0,
+            "type": "integer"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "description": "Candle that traded through the base.",
+        "title": "Mitigated Index"
+      },
+      "priority": {
+        "default": 0,
+        "description": "Render/selection priority (higher wins).",
+        "title": "Priority",
+        "type": "integer"
+      },
+      "rank": {
+        "default": 0,
+        "description": "1 = strongest within the result.",
+        "minimum": 0,
+        "title": "Rank",
+        "type": "integer"
+      },
+      "schema_version": {
+        "default": "1.0.0",
+        "description": "Version of this model's schema ('major.minor.patch').",
+        "title": "Schema Version",
+        "type": "string"
+      },
+      "status": {
+        "$ref": "#/$defs/SDZoneStatus",
+        "default": "fresh"
+      },
+      "strength": {
+        "description": "Deterministic strength in [0, 1].",
+        "maximum": 1,
+        "minimum": 0,
+        "title": "Strength",
+        "type": "number"
+      },
+      "style": {
+        "$ref": "#/$defs/VisualStyle"
+      },
+      "tests": {
+        "default": 0,
+        "description": "Distinct re-entries into the zone.",
+        "minimum": 0,
+        "title": "Tests",
+        "type": "integer"
+      },
+      "trend_aligned": {
+        "default": false,
+        "description": "Zone kind aligned with the external trend.",
+        "title": "Trend Aligned",
+        "type": "boolean"
+      },
+      "zone_bottom": {
+        "exclusiveMinimum": 0,
+        "title": "Zone Bottom",
+        "type": "number"
+      },
+      "zone_top": {
+        "exclusiveMinimum": 0,
+        "title": "Zone Top",
+        "type": "number"
+      }
+    },
+    "required": [
+      "kind",
+      "zone_bottom",
+      "zone_top",
+      "base_start_index",
+      "base_end_index",
+      "formed_at",
+      "actionable_from_index",
+      "age",
+      "strength"
+    ],
+    "title": "SupplyDemandZone",
+    "type": "object"
+  },
+  "name": "SupplyDemandZone",
+  "schema_version": "1.0.0"
+}
