@@ -16,6 +16,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sqlite3
+import threading
 from pathlib import Path
 from typing import Any
 
@@ -74,8 +75,11 @@ class ResultStore:
 
     def __init__(self, path: str | Path) -> None:
         self._path = str(path)
+        # check_same_thread=False: the API serves requests from worker
+        # threads; the lock below serializes all access instead.
+        self._lock = threading.Lock()
         try:
-            self._conn = sqlite3.connect(self._path)
+            self._conn = sqlite3.connect(self._path, check_same_thread=False)
             self._conn.execute(_SCHEMA)
         except sqlite3.Error as exc:  # pragma: no cover - environment failure
             raise DataError(
@@ -86,6 +90,12 @@ class ResultStore:
     def close(self) -> None:
         """Close the underlying connection."""
         self._conn.close()
+
+    def ping(self) -> bool:
+        """Liveness probe used by /readyz."""
+        with self._lock:
+            self._conn.execute("SELECT 1")
+        return True
 
     def __enter__(self) -> ResultStore:
         return self
@@ -104,20 +114,21 @@ class ResultStore:
             DataError: On any SQLite failure.
         """
         try:
-            self._conn.execute(
-                "INSERT OR REPLACE INTO results "
-                "(symbol, timeframe, module, series_hash, schema_version, payload_json) "
-                "VALUES (?, ?, ?, ?, ?, ?)",
-                (
-                    result.symbol,
-                    str(result.timeframe),
-                    result.module,
-                    series_hash,
-                    result.schema_version,
-                    result.model_dump_json(),
-                ),
-            )
-            self._conn.commit()
+            with self._lock:
+                self._conn.execute(
+                    "INSERT OR REPLACE INTO results "
+                    "(symbol, timeframe, module, series_hash, schema_version, payload_json) "
+                    "VALUES (?, ?, ?, ?, ?, ?)",
+                    (
+                        result.symbol,
+                        str(result.timeframe),
+                        result.module,
+                        series_hash,
+                        result.schema_version,
+                        result.model_dump_json(),
+                    ),
+                )
+                self._conn.commit()
         except sqlite3.Error as exc:
             raise DataError(
                 "Failed to persist analysis result",
@@ -147,11 +158,12 @@ class ResultStore:
         if model is None:
             raise DataError(f"Unknown module {module!r}", context={"module": module})
         try:
-            row = self._conn.execute(
-                "SELECT schema_version, payload_json FROM results "
-                "WHERE symbol = ? AND timeframe = ? AND module = ? AND series_hash = ?",
-                (symbol, timeframe, module, series_hash),
-            ).fetchone()
+            with self._lock:
+                row = self._conn.execute(
+                    "SELECT schema_version, payload_json FROM results "
+                    "WHERE symbol = ? AND timeframe = ? AND module = ? AND series_hash = ?",
+                    (symbol, timeframe, module, series_hash),
+                ).fetchone()
         except sqlite3.Error as exc:
             raise DataError(
                 "Failed to read analysis result",

@@ -39,6 +39,9 @@ SCHEMA_VERSION_VISUALIZATION: str = "1.0.0"
 #: AI layer (Phase 8): analysis context + structured AI reports.
 SCHEMA_VERSION_AI: str = "1.0.0"
 
+#: REST API layer: versioned request/response models.
+SCHEMA_VERSION_API: str = "1.0.0"
+
 #: Registry of all current schema versions, keyed by logical model name.
 CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "AnalysisResult": SCHEMA_VERSION_ENVELOPE,
@@ -107,6 +110,16 @@ CURRENT_SCHEMA_VERSIONS: dict[str, str] = {
     "JournalReviewReport": SCHEMA_VERSION_AI,
     "PerformanceReviewReport": SCHEMA_VERSION_AI,
     "AIReportResult": SCHEMA_VERSION_AI,
+    "CandlesInput": SCHEMA_VERSION_API,
+    "AnalysisRequest": SCHEMA_VERSION_API,
+    "FullAnalysisResponse": SCHEMA_VERSION_API,
+    "ChartRequest": SCHEMA_VERSION_API,
+    "ChartResponse": SCHEMA_VERSION_API,
+    "TradeEvaluationRequest": SCHEMA_VERSION_API,
+    "JournalReviewRequest": SCHEMA_VERSION_API,
+    "WeeklyReviewRequest": SCHEMA_VERSION_API,
+    "StoredResultResponse": SCHEMA_VERSION_API,
+    "ErrorEnvelope": SCHEMA_VERSION_API,
 }
 
 

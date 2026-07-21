@@ -358,7 +358,13 @@ class SessionConfig(BaseModel):
 
 
 class APIConfig(BaseModel):
-    """FastAPI service configuration (Phase 9)."""
+    """FastAPI service configuration (Phase 10 in roadmap numbering).
+
+    Secrets are never stored here: API keys arrive as a JSON array (or
+    comma-separated string) via env (``CT_API__API_KEYS``). Auth is
+    service-level, not multi-user IAM — deploy behind a reverse proxy for
+    rate limiting (see ``docs/api/README.md``).
+    """
 
     model_config = ConfigDict(extra="forbid")
 
@@ -366,6 +372,30 @@ class APIConfig(BaseModel):
     port: int = Field(default=8000, ge=1, le=65535)
     cors_origins: list[str] = Field(default_factory=list)
     api_key_header: str = "X-API-Key"
+    auth_enabled: bool = Field(
+        default=True, description="Master switch for API-key authentication."
+    )
+    allow_anonymous: bool = Field(
+        default=False,
+        description="Local-dev escape hatch; MUST stay False in production profiles.",
+    )
+    api_keys: list[str] = Field(
+        default_factory=list, description="Accepted API keys (from env, never hard-coded)."
+    )
+    max_candles_per_request: int = Field(
+        default=20000, ge=1, description="Request size cap (413 above this)."
+    )
+
+    @field_validator("api_keys", mode="before")
+    @classmethod
+    def _split_keys(cls, value: Any) -> Any:
+        """Accept comma-separated strings in addition to JSON arrays."""
+        if isinstance(value, str):
+            stripped = value.strip()
+            if stripped.startswith("["):  # JSON array form
+                return value
+            return [part.strip() for part in stripped.split(",") if part.strip()]
+        return value
 
 
 class StorageConfig(BaseModel):

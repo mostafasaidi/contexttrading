@@ -135,3 +135,21 @@ class APIError(ContextTradingError):
     """API-layer failures (auth, rate limits, serialization)."""
 
     default_code = "CT-7000"
+
+
+class AuthenticationError(APIError):
+    """Missing or invalid API key."""
+
+    default_code = "CT-7001"
+
+
+class RequestTooLargeError(APIError):
+    """Request exceeded configured size/candle-count limits."""
+
+    default_code = "CT-7002"
+
+
+class NotFoundError(APIError):
+    """Requested resource (route module, stored result) does not exist."""
+
+    default_code = "CT-7003"
