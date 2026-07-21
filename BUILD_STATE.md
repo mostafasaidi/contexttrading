@@ -40,7 +40,7 @@
 
 - Work is delegated to a **coder subagent, resumed across runs**: resume id = `agent-0` (it holds full context of Phases 1–3 and the conventions). Resume it with the Phase-4 task; if resume is unavailable, spawn a fresh coder subagent and point it at this file + `docs/` + `docs/architecture/determinism.md` + `docs/guides/developer-guide.md`.
 - Each run: implement one phase → full unit/property/golden/integration tests → ruff + black clean → logical conventional commits.
-- TodoList mirrors the 12 phases (Phase 11 = in_progress).
+- TodoList mirrors the 12 phases (Phase 12 = in_progress).
 
 ## Current verified state (end of backtesting)
 
