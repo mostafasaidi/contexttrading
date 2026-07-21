@@ -174,3 +174,20 @@ class TestChartGoldens:
         }
         chart = build_chart_payload(series, results)
         _assert_golden("chart_uptrend.json", chart.model_dump_json())
+
+
+class TestAiGoldens:
+    def test_five_day_analysis_context(self) -> None:
+        from contexttrading.ai import build_analysis_context
+
+        series = five_day_15m_series()
+        context = build_analysis_context(series, full_stack_results(series, engine_config()))
+        _assert_golden("ai_context_five_day.json", context.model_dump_json())
+
+    def test_five_day_mock_market_report(self) -> None:
+        from contexttrading.ai import InstitutionalAnalyst, MockProvider
+
+        series = five_day_15m_series()
+        results = full_stack_results(series, engine_config())
+        report = InstitutionalAnalyst(MockProvider()).analyze_market(series, results)
+        _assert_golden("ai_report_five_day.json", report.model_dump_json())

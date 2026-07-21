@@ -1,0 +1,218 @@
+{
+  "engine_version": "0.1.0",
+  "generated_from": {
+    "candle_count": 480,
+    "end": "2024-01-05T23:45:00Z",
+    "schema_version": "1.0.0",
+    "start": "2024-01-01T00:00:00Z"
+  },
+  "module": "ai.market_analysis",
+  "payload": {
+    "action_items": [
+      {
+        "evidence_ids": [
+          "factor:00:trend"
+        ],
+        "schema_version": "1.0.0",
+        "text": "Stand aside unless provided confluence strengthens."
+      }
+    ],
+    "alternative_scenarios": [
+      {
+        "probability": "medium",
+        "scenario": {
+          "evidence_ids": [
+            "pool_01b755911dde359a337c47ed",
+            "pool_0235457a511e422426e1f858"
+          ],
+          "schema_version": "1.0.0",
+          "text": "Price sweeps the nearest provided pool before resolving."
+        },
+        "schema_version": "1.0.0",
+        "trigger": {
+          "evidence_ids": [
+            "pool_01b755911dde359a337c47ed",
+            "pool_0235457a511e422426e1f858"
+          ],
+          "schema_version": "1.0.0",
+          "text": "Sweep of the cited pool."
+        }
+      }
+    ],
+    "bias": "bullish",
+    "bias_rationale": {
+      "evidence_ids": [
+        "factor:00:trend",
+        "factor:01:mtf",
+        "factor:02:structure"
+      ],
+      "schema_version": "1.0.0",
+      "text": "Bias mirrors the confluence engine (bullish, score 0.627964022235904)."
+    },
+    "confidence_score": {
+      "factor_ids": [
+        "factor:00:trend",
+        "factor:01:mtf",
+        "factor:02:structure"
+      ],
+      "justification": {
+        "evidence_ids": [
+          "factor:00:trend",
+          "factor:01:mtf",
+          "factor:02:structure"
+        ],
+        "schema_version": "1.0.0",
+        "text": "Confidence echoes the engine confluence score and data quality."
+      },
+      "schema_version": "1.0.0",
+      "score": 0.627964022235904
+    },
+    "confluences": [
+      {
+        "description": {
+          "evidence_ids": [
+            "factor:00:trend"
+          ],
+          "schema_version": "1.0.0",
+          "text": "Highest-scoring provided confluence zone."
+        },
+        "direction": "bullish",
+        "factor_ids": [
+          "factor:00:trend",
+          "factor:01:mtf"
+        ],
+        "schema_version": "1.0.0",
+        "zone_id": "conf_2273b991c4241f93cb2dc021"
+      }
+    ],
+    "data_quality": {
+      "level": "fair",
+      "limitations": [
+        "stale_untapped_pools:2"
+      ],
+      "schema_version": "1.0.0"
+    },
+    "evidence_citations": [
+      "break_007371c3d7c2fe2b6afd5a4a",
+      "break_1ae12a0013bbcbe4a46e92ae",
+      "conf_2273b991c4241f93cb2dc021",
+      "factor:00:trend",
+      "factor:01:mtf",
+      "factor:02:structure",
+      "pool_01b755911dde359a337c47ed",
+      "pool_0235457a511e422426e1f858",
+      "sess_01444865dac77c4a928092cf",
+      "swing_0113e36bf09aff688cda2020",
+      "swing_09c5d1913593cb561b7e6200",
+      "trend:state"
+    ],
+    "executive_summary": {
+      "evidence_ids": [
+        "factor:00:trend",
+        "factor:01:mtf",
+        "factor:02:structure"
+      ],
+      "schema_version": "1.0.0",
+      "text": "Confluence engine reports a bullish bias at score 0.627964022235904; interpretation follows the provided factor breakdown."
+    },
+    "market_narrative": {
+      "accumulation_distribution": {
+        "evidence_ids": [
+          "sess_01444865dac77c4a928092cf"
+        ],
+        "schema_version": "1.0.0",
+        "text": "Accumulation/distribution read from provided session stats."
+      },
+      "control": {
+        "evidence_ids": [
+          "factor:00:trend",
+          "factor:01:mtf",
+          "factor:02:structure"
+        ],
+        "schema_version": "1.0.0",
+        "text": "Control read follows the bullish confluence bias."
+      },
+      "expansion_correction": {
+        "evidence_ids": [
+          "swing_0113e36bf09aff688cda2020",
+          "swing_09c5d1913593cb561b7e6200"
+        ],
+        "schema_version": "1.0.0",
+        "text": "Expansion/correction per provided trend state."
+      },
+      "liquidity_objectives": {
+        "evidence_ids": [
+          "pool_01b755911dde359a337c47ed",
+          "pool_0235457a511e422426e1f858"
+        ],
+        "schema_version": "1.0.0",
+        "text": "Nearest resting liquidity per provided pools."
+      },
+      "momentum": {
+        "evidence_ids": [
+          "break_007371c3d7c2fe2b6afd5a4a",
+          "break_1ae12a0013bbcbe4a46e92ae"
+        ],
+        "schema_version": "1.0.0",
+        "text": "Momentum per provided legs and breaks."
+      },
+      "schema_version": "1.0.0",
+      "trend_health": {
+        "evidence_ids": [
+          "trend:state"
+        ],
+        "schema_version": "1.0.0",
+        "text": "Trend health per the provided trend state."
+      }
+    },
+    "provenance": {
+      "model": "mock-analyst-v1",
+      "prompt_name": "market_analysis",
+      "prompt_sha256": "88c0f87767067ec5133b90f509359c9a4fe4adf3f65ed9e11bdaf5c82d24b408",
+      "prompt_version": "1.0.0",
+      "provider": "mock",
+      "schema_version": "1.0.0",
+      "validation_warnings": []
+    },
+    "risk_assessment": {
+      "capital_preservation_notes": {
+        "evidence_ids": [
+          "factor:00:trend"
+        ],
+        "schema_version": "1.0.0",
+        "text": "No news data provided; size conservatively when flags are present."
+      },
+      "liquidity_risk": "medium",
+      "market_risk": "medium",
+      "news_risk": "low",
+      "position_size_suggestion": "reduced",
+      "risk_rationale": {
+        "evidence_ids": [
+          "pool_01b755911dde359a337c47ed",
+          "pool_0235457a511e422426e1f858",
+          "swing_0113e36bf09aff688cda2020",
+          "swing_09c5d1913593cb561b7e6200"
+        ],
+        "schema_version": "1.0.0",
+        "text": "Risk levels derived from provided pools, trend state, and data quality."
+      },
+      "schema_version": "1.0.0",
+      "session_risk": "low",
+      "trend_risk": "medium",
+      "volatility_risk": "medium"
+    },
+    "schema_version": "1.0.0",
+    "trade_evaluation": null,
+    "weaknesses": [
+      {
+        "evidence_ids": [
+          "factor:00:trend"
+        ],
+        "schema_version": "1.0.0",
+        "text": "Conflicting provided factors argue against the bias."
+      }
+    ]
+  },
+  "schema_version": "1.0.0",
+  "subject": "SESS/15m"
+}
