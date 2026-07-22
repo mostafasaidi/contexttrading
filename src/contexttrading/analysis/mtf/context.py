@@ -133,8 +133,17 @@ def analyze_mtf(
 
     Raises:
         DataError: When a requested timeframe is not higher than the base.
+        InsufficientDataError: When the series has no candles (every other
+            module rejects short series before reaching the envelope build;
+            an empty base would otherwise surface a raw DataWindow
+            validation error from the ``None`` start/end).
     """
     config = config or EngineConfig()
+    if len(series) == 0:
+        raise InsufficientDataError(
+            "Series too short for MTF analysis",
+            context={"candles": 0, "min_candles": 1},
+        )
     targets = sorted({Timeframe.parse(t) for t in timeframes}, key=lambda t: t.seconds)
     for tf in targets:
         if tf.seconds <= series.timeframe.seconds:
