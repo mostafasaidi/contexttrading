@@ -29,7 +29,7 @@ from collections.abc import Sequence
 from typing import Protocol, runtime_checkable
 
 from contexttrading import __version__
-from contexttrading.analysis.pipeline import MODULE_ORDER, run_module
+from contexttrading.analysis.pipeline import MODULE_ORDER, run_modules
 from contexttrading.backtesting.execution import (
     PositionState,
     close_trade,
@@ -194,10 +194,9 @@ def run_backtest(
             start = 0 if config.window_bars is None else max(0, i + 1 - config.window_bars)
             window = series[start : i + 1]
             if results is None or (i - config.warmup_bars) % config.recompute_interval == 0:
-                results = {
-                    module: run_module(module, window, engine_config, mtf_timeframes=mtf_timeframes)
-                    for module in ordered_modules
-                }
+                results = run_modules(
+                    ordered_modules, window, engine_config, mtf_timeframes=mtf_timeframes
+                )
             if (
                 position is not None
                 and config.breakeven_after_r is not None

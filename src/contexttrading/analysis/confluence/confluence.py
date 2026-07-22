@@ -14,7 +14,7 @@ Score semantics (documented in ``docs/modules/confluence.md``):
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 
 from contexttrading.analysis.confluence.factors import BLOCK_KIND_RAW, collect_factors
 from contexttrading.analysis.confluence.zones import (
@@ -47,6 +47,8 @@ def analyze_confluence(
     config: EngineConfig | None = None,
     session_config: SessionConfig | None = None,
     mtf_timeframes: Sequence[Timeframe | str] | None = None,
+    *,
+    precomputed: Mapping[str, AnalysisResult] | None = None,  # type: ignore[type-arg]
 ) -> AnalysisResult[ConfluenceResult]:
     """Score directional confluence over a series.
 
@@ -56,26 +58,56 @@ def analyze_confluence(
         session_config: Session windows (forwarded to the sessions engine).
         mtf_timeframes: HTFs for the MTF context (defaults to the next two
             standard timeframes above the base).
+        precomputed: Optional previously computed module envelopes keyed by
+            module name ("liquidity", "premium_discount", "fvg",
+            "orderblocks", "supplydemand", "sessions", "mtf"). Callers that
+            already ran modules over the SAME series + config (e.g. the
+            full-stack pipeline) pass them here so confluence reuses the
+            payloads instead of recomputing them — output is identical to
+            standalone recomputation (proven by goldens). Structure scan
+            and trend state are always derived internally (cheap, and their
+            non-payload objects are required for factor evaluation).
 
     Returns:
         Envelope with bias, normalized directional scores, every factor
         contribution, agree/conflict counts, and confluence zones.
     """
     config = config or EngineConfig()
+    pre = precomputed or {}
     scan = StructureScanner(config).run(series)
     trend = TrendEngine(config).evaluate(series, scan)
-    liquidity = analyze_liquidity(series, config).payload
-    dealing_range = analyze_dealing_range(series, config).payload.dealing_range
-    fvg = analyze_fvg(series, config).payload
-    ob = analyze_orderblocks(series, config).payload
-    sd = analyze_supplydemand(series, config).payload
-    sessions = analyze_sessions(series, config, session_config).payload
+    liquidity = (
+        pre["liquidity"].payload
+        if "liquidity" in pre
+        else analyze_liquidity(series, config).payload
+    )
+    dealing_range = (
+        pre["premium_discount"].payload.dealing_range
+        if "premium_discount" in pre
+        else analyze_dealing_range(series, config).payload.dealing_range
+    )
+    fvg = pre["fvg"].payload if "fvg" in pre else analyze_fvg(series, config).payload
+    ob = (
+        pre["orderblocks"].payload
+        if "orderblocks" in pre
+        else analyze_orderblocks(series, config).payload
+    )
+    sd = (
+        pre["supplydemand"].payload
+        if "supplydemand" in pre
+        else analyze_supplydemand(series, config).payload
+    )
+    sessions = (
+        pre["sessions"].payload
+        if "sessions" in pre
+        else analyze_sessions(series, config, session_config).payload
+    )
     targets = (
         list(mtf_timeframes)
         if mtf_timeframes is not None
         else (default_mtf_timeframes(series.timeframe))
     )
-    mtf = analyze_mtf(series, targets, config).payload
+    mtf = pre["mtf"].payload if "mtf" in pre else analyze_mtf(series, targets, config).payload
 
     price = series.candles[-1].close
     atr_last = scan.atr_values[-1] if scan.atr_values else None

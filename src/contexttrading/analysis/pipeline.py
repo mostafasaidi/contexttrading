@@ -86,6 +86,39 @@ def run_module(
     return runners[module]()
 
 
+def run_modules(
+    modules: Sequence[str],
+    series: CandleSeries,
+    config: EngineConfig | None = None,
+    *,
+    mtf_timeframes: Sequence[Timeframe | str] = ("1h", "4h"),
+) -> dict[str, AnalysisResult]:  # type: ignore[type-arg]
+    """Run a subset of modules over a series with payload sharing.
+
+    Computation order moves MTF ahead of confluence so confluence reuses
+    the already computed payloads (``analyze_confluence(precomputed=...)``)
+    instead of re-running every module internally — same output, roughly
+    half the cost of independent runs (byte-identity proven by goldens).
+    The returned dict is keyed in canonical ``MODULE_ORDER`` regardless of
+    computation order. Unknown module names raise KeyError.
+    """
+    config = config or EngineConfig()
+    unknown = [m for m in modules if m not in MODULE_ORDER]
+    if unknown:
+        raise KeyError(unknown[0])
+    requested = [m for m in MODULE_ORDER if m in modules]
+    results: dict[str, AnalysisResult] = {}  # type: ignore[type-arg]
+    compute_order = sorted(requested, key=lambda m: (m == "confluence", MODULE_ORDER.index(m)))
+    for module in compute_order:
+        if module == "confluence":
+            results[module] = analyze_confluence(
+                series, config, mtf_timeframes=list(mtf_timeframes), precomputed=results
+            )
+        else:
+            results[module] = run_module(module, series, config, mtf_timeframes=mtf_timeframes)
+    return {module: results[module] for module in requested}
+
+
 def run_full_stack(
     series: CandleSeries,
     config: EngineConfig | None = None,
@@ -93,8 +126,4 @@ def run_full_stack(
     mtf_timeframes: Sequence[Timeframe | str] = ("1h", "4h"),
 ) -> dict[str, AnalysisResult]:  # type: ignore[type-arg]
     """Run every analysis module over a series, keyed by module name."""
-    config = config or EngineConfig()
-    return {
-        module: run_module(module, series, config, mtf_timeframes=mtf_timeframes)
-        for module in MODULE_ORDER
-    }
+    return run_modules(MODULE_ORDER, series, config, mtf_timeframes=mtf_timeframes)
