@@ -1,0 +1,33 @@
+# VCS / metadata
+.git
+.github
+.gitignore
+
+# Python caches and test artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+coverage.xml
+htmlcov/
+.wheelcheck/
+
+# Tests, examples, and docs are not needed in the image
+tests/
+examples/
+docs/
+BUILD_STATE.md
+
+# Local environments and editors
+.venv/
+venv/
+.idea/
+.vscode/
+
+# Docker wiring itself
+docker/
+.dockerignore
+Dockerfile
+docker-compose.yml
