@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ContextTrading — Institutional SMC Terminal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0e13;
+    --bg-panel: #10141b;
+    --bg-panel-2: #151a23;
+    --bg-hover: #1a2130;
+    --border: #1e2633;
+    --border-soft: #182030;
+    --text: #e7ebf2;
+    --text-dim: #8b95a8;
+    --text-faint: #5b6577;
+    --teal: #2dd4bf;
+    --teal-dim: rgba(45, 212, 191, 0.12);
+    --rose: #fb7185;
+    --rose-dim: rgba(251, 113, 133, 0.12);
+    --amber: #fbbf24;
+    --amber-dim: rgba(251, 191, 36, 0.12);
+    --purple: #a78bfa;
+    --blue: #60a5fa;
+    --blue-dim: rgba(96, 165, 250, 0.10);
+    --mono: 'JetBrains Mono', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 13px;
+    overflow: hidden;
+  }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #232c3d; border-radius: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  /* ============ APP GRID ============ */
+  .app {
+    display: grid;
+    grid-template-rows: 48px 1fr 34px;
+    grid-template-columns: 232px 1fr 360px;
+    grid-template-areas:
+      "topbar topbar topbar"
+      "sidebar chart analyst"
+      "statusbar statusbar statusbar";
+    height: 100vh;
+  }
+
+  /* ============ TOP BAR ============ */
+  .topbar {
+    grid-area: topbar;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 0 14px;
+    background: var(--bg-panel);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    display: flex; align-items: center; gap: 8px;
+    font-weight: 800; font-size: 14px; letter-spacing: 0.4px;
+  }
+  .logo-mark {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: linear-gradient(135deg, var(--teal), #0ea5e9);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono); font-size: 12px; font-weight: 700; color: #06251f;
+  }
+  .logo span.dim { color: var(--text-faint); font-weight: 600; }
+  .symbol-btn {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg-panel-2); border: 1px solid var(--border);
+    border-radius: 8px; padding: 6px 12px; cursor: pointer;
+    font-family: var(--mono); font-weight: 700; font-size: 13px; color: var(--text);
+  }
+  .symbol-btn:hover { background: var(--bg-hover); }
+  .symbol-btn .price { color: var(--teal); }
+  .symbol-btn .chg-up { color: var(--teal); font-size: 11px; }
+  .tf-group { display: flex; background: var(--bg-panel-2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .tf {
+    padding: 6px 11px; cursor: pointer; color: var(--text-dim);
+    font-family: var(--mono); font-size: 12px; font-weight: 600;
+    border-right: 1px solid var(--border-soft);
+  }
+  .tf:last-child { border-right: none; }
+  .tf:hover { color: var(--text); }
+  .tf.active { background: var(--blue-dim); color: var(--blue); }
+  .topbar-right { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+  .bias-badge {
+    display: flex; align-items: center; gap: 7px;
+    background: var(--teal-dim); border: 1px solid rgba(45,212,191,0.35);
+    color: var(--teal); border-radius: 8px; padding: 6px 12px;
+    font-weight: 700; font-size: 12px; letter-spacing: 0.5px;
+  }
+  .bias-badge .score { font-family: var(--mono); font-size: 12px; opacity: 0.9; }
+  .session-chip {
+    display: flex; align-items: center; gap: 7px;
+    background: var(--amber-dim); border: 1px solid rgba(251,191,36,0.3);
+    color: var(--amber); border-radius: 8px; padding: 6px 12px;
+    font-weight: 600; font-size: 12px;
+  }
+  .pulse { width: 7px; height: 7px; border-radius: 50%; background: var(--amber); animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; box-shadow: 0 0 0 0 rgba(251,191,36,0.5);} 50% { opacity: .6; box-shadow: 0 0 0 5px rgba(251,191,36,0);} }
+  .icon-btn {
+    width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--bg-panel-2); color: var(--text-dim); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+  }
+  .icon-btn:hover { color: var(--text); background: var(--bg-hover); }
+
+  /* ============ SIDEBAR ============ */
+  .sidebar {
+    grid-area: sidebar;
+    background: var(--bg-panel);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow-y: auto;
+  }
+  .panel-section { padding: 12px 12px 8px; border-bottom: 1px solid var(--border-soft); }
+  .panel-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+    color: var(--text-faint); text-transform: uppercase; margin-bottom: 9px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .watch-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 7px 8px; border-radius: 7px; cursor: pointer;
+  }
+  .watch-item:hover { background: var(--bg-hover); }
+  .watch-item.active { background: var(--blue-dim); }
+  .watch-item .sym { font-family: var(--mono); font-weight: 600; font-size: 12px; }
+  .watch-item .sub { color: var(--text-faint); font-size: 10px; }
+  .watch-item .px { font-family: var(--mono); font-size: 11px; text-align: right; }
+  .up { color: var(--teal); } .down { color: var(--rose); }
+
+  .mtf-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .mtf-cell {
+    background: var(--bg-panel-2); border: 1px solid var(--border);
+    border-radius: 7px; padding: 7px 4px; text-align: center;
+  }
+  .mtf-cell .tfname { font-family: var(--mono); font-size: 10px; color: var(--text-dim); display: block; margin-bottom: 3px; }
+  .mtf-cell .arrow { font-size: 14px; font-weight: 800; }
+  .mtf-cell.bull .arrow { color: var(--teal); }
+  .mtf-cell.bear .arrow { color: var(--rose); }
+  .mtf-cell.neut .arrow { color: var(--text-faint); }
+  .mtf-cell .ph { font-size: 8.5px; color: var(--text-faint); display: block; margin-top: 2px; }
+
+  .layer-item {
+    display: flex; align-items: center; gap: 8px;
+    padding: 5px 4px; cursor: pointer; border-radius: 6px;
+  }
+  .layer-item:hover { background: var(--bg-hover); }
+  .layer-dot { width: 9px; height: 9px; border-radius: 3px; flex-shrink: 0; }
+  .layer-item .lname { font-size: 12px; flex: 1; }
+  .layer-item .count { font-family: var(--mono); font-size: 10px; color: var(--text-faint); }
+  .toggle {
+    width: 28px; height: 16px; border-radius: 9px; background: #2a3446;
+    position: relative; transition: background .15s; flex-shrink: 0;
+  }
+  .toggle::after {
+    content: ''; position: absolute; top: 2px; left: 2px;
+    width: 12px; height: 12px; border-radius: 50%; background: #98a2b8; transition: all .15s;
+  }
+  .toggle.on { background: rgba(45,212,191,0.45); }
+  .toggle.on::after { left: 14px; background: var(--teal); }
+
+  /* ============ CHART AREA ============ */
+  .chart-area {
+    grid-area: chart;
+    display: flex; flex-direction: column;
+    background: var(--bg);
+    min-width: 0;
+  }
+  .chart-toolbar {
+    display: flex; align-items: center; gap: 14px;
+    padding: 7px 14px; border-bottom: 1px solid var(--border-soft);
+    font-family: var(--mono); font-size: 11px; color: var(--text-dim);
+    background: var(--bg-panel);
+  }
+  .chart-toolbar .ohlc b { color: var(--text); font-weight: 600; }
+  .chart-toolbar .sep { color: var(--border); }
+  .chart-toolbar .right { margin-left: auto; display: flex; gap: 10px; align-items: center; }
+  .engine-chip {
+    font-size: 10px; background: var(--bg-panel-2); border: 1px solid var(--border);
+    padding: 3px 8px; border-radius: 6px; color: var(--text-faint);
+  }
+  .engine-chip b { color: var(--teal); font-weight: 600; }
+  #chart-container { position: relative; flex: 1; min-height: 0; }
+  #chart { position: absolute; inset: 0; }
+  #overlay { position: absolute; inset: 0; pointer-events: none; z-index: 5; }
+  .chart-fallback {
+    position: absolute; inset: 0; display: none;
+    align-items: center; justify-content: center; flex-direction: column; gap: 10px;
+    color: var(--text-dim); text-align: center; padding: 40px;
+  }
+  .overlay-label {
+    position: absolute; pointer-events: none;
+    font-family: var(--mono); font-size: 9.5px; font-weight: 600;
+    padding: 2px 6px; border-radius: 4px; white-space: nowrap; z-index: 6;
+  }
+
+  /* ============ AI ANALYST PANEL ============ */
+  .analyst {
+    grid-area: analyst;
+    background: var(--bg-panel);
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .analyst-header {
+    padding: 12px 14px 10px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .analyst-header .title { font-weight: 800; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .ai-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--purple); box-shadow: 0 0 8px rgba(167,139,250,.7); }
+  .conf-ring {
+    font-family: var(--mono); font-weight: 700; font-size: 13px;
+    color: var(--teal); background: var(--teal-dim);
+    border: 1px solid rgba(45,212,191,0.3);
+    padding: 4px 10px; border-radius: 8px;
+  }
+  .analyst-body { flex: 1; overflow-y: auto; padding: 12px 14px; }
+  .card {
+    background: var(--bg-panel-2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 12px; margin-bottom: 12px;
+  }
+  .card-title {
+    font-size: 10px; font-weight: 700; letter-spacing: 1px;
+    color: var(--text-faint); text-transform: uppercase; margin-bottom: 8px;
+    display: flex; justify-content: space-between;
+  }
+  .card p { color: var(--text-dim); line-height: 1.55; font-size: 12px; }
+  .card p b { color: var(--text); font-weight: 600; }
+  .cite {
+    font-family: var(--mono); font-size: 9.5px; color: var(--blue);
+    background: var(--blue-dim); border: 1px solid rgba(96,165,250,0.25);
+    border-radius: 4px; padding: 1px 5px; cursor: pointer; white-space: nowrap;
+    transition: all .15s;
+  }
+  .cite:hover { background: rgba(96,165,250,0.25); color: #cfe4ff; }
+
+  .conf-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+  .conf-bar-row .fname { width: 92px; font-size: 11px; color: var(--text-dim); flex-shrink: 0; }
+  .conf-bar { flex: 1; height: 6px; background: #1c2431; border-radius: 3px; overflow: hidden; }
+  .conf-bar .fill { height: 100%; border-radius: 3px; }
+  .conf-bar-row .fval { font-family: var(--mono); font-size: 10px; width: 32px; text-align: right; color: var(--text-dim); }
+
+  .trade-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 4px; }
+  .trade-cell { background: var(--bg); border: 1px solid var(--border-soft); border-radius: 8px; padding: 8px 10px; }
+  .trade-cell .k { font-size: 9.5px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.8px; }
+  .trade-cell .v { font-family: var(--mono); font-size: 13px; font-weight: 700; margin-top: 2px; }
+  .rr-pill {
+    display: inline-block; font-family: var(--mono); font-weight: 700; font-size: 12px;
+    background: var(--teal-dim); color: var(--teal); border-radius: 6px; padding: 3px 9px;
+    border: 1px solid rgba(45,212,191,0.3);
+  }
+  .weak-item { display: flex; gap: 8px; padding: 5px 0; font-size: 11.5px; color: var(--text-dim); line-height: 1.45; }
+  .weak-item .wicon { color: var(--amber); flex-shrink: 0; }
+  .action-item { display: flex; gap: 8px; padding: 5px 0; font-size: 11.5px; color: var(--text-dim); line-height: 1.45; }
+  .action-item .acheck { color: var(--teal); flex-shrink: 0; }
+  .scenario { border-left: 2px solid var(--border); padding: 6px 10px; margin-bottom: 8px; }
+  .scenario.bull { border-color: var(--teal); }
+  .scenario.bear { border-color: var(--rose); }
+  .scenario .sname { font-weight: 700; font-size: 11.5px; margin-bottom: 2px; }
+  .scenario .sprob { font-family: var(--mono); font-size: 10px; color: var(--text-faint); float: right; }
+  .scenario p { font-size: 11px; }
+
+  /* ============ STATUS BAR ============ */
+  .statusbar {
+    grid-area: statusbar;
+    display: flex; align-items: center; gap: 4px;
+    background: var(--bg-panel); border-top: 1px solid var(--border);
+    padding: 0 10px; font-size: 11px; color: var(--text-faint);
+  }
+  .tab {
+    padding: 5px 14px; cursor: pointer; color: var(--text-dim);
+    font-weight: 600; border-radius: 6px; font-size: 11.5px;
+  }
+  .tab:hover { color: var(--text); background: var(--bg-hover); }
+  .tab.active { color: var(--blue); background: var(--blue-dim); }
+  .status-right { margin-left: auto; display: flex; gap: 14px; font-family: var(--mono); font-size: 10px; }
+  .status-right .ok { color: var(--teal); }
+
+  @media (max-width: 1200px) {
+    .app { grid-template-columns: 200px 1fr 300px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ================= TOP BAR ================= -->
+  <header class="topbar">
+    <div class="logo">
+      <div class="logo-mark">CT</div>
+      Context<span class="dim">Trading</span>
+    </div>
+    <button class="symbol-btn">
+      BTCUSDT ▾ <span class="price">67,482.5</span> <span class="chg-up">+1.84%</span>
+    </button>
+    <div class="tf-group">
+      <div class="tf">1m</div><div class="tf">5m</div><div class="tf active">15m</div>
+      <div class="tf">1H</div><div class="tf">4H</div><div class="tf">1D</div><div class="tf">1W</div>
+    </div>
+    <div class="topbar-right">
+      <div class="bias-badge">▲ BULLISH <span class="score">0.78</span></div>
+      <div class="session-chip"><div class="pulse"></div> London KZ · 08:42 UTC</div>
+      <button class="icon-btn" title="API key">🔑</button>
+      <button class="icon-btn" title="Settings">⚙</button>
+    </div>
+  </header>
+
+  <!-- ================= LEFT SIDEBAR ================= -->
+  <aside class="sidebar">
+    <div class="panel-section">
+      <div class="panel-title">Watchlist <span>＋</span></div>
+      <div class="watch-item active">
+        <div><div class="sym">BTCUSDT</div><div class="sub">Bitcoin</div></div>
+        <div class="px up">67,482.5<br>+1.84%</div>
+      </div>
+      <div class="watch-item">
+        <div><div class="sym">ETHUSDT</div><div class="sub">Ethereum</div></div>
+        <div class="px up">3,512.08<br>+0.92%</div>
+      </div>
+      <div class="watch-item">
+        <div><div class="sym">SOLUSDT</div><div class="sub">Solana</div></div>
+        <div class="px down">161.44<br>−0.67%</div>
+      </div>
+      <div class="watch-item">
+        <div><div class="sym">XAUUSD</div><div class="sub">Gold</div></div>
+        <div class="px up">2,414.20<br>+0.31%</div>
+      </div>
+      <div class="watch-item">
+        <div><div class="sym">EURUSD</div><div class="sub">Euro</div></div>
+        <div class="px down">1.0852<br>−0.12%</div>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <div class="panel-title">MTF Bias Matrix</div>
+      <div class="mtf-grid">
+        <div class="mtf-cell bull"><span class="tfname">1W</span><span class="arrow">▲</span><span class="ph">expan.</span></div>
+        <div class="mtf-cell bull"><span class="tfname">1D</span><span class="arrow">▲</span><span class="ph">expan.</span></div>
+        <div class="mtf-cell bull"><span class="tfname">4H</span><span class="arrow">▲</span><span class="ph">correc.</span></div>
+        <div class="mtf-cell neut"><span class="tfname">1H</span><span class="arrow">◆</span><span class="ph">consol.</span></div>
+      </div>
+      <div style="margin-top:8px; font-size:10.5px; color:var(--text-faint); line-height:1.5;">
+        Alignment: <b style="color:var(--teal)">3/4 bullish</b> · htf_influence <span style="font-family:var(--mono)">0.22</span>
+      </div>
+    </div>
+
+    <div class="panel-section" style="border-bottom:none;">
+      <div class="panel-title">Engine Layers</div>
+      <div class="layer-item"><div class="layer-dot" style="background:#60a5fa"></div><span class="lname">Market Structure</span><span class="count">14</span><div class="toggle on"></div></div>
+      <div class="layer-item"><div class="layer-dot" style="background:#2dd4bf"></div><span class="lname">Fair Value Gaps</span><span class="count">6</span><div class="toggle on"></div></div>
+      <div class="layer-item"><div class="layer-dot" style="background:#fb7185"></div><span class="lname">Order Blocks</span><span class="count">4</span><div class="toggle on"></div></div>
+      <div class="layer-item"><div class="layer-dot" style="background:#fbbf24"></div><span class="lname">Liquidity</span><span class="count">9</span><div class="toggle on"></div></div>
+      <div class="layer-item"><div class="layer-dot" style="background:#a78bfa"></div><span class="lname">Sessions / KZ</span><span class="count">3</span><div class="toggle on"></div></div>
+      <div class="layer-item"><div class="layer-dot" style="background:#94a3b8"></div><span class="lname">Premium / Discount</span><span class="count">1</span><div class="toggle on"></div></div>
+      <div class="layer-item"><div class="layer-dot" style="background:#34d399"></div><span class="lname">Confluence Zones</span><span class="count">2</span><div class="toggle"></div></div>
+      <div class="layer-item"><div class="layer-dot" style="background:#64748b"></div><span class="lname">HTF Levels</span><span class="count">5</span><div class="toggle"></div></div>
+    </div>
+  </aside>
+
+  <!-- ================= CHART ================= -->
+  <main class="chart-area">
+    <div class="chart-toolbar">
+      <span class="ohlc">O <b>66,910</b> H <b>67,540</b> L <b>66,845</b> C <b class="up">67,482</b></span>
+      <span class="sep">|</span>
+      <span>Vol <b style="color:var(--text)">1,284</b></span>
+      <span class="sep">|</span>
+      <span>ATR(14) <b style="color:var(--text)">182.4</b></span>
+      <div class="right">
+        <span class="engine-chip">engine <b>v1.0.0</b> · deterministic ✓</span>
+        <span class="engine-chip">schema <b>1.0.0</b></span>
+      </div>
+    </div>
+    <div id="chart-container">
+      <div id="chart"></div>
+      <svg id="overlay"></svg>
+      <div class="chart-fallback" id="fallback">
+        <div style="font-size:28px">📈</div>
+        <div>Chart library loading…<br><span style="font-size:11px">(Lightweight Charts loads from CDN — the UI shell above is the real layout)</span></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= AI ANALYST ================= -->
+  <aside class="analyst">
+    <div class="analyst-header">
+      <div class="title"><div class="ai-dot"></div> AI Analyst <span style="color:var(--text-faint);font-weight:500;font-size:11px">· evidence-bound</span></div>
+      <div class="conf-ring">0.78</div>
+    </div>
+    <div class="analyst-body">
+
+      <div class="card">
+        <div class="card-title">Executive Summary</div>
+        <p><b>Bullish continuation</b> is favored while price holds above the 4H order block at
+        <span class="cite">#ob_a3f9c2</span>. London KZ swept Asian lows
+        <span class="cite">#liq_swp_07</span> and displaced through intraday structure
+        <span class="cite">#bos_e112</span>, printing a strong BOS. Bias remains long toward
+        buy-side liquidity at <b>68,200</b> <span class="cite">#pool_bsl_03</span>.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Confluence Breakdown</div>
+        <div class="conf-bar-row"><span class="fname">MTF align</span><div class="conf-bar"><div class="fill" style="width:90%;background:var(--teal)"></div></div><span class="fval">1.50</span></div>
+        <div class="conf-bar-row"><span class="fname">Structure</span><div class="conf-bar"><div class="fill" style="width:85%;background:var(--teal)"></div></div><span class="fval">1.00</span></div>
+        <div class="conf-bar-row"><span class="fname">Liquidity</span><div class="conf-bar"><div class="fill" style="width:80%;background:var(--teal)"></div></div><span class="fval">0.80</span></div>
+        <div class="conf-bar-row"><span class="fname">Order block</span><div class="conf-bar"><div class="fill" style="width:70%;background:var(--teal)"></div></div><span class="fval">0.70</span></div>
+        <div class="conf-bar-row"><span class="fname">FVG</span><div class="conf-bar"><div class="fill" style="width:60%;background:var(--teal)"></div></div><span class="fval">0.60</span></div>
+        <div class="conf-bar-row"><span class="fname">Premium/Disc</span><div class="conf-bar"><div class="fill" style="width:50%;background:var(--amber)"></div></div><span class="fval">0.25</span></div>
+        <div class="conf-bar-row"><span class="fname">Session</span><div class="conf-bar"><div class="fill" style="width:80%;background:var(--amber)"></div></div><span class="fval">0.40</span></div>
+        <div style="margin-top:9px; font-size:10.5px; color:var(--text-faint);">Every factor is computed by the engine — the AI only narrates. <span class="cite">#factor_*</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Trade Evaluation <span class="rr-pill">R:R 3.2</span></div>
+        <div class="trade-grid">
+          <div class="trade-cell"><div class="k">Entry (OTE)</div><div class="v" style="color:var(--teal)">67,310</div></div>
+          <div class="trade-cell"><div class="k">Stop Loss</div><div class="v" style="color:var(--rose)">66,890</div></div>
+          <div class="trade-cell"><div class="k">Take Profit</div><div class="v" style="color:var(--blue)">68,200</div></div>
+          <div class="trade-cell"><div class="k">Probability</div><div class="v">High</div></div>
+        </div>
+        <p style="margin-top:9px">Entry sits in <b>discount</b> inside the OTE zone
+        <span class="cite">#rng_d4</span>, confluent with the unmitigated 4H OB
+        <span class="cite">#ob_a3f9c2</span> and a stacked FVG <span class="cite">#fvg_91e0</span>.
+        Invalidation: 15m close below OB low.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Alternative Scenarios</div>
+        <div class="scenario bull"><span class="sprob">62%</span><div class="sname" style="color:var(--teal)">Continuation</div><p>Hold above 67,310 → expansion into 68,200 BSL pool.</p></div>
+        <div class="scenario bear"><span class="sprob">24%</span><div class="sname" style="color:var(--rose)">Deep pullback</div><p>Loss of OB → mitigation block at 66,540 becomes the draw.</p></div>
+        <div class="scenario"><span class="sprob">14%</span><div class="sname" style="color:var(--text-dim)">Range</div><p>Failure at EQ → consolidation into NY open.</p></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Weaknesses</div>
+        <div class="weak-item"><span class="wicon">⚠</span>1H momentum diverging — last two impulse legs shorter (leg_atr 2.4 → 1.7) <span class="cite">#leg_88</span></div>
+        <div class="weak-item"><span class="wicon">⚠</span>Price approaching premium of the weekly range <span class="cite">#rng_w1</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Action Items</div>
+        <div class="action-item"><span class="acheck">→</span>Wait for 15m tap of 67,310 OTE; no market orders at EQ.</div>
+        <div class="action-item"><span class="acheck">→</span>Risk ≤ 1% — London KZ volatility regime.</div>
+        <div class="action-item"><span class="acheck">→</span>Re-evaluate on 15m CHoCH below 66,890.</div>
+      </div>
+
+      <div style="text-align:center; font-size:10px; color:var(--text-faint); padding:4px 0 10px;">
+        prompt v3 · gpt-4o · citations 14/14 verified · data quality: <span style="color:var(--teal)">good</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ================= STATUS BAR ================= -->
+  <footer class="statusbar">
+    <div class="tab active">📊 Chart</div>
+    <div class="tab">⚡ Backtest</div>
+    <div class="tab">📓 Journal</div>
+    <div class="tab">📅 Weekly Review</div>
+    <div class="status-right">
+      <span class="ok">● API connected</span>
+      <span>stream: NDJSON</span>
+      <span>full-stack: 1.66s @2k bars</span>
+      <span>UTC 08:42:17</span>
+    </div>
+  </footer>
+</div>
+
+<script src="https://unpkg.com/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+<script>
+(function () {
+  if (typeof LightweightCharts === 'undefined') {
+    document.getElementById('fallback').style.display = 'flex';
+    return;
+  }
+
+  // ---------- deterministic synthetic 15m data (seeded LCG) ----------
+  let seed = 42;
+  const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+  const candles = [];
+  let t = Math.floor(Date.UTC(2026, 6, 20, 0, 0, 0) / 1000);
+  let px = 66200;
+  for (let i = 0; i < 320; i++) {
+    const drift = i < 90 ? -6 : i < 130 ? 2 : i < 260 ? 14 : 4; // down → base → markup
+    const o = px;
+    const c = o + drift + (rnd() - 0.48) * 140;
+    const h = Math.max(o, c) + rnd() * 90;
+    const l = Math.min(o, c) - rnd() * 90;
+    candles.push({ time: t, open: o, high: h, low: l, close: c });
+    px = c; t += 900;
+  }
+
+  const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+    layout: {
+      background: { type: 'solid', color: 'transparent' },
+      textColor: '#8b95a8',
+      fontFamily: "'JetBrains Mono', monospace",
+      fontSize: 10,
+    },
+    grid: {
+      vertLines: { color: '#151b26' },
+      horzLines: { color: '#151b26' },
+    },
+    rightPriceScale: { borderColor: '#1e2633' },
+    timeScale: { borderColor: '#1e2633', timeVisible: true, secondsVisible: false },
+    crosshair: {
+      vertLine: { color: '#33415c', labelBackgroundColor: '#33415c' },
+      horzLine: { color: '#33415c', labelBackgroundColor: '#33415c' },
+    },
+    autoSize: true,
+  });
+
+  const series = chart.addCandlestickSeries({
+    upColor: '#2dd4bf', downColor: '#fb7185',
+    borderUpColor: '#2dd4bf', borderDownColor: '#fb7185',
+    wickUpColor: '#2dd4bf99', wickDownColor: '#fb718599',
+  });
+  series.setData(candles);
+
+  // price lines: EQH liquidity, EQ, PDH
+  series.createPriceLine({ price: 67140, color: '#fbbf24', lineWidth: 1, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible: true, title: 'EQH · BSL' });
+  series.createPriceLine({ price: 66800, color: '#94a3b8', lineWidth: 1, lineStyle: LightweightCharts.LineStyle.SparseDotted, axisLabelVisible: true, title: 'EQ' });
+
+  // ---------- SVG overlay: zones + structure annotations ----------
+  const svg = document.getElementById('overlay');
+  const NS = 'http://www.w3.org/2000/svg';
+  function el(name, attrs, parent) {
+    const e = document.createElementNS(NS, name);
+    for (const k in attrs) e.setAttribute(k, attrs[k]);
+    (parent || svg).appendChild(e);
+    return e;
+  }
+  function x(time) { const c = chart.timeScale().timeToCoordinate(time); return c === null ? -9999 : c; }
+  function y(price) { const c = series.priceToCoordinate(price); return c === null ? -9999 : c; }
+
+  const labels = [];
+  function zoneLabel(text, zx, zy, color) {
+    const d = document.createElement('div');
+    d.className = 'overlay-label';
+    d.textContent = text;
+    d.style.cssText = `left:${zx + 5}px;top:${zy + 4}px;color:${color};background:rgba(11,14,19,0.75);border:1px solid ${color}44;`;
+    document.getElementById('chart-container').appendChild(d);
+    labels.push(d);
+    return d;
+  }
+
+  function draw() {
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+    labels.forEach(l => l.remove()); labels.length = 0;
+    svg.setAttribute('width', '100%'); svg.setAttribute('height', '100%');
+
+    const T = candles.map(c => c.time);
+
+    // London session band (bars 210–260 area)
+    const s1 = x(T[205]), s2 = x(T[265]);
+    if (s2 > 0) {
+      el('rect', { x: s1, y: 0, width: s2 - s1, height: '100%', fill: 'rgba(167,139,250,0.05)' });
+      el('line', { x1: s1, y1: 0, x2: s1, y2: '100%', stroke: 'rgba(167,139,250,0.25)', 'stroke-dasharray': '3 4' });
+      zoneLabel('LONDON KZ', s1, 8, '#a78bfa');
+    }
+
+    // Bearish OB (rose box around bars 118–300, the down-candle before markup… drawn top-left zone)
+    const ob1x = x(T[118]), ob1y = y(66860), ob2x = x(T[319]), ob2y = y(66620);
+    if (ob1x > -999 && ob1y > -999) {
+      el('rect', { x: ob1x, y: ob1y, width: ob2x - ob1x, height: ob2y - ob1y, fill: 'rgba(251,113,133,0.10)', stroke: 'rgba(251,113,133,0.45)', 'stroke-width': 1, rx: 2 });
+      zoneLabel('4H OB · #ob_a3f9c2', ob1x, ob1y - 14, '#fb7185');
+    }
+
+    // Bullish FVG (teal box bars 240→ end)
+    const f1x = x(T[238]), f1y = y(67420), f2x = x(T[319]), f2y = y(67240);
+    if (f1x > -999) {
+      el('rect', { x: f1x, y: f1y, width: f2x - f1x, height: f2y - f1y, fill: 'rgba(45,212,191,0.12)', stroke: 'rgba(45,212,191,0.5)', 'stroke-width': 1, rx: 2 });
+      zoneLabel('FVG · #fvg_91e0', f1x, f1y - 14, '#2dd4bf');
+    }
+
+    // OTE zone (blue)
+    const o1x = x(T[255]), o1y = y(67390), o2x = x(T[319]), o2y = y(67210);
+    if (o1x > -999) {
+      el('rect', { x: o1x, y: o1y, width: o2x - o1x, height: o2y - o1y, fill: 'rgba(96,165,250,0.08)', stroke: 'rgba(96,165,250,0.35)', 'stroke-dasharray': '4 3', rx: 2 });
+      zoneLabel('OTE 0.62–0.79', o1x, o2y + 4, '#60a5fa');
+    }
+
+    // BOS line (structure break)
+    const b1x = x(T[150]), b2x = x(T[225]), by = y(67100);
+    if (b1x > -999) {
+      el('line', { x1: b1x, y1: by, x2: b2x, y2: by, stroke: '#2dd4bf', 'stroke-width': 1.5 });
+      el('polygon', { points: `${b2x},${by} ${b2x - 8},${by - 4} ${b2x - 8},${by + 4}`, fill: '#2dd4bf' });
+      zoneLabel('BOS ↑ #bos_e112', b1x + 10, by - 18, '#2dd4bf');
+    }
+
+    // Liquidity sweep marker (bars ~122)
+    const swx = x(T[122]), swy = y(65890);
+    if (swx > -999) {
+      el('circle', { cx: swx, cy: swy, r: 5, fill: 'none', stroke: '#fbbf24', 'stroke-width': 2 });
+      zoneLabel('sweep ▽ #liq_swp_07', swx - 30, swy + 14, '#fbbf24');
+    }
+
+    // CHoCH earlier (bear→bull flip)
+    const c1x = x(T[96]), c2x = x(T[150]), cy = y(66440);
+    if (c1x > -999) {
+      el('line', { x1: c1x, y1: cy, x2: c2x, y2: cy, stroke: '#fb7185', 'stroke-width': 1.2, 'stroke-dasharray': '5 3' });
+      zoneLabel('CHoCH', c1x + 8, cy - 16, '#fb7185');
+    }
+  }
+
+  chart.timeScale().subscribeVisibleLogicalRangeChange(draw);
+  new ResizeObserver(draw).observe(document.getElementById('chart'));
+  chart.timeScale().setVisibleLogicalRange({ from: 60, to: 325 });
+  draw();
+
+  // layer toggles (visual only in mockup)
+  document.querySelectorAll('.toggle').forEach(t =>
+    t.addEventListener('click', () => t.classList.toggle('on'))
+  );
+  document.querySelectorAll('.tf').forEach(tf =>
+    tf.addEventListener('click', () => {
+      document.querySelectorAll('.tf').forEach(x => x.classList.remove('active'));
+      tf.classList.add('active');
+    })
+  );
+})();
+</script>
+</body>
+</html>
