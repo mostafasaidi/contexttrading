@@ -38,7 +38,12 @@ pytest -q
 - `tests/unit/` — fast, isolated, no I/O.
 - `tests/integration/` — cross-layer flows; may use temp files.
 - `tests/regression/` — golden-file determinism tests (from Phase 3).
-- `tests/performance/` — `pytest-benchmark` budgets (`-m benchmark`).
+- `tests/performance/` — plain-timing tripwires (`-m benchmark`, no
+  pytest-benchmark). Ceilings are calibrated to the dev machine (~4-5x
+  observed) as regression alarms, NOT SLAs; under CI (`CI` env var) they
+  are multiplied by 2.5 (`CT_BENCH_MULTIPLIER` overrides) rather than
+  weakened locally. Ratio checks (scaling, interval trade-off) are
+  machine-independent.
 
 Conventions:
 

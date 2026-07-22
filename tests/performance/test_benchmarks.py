@@ -1,9 +1,17 @@
 """Performance benchmarks (plain timing tripwires — no pytest-benchmark).
 
-Ceilings are deliberately generous (~4-5x the observed timings on the
-reference dev machine, recorded below). They exist to catch algorithmic
-regressions, not to enforce SLAs — a failure means "investigate", not
+Ceilings are calibrated to the reference dev machine (~4-5x the
+observed timings, recorded below) — they exist to catch algorithmic
+regressions, not to enforce SLAs. A failure means "investigate", not
 "the build is too slow by 50 ms".
+
+CI runners are ~1.5-2x slower than the dev machine, so ceilings are
+SCALED there instead of weakened locally: when the standard ``CI``
+environment variable is set (GitHub Actions sets ``CI=true``), ceilings
+are multiplied by :data:`CEILING_MULTIPLIER` (default 2.5, overridable
+via ``CT_BENCH_MULTIPLIER``). Ratio-based checks (scaling, interval
+trade-off) self-normalize on any machine and are left unscaled; the
+replay throughput floor is divided by the multiplier.
 
 Observed (Windows, Python 3.12, seeded ``_dataset``):
 
@@ -19,6 +27,7 @@ Observed (Windows, Python 3.12, seeded ``_dataset``):
 
 from __future__ import annotations
 
+import os
 import time
 
 import pytest
@@ -33,6 +42,13 @@ from contexttrading.core.config import BacktestConfig, EngineConfig
 from tests.integration.test_pipeline import _dataset
 
 pytestmark = pytest.mark.benchmark
+
+#: Tripwire scale factor for slower machines. Defaults to 2.5 under CI
+#: (the ``CI`` env var convention), 1.0 locally; CT_BENCH_MULTIPLIER
+#: overrides both. Keeps local regression detection at full sensitivity.
+CEILING_MULTIPLIER = float(
+    os.environ.get("CT_BENCH_MULTIPLIER", "2.5" if os.environ.get("CI") else "1.0")
+)
 
 # (analyze_fn, {bar_count: ceiling_seconds}) — tripwires, not SLAs.
 MODULE_BENCHMARKS = [
@@ -54,9 +70,11 @@ def _timed(fn, series) -> float:
 def test_module_runtime(analyze, ceilings, count):
     series = _dataset(count=count)
     elapsed = _timed(analyze, series)
-    assert elapsed < ceilings[count], (
+    ceiling = ceilings[count] * CEILING_MULTIPLIER
+    assert elapsed < ceiling, (
         f"{analyze.__name__} on {count} bars took {elapsed:.2f}s "
-        f"(tripwire {ceilings[count]}s) — investigate for an algorithmic regression"
+        f"(tripwire {ceiling:.2f}s = {ceilings[count]}s x{CEILING_MULTIPLIER}) — "
+        f"investigate for an algorithmic regression"
     )
 
 
@@ -85,6 +103,9 @@ def test_replay_recompute_interval_tradeoff():
     assert (
         every_six < every_bar * 0.5
     ), f"interval=6 ({every_six:.1f}s) should be >2x faster than interval=1 ({every_bar:.1f}s)"
-    assert (
-        len(series.candles) / every_bar > 3
-    ), f"replay throughput {len(series.candles) / every_bar:.1f} bars/s below 3 bars/s floor"
+    floor = 3.0 / CEILING_MULTIPLIER  # bars/s floor, relaxed on slower CI runners
+    throughput = len(series.candles) / every_bar
+    assert throughput > floor, (
+        f"replay throughput {throughput:.1f} bars/s below {floor:.1f} bars/s floor "
+        f"(3 bars/s / x{CEILING_MULTIPLIER})"
+    )
