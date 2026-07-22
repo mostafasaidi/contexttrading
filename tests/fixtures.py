@@ -166,6 +166,40 @@ def news_spike_series() -> CandleSeries:
     return to_series(records, symbol="NEWS")
 
 
+def long_news_spike_series(count: int = 80, spike_index: int = 40) -> CandleSeries:
+    """Full-length (>= min_candles) zigzag with one huge range+volume candle.
+
+    The short :func:`news_spike_series` predates the 50-candle scanner
+    minimum; this variant lets the whole module stack process a news event.
+    """
+    pivots = [10 + (i % 4) * 0.4 for i in range(count // 4 + 2)]
+    records = zigzag_records(pivots, leg_bars=4, volume=100.0)[:count]
+    base = records[spike_index]
+    mid = (base["high"] + base["low"]) / 2
+    records[spike_index] = make_candle(spike_index, mid, mid * 1.25, mid * 0.8, mid * 1.2, 5000.0)
+    return to_series(records, symbol="NEWS")
+
+
+def low_liquidity_series(count: int = 80) -> CandleSeries:
+    """Thin market: tiny ranges, near-zero sparse volume, slow drift.
+
+    Distinct from :func:`flat_series` (identical OHLC, zero volume): prices
+    move a little and volume is sporadic, exercising near-zero ATR and
+    volume guards without the fully degenerate shape.
+    """
+    records = []
+    price = 100.0
+    for i in range(count):
+        drift = 0.01 if i % 3 else -0.01
+        o, c = price, price + drift
+        h = max(o, c) + 0.005
+        lo = min(o, c) - 0.005
+        v = 1.0 if i % 5 else 7.0  # sporadic prints
+        records.append(make_candle(i, o, h, lo, c, v))
+        price = c
+    return to_series(records, symbol="THIN")
+
+
 # --- Phase 6: sessions / MTF fixtures (15-minute multi-day series) ------------
 
 M15_SECONDS = 15 * 60
