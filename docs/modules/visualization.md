@@ -117,6 +117,18 @@ fixed list.
 (CT-1000). `PAYLOAD_MODELS` registers every module's payload class
 (including `chart`) so loads return fully typed envelopes.
 
+### PostgreSQL adapter (`data.postgres`, Phase 12)
+
+`PostgresResultStore(dsn)` mirrors the full `ResultStore` surface
+(`save`/`load`/`ping`/`close`/context manager, same key, `ON CONFLICT`
+upsert, same schema-version validation). `psycopg` is an OPTIONAL
+dependency, imported lazily like the httpx AI providers — a missing
+driver raises `ConfigurationError` with an install hint, so the package
+imports fine without it. The API picks the backend from
+`CT_STORAGE__BACKEND` (`sqlite` default / `postgresql`) +
+`CT_STORAGE__URL`; the compose `db` profile starts a matching postgres.
+Live round-trip tests skip unless `CT_TEST_POSTGRES_DSN` is set.
+
 ## Frontend usage
 
 ```bash
@@ -139,6 +151,8 @@ must be served over HTTP (fetch does not work from `file://`).
   traceability + series-bounded times across the full stack.
 - `tests/unit/data/test_store.py` — round-trip, upsert, version
   compatibility, corrupt-row handling.
+- `tests/unit/data/test_postgres_store.py` — driver-absence contract
+  (always) + live round-trip (skip unless `CT_TEST_POSTGRES_DSN`).
 - `tests/regression/test_goldens.py::TestChartGoldens` — byte-exact
   full-stack and subset chart goldens.
 - `tests/integration/test_phase7b.py` — 2000-candle pipeline → payload →
@@ -152,8 +166,9 @@ must be served over HTTP (fetch does not work from `file://`).
   drop-in upgrade).
 - `Label` primitives are emitted by no current mapper (reserved for the
   AI layer's annotations).
-- The store is SQLite only; PostgreSQL/Redis adapters are deferred (the
-  `ResultStore` surface is small enough to mirror).
+- The store ships SQLite (default) and PostgreSQL (`data.postgres`,
+  optional psycopg driver) backends; a Redis adapter remains deferred
+  (the `ResultStore` surface is small enough to mirror).
 - A `Plotly` renderer is not included; the payload is renderer-agnostic
   by design and Plotly was dropped in favor of the Lightweight Charts
   contract.

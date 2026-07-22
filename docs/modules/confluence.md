@@ -29,6 +29,14 @@ Phase-8 AI layer can narrate without recomputing anything.
 - Module outputs: structure scan + `TrendState`, liquidity,
   premium/discount, FVG, order blocks, supply/demand, sessions, MTF —
   obtained by running the configured engines, never reimplemented.
+- Optional `precomputed: Mapping[str, AnalysisResult]` (Phase 12): payloads
+  for liquidity/premium_discount/fvg/orderblocks/supplydemand/sessions/mtf
+  are REUSED instead of re-run when supplied (structure scan + trend are
+  still derived internally — cheap, and the objects are needed). This is
+  how `analysis.pipeline.run_modules` and the backtesting replay avoid
+  double-computing the whole stack inside confluence: full stack 345 ms →
+  169 ms on the five-day fixture, 480-bar interval-1 replay 65 s → 38.5 s.
+  Byte-identical results, proven by the 26 regression goldens.
 
 ## Outputs
 

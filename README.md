@@ -121,6 +121,21 @@ curl -X POST localhost:8000/v1/analysis/full \
 See [docs/api/README.md](docs/api/README.md) for endpoints, the error
 envelope, streaming, and Docker Compose.
 
+## Examples
+
+Runnable, deterministic scripts on seeded data (no network, no
+credentials) live in [examples/](examples/README.md): basic module
+analysis, the full-stack pipeline, chart-payload export, the mock-provider
+AI narrative, and an SMC pullback backtest. Each doubles as documentation
+and is smoke-tested in `tests/integration/test_examples.py`.
+
+```bash
+cd examples && PYTHONPATH="../src;.." python full_stack.py   # Windows Git Bash
+```
+
+Performance tripwires (plain timing, no extra deps) live in
+`tests/performance/` — run with `pytest -m benchmark`.
+
 ## Backtesting
 
 Deterministic, no-lookahead backtesting over any CandleSeries. Strategies

@@ -48,7 +48,10 @@ statistics, and deterministic optimization.
 - `window_bars` (default None = full prefix): bounds engine input cost.
   Windowed != prefix once the window truncates engine warm-up history —
   prefer prefixes for report-grade runs. Full-prefix replay is O(n^2);
-  incremental engine updates are a Phase-12 roadmap item.
+  since Phase 12 the confluence engine reuses the replay's precomputed
+  module payloads (`analyze_confluence(precomputed=...)` via
+  `run_modules`), cutting a 480-bar interval-1 replay from 65 s to 38.5 s.
+  Incremental engine updates remain a Phase-13+ roadmap item.
 
 ## Fill & cost rules
 
@@ -135,9 +138,12 @@ name → 422 CT-2000. Same auth/envelope conventions as all v1 routes.
 
 ## Limitations
 
-- O(n²) replay (full prefix). Use `recompute_interval`/`window_bars` to
+- O(n²) replay (full prefix), mitigated since Phase 12 by confluence
+  payload-sharing (~41% faster: 65 s → 38.5 s on 480 bars at
+  `recompute_interval=1`). Use `recompute_interval`/`window_bars` to
   trade freshness/input-size for speed (integration config: every 20
   bars, 400-bar window → ~40s for 2,000 bars incl. determinism checks).
+  Measured tripwires live in `tests/performance/`.
 - Single position, no partial exits/scaling, no trailing stop (breakeven
   only). Long/short spot semantics; no leverage/margin modeling.
 - Mark-to-market uses closes only; intrabar equity path is not tracked.
