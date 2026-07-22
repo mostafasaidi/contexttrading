@@ -1,6 +1,12 @@
 # Compose wiring. The api service runs by default with a SQLite result
-# store on a named volume; postgres/redis stay behind the "later" profile
-# until Phase 12 (durable storage / cache).
+# store on a named volume. The "db" profile starts postgres for the
+# PostgreSQL result store (Phase 11+): run with
+#   docker compose --profile db up
+# and point the api at it via
+#   CT_STORAGE__BACKEND=postgresql
+#   CT_STORAGE__URL=postgresql://contexttrading:contexttrading@postgres:5432/contexttrading
+# (requires the optional psycopg driver in the image). redis stays behind
+# the "later" profile until a cache consumer lands.
 
 services:
   api:
@@ -20,7 +26,7 @@ services:
 
   postgres:
     image: postgres:16-alpine
-    profiles: ["later"]
+    profiles: ["db"]
     environment:
       POSTGRES_USER: contexttrading
       POSTGRES_PASSWORD: contexttrading

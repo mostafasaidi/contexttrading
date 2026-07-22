@@ -49,6 +49,7 @@ from contexttrading.core.errors import (
     RequestTooLargeError,
     ValidationError,
 )
+from contexttrading.data.postgres import PostgresResultStore
 from contexttrading.data.store import ResultStore
 
 _TAGS = [
@@ -84,15 +85,27 @@ def _status_for(exc: ContextTradingError) -> int:
     return 500
 
 
+def _build_store(settings: Settings) -> ResultStore | PostgresResultStore:
+    """Select the result-store backend from ``settings.storage``."""
+    backend = settings.storage.backend
+    if backend == "sqlite":
+        return ResultStore(settings.storage.url.removeprefix("sqlite:///"))
+    if backend == "postgresql":
+        return PostgresResultStore(settings.storage.url)
+    raise ConfigurationError(
+        f"Unsupported storage backend {backend!r} for the result store",
+        context={"backend": backend},
+    )
+
+
 def create_app(settings: Settings | None = None) -> FastAPI:
     """Build the ContextTrading FastAPI application."""
     settings = settings or Settings()
 
     @asynccontextmanager
     async def lifespan(app: FastAPI) -> AsyncIterator[None]:
-        path = settings.storage.url.removeprefix("sqlite:///")
         app.state.settings = settings
-        app.state.store = ResultStore(path)
+        app.state.store = _build_store(settings)
         app.state.analyst = (
             None
             if settings.ai.provider == "none"
