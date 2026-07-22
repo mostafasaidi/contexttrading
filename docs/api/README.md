@@ -117,7 +117,9 @@ curl -N -X POST localhost:8000/v1/stream/analysis \
 
 All settings via `CT_` env vars (nested with `__`):
 `CT_API__AUTH_ENABLED`, `CT_API__API_KEYS`, `CT_API__CORS_ORIGINS`,
-`CT_API__MAX_CANDLES_PER_REQUEST`, `CT_STORAGE__URL` (SQLite path),
+`CT_API__MAX_CANDLES_PER_REQUEST`, `CT_STORAGE__BACKEND` (`sqlite`
+default / `postgresql` — needs the `postgres` extra),
+`CT_STORAGE__URL` (SQLite path or postgres DSN),
 `CT_AI__PROVIDER` (`mock` / `openai` / `anthropic` / `none`).
 
 Rate limiting and TLS are deployment concerns — put the service behind a

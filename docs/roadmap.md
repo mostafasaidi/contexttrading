@@ -14,7 +14,7 @@
 | 10 | API service | FastAPI service, analyze/AI endpoints, schema endpoints, `docs/api/` | ✅ Done |
 | 11 | Backtesting | Event-driven replay, fills/costs, equity + reports, seeded determinism | ✅ Done |
 | 12 | Examples, polish, performance | `examples/` (5 runnable + smoke tests), `tests/performance/` timing tripwires, confluence payload-sharing (−51% full-stack, −41% replay), PostgreSQL store adapter, edge-case hardening matrix, docs completion (Redis adapter deferred — no cache consumer yet) | ✅ Done |
-| 13 | Release hardening | Packaging to PyPI, Docker images, security review, v1.0 schema freeze | ⬜ Next |
+| 13 | Release hardening | Packaging audit (v1.0.0, extras, package data), production Dockerfile, security guide + pip-audit CI, schema freeze + versioning policy, tutorials, README/docs completion | ✅ Done |
 
 ## Principles governing the roadmap
 

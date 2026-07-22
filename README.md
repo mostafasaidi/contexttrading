@@ -43,9 +43,15 @@ LLM in front of.
 | Sessions | ✅ Phase 6 | Configurable windows + killzones, session high/low/PDH/PDL pools, Judas swings, day-extreme stats |
 | MTF context | ✅ Phase 6 | Deterministic resampling (epoch/Monday/month anchors), weighted multi-timeframe bias |
 | Confluence | ✅ Phase 7 | Explainable weighted scores, directional bias, spatial confluence zones |
-| Visualization | ✅ Phase 8 | Lightweight-Charts payloads, 23-layer serializer, reference frontend, SQLite result store |
+| Visualization | ✅ Phase 8 | Lightweight-Charts payloads, 23-layer serializer, reference frontend, result store (SQLite + PostgreSQL) |
 | AI narrative | ✅ Phase 9 | Evidence-bound structured analyst reports, citation enforcement, mock + HTTP providers |
-| Backtesting & API | 🔜 Phases 10–12 | FastAPI service, event-driven backtester, polish |
+| REST API | ✅ Phase 10 | FastAPI service, key auth, versioned error envelopes, NDJSON streaming, golden-tested OpenAPI |
+| Backtesting | ✅ Phase 11 | No-lookahead event replay, costs/fills, statistics, grid + walk-forward optimization |
+| Examples & performance | ✅ Phase 12 | Runnable example suite, timing tripwires, confluence payload-sharing (−51% full stack), edge-case matrix |
+
+**v1.0.0 — all 13 roadmap phases complete.** 885 tests + 14 performance
+benchmarks green; schemas frozen at 1.0.0
+([versioning policy](docs/architecture/versioning-policy.md)).
 
 ## Architecture
 
@@ -160,11 +166,23 @@ it). HTTP: `POST /v1/backtest`. Full contract:
 
 ## Documentation
 
+Tutorials (start here):
+
+- [Quickstart](docs/guides/quickstart.md) — install to first analysis in 5 minutes
+- [Engine tutorial](docs/guides/engine-tutorial.md) — every module and its output
+- [AI analyst tutorial](docs/guides/ai-analyst-tutorial.md) — evidence-bound reports
+- [Backtesting tutorial](docs/guides/backtesting-tutorial.md) — run + optimize the SMC strategy
+- [API tutorial](docs/guides/api-tutorial.md) — launch, auth, call, stream
+
+Reference:
+
 - [Architecture overview](docs/architecture/overview.md) — the 9 layers and their boundaries
 - [Determinism contract](docs/architecture/determinism.md) — reproducibility rules every module obeys
-- [Data flow](docs/architecture/data-flow.md) — OHLCV in, versioned JSON out
-- [Layer details](docs/architecture/layers.md) — responsibilities and dependency rules
-- [Roadmap](docs/roadmap.md) — the 12-phase build plan
+- [Versioning policy](docs/architecture/versioning-policy.md) — schema freeze, bump rules, golden protocol
+- [Module contracts](docs/modules/) — one doc per engine module
+- [REST API reference](docs/api/README.md) — endpoints, error codes, streaming
+- [Security guide](docs/guides/security.md) — trust boundaries, secrets, deployment checklist
+- [Roadmap](docs/roadmap.md) — the 13-phase build plan (complete)
 - [Developer guide](docs/guides/developer-guide.md) — setup, style, testing, commits
 
 ## Contributing
