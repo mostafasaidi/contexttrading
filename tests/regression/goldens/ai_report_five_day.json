@@ -22,8 +22,8 @@
         "probability": "medium",
         "scenario": {
           "evidence_ids": [
-            "pool_01b755911dde359a337c47ed",
-            "pool_0235457a511e422426e1f858"
+            "pool_0235457a511e422426e1f858",
+            "pool_05e7bd153e82cbe327b97feb"
           ],
           "schema_version": "1.0.0",
           "text": "Price sweeps the nearest provided pool before resolving."
@@ -31,15 +31,15 @@
         "schema_version": "1.0.0",
         "trigger": {
           "evidence_ids": [
-            "pool_01b755911dde359a337c47ed",
-            "pool_0235457a511e422426e1f858"
+            "pool_0235457a511e422426e1f858",
+            "pool_05e7bd153e82cbe327b97feb"
           ],
           "schema_version": "1.0.0",
           "text": "Sweep of the cited pool."
         }
       }
     ],
-    "bias": "bullish",
+    "bias": "bearish",
     "bias_rationale": {
       "evidence_ids": [
         "factor:00:trend",
@@ -47,7 +47,7 @@
         "factor:02:structure"
       ],
       "schema_version": "1.0.0",
-      "text": "Bias mirrors the confluence engine (bullish, score 0.627964022235904)."
+      "text": "Bias mirrors the confluence engine (bearish, score 0.5825506458427048)."
     },
     "confidence_score": {
       "factor_ids": [
@@ -65,7 +65,7 @@
         "text": "Confidence echoes the engine confluence score and data quality."
       },
       "schema_version": "1.0.0",
-      "score": 0.627964022235904
+      "score": 0.5825506458427048
     },
     "confluences": [
       {
@@ -76,34 +76,34 @@
           "schema_version": "1.0.0",
           "text": "Highest-scoring provided confluence zone."
         },
-        "direction": "bullish",
+        "direction": "bearish",
         "factor_ids": [
           "factor:00:trend",
           "factor:01:mtf"
         ],
         "schema_version": "1.0.0",
-        "zone_id": "conf_2273b991c4241f93cb2dc021"
+        "zone_id": "conf_55260b604eb81342d656a577"
       }
     ],
     "data_quality": {
       "level": "fair",
       "limitations": [
-        "stale_untapped_pools:2"
+        "stale_untapped_pools:1"
       ],
       "schema_version": "1.0.0"
     },
     "evidence_citations": [
-      "break_007371c3d7c2fe2b6afd5a4a",
-      "break_1ae12a0013bbcbe4a46e92ae",
-      "conf_2273b991c4241f93cb2dc021",
+      "break_01c4728999ca6d36dfd49d9c",
+      "break_173f82506f26efcf11b591f9",
+      "conf_55260b604eb81342d656a577",
       "factor:00:trend",
       "factor:01:mtf",
       "factor:02:structure",
-      "pool_01b755911dde359a337c47ed",
       "pool_0235457a511e422426e1f858",
-      "sess_01444865dac77c4a928092cf",
-      "swing_0113e36bf09aff688cda2020",
-      "swing_09c5d1913593cb561b7e6200",
+      "pool_05e7bd153e82cbe327b97feb",
+      "sess_064258568d09fe1902055742",
+      "swing_0bfb2c5cc43b565582d519de",
+      "swing_214d4fd8ecdec57b512487b8",
       "trend:state"
     ],
     "executive_summary": {
@@ -113,12 +113,12 @@
         "factor:02:structure"
       ],
       "schema_version": "1.0.0",
-      "text": "Confluence engine reports a bullish bias at score 0.627964022235904; interpretation follows the provided factor breakdown."
+      "text": "Confluence engine reports a bearish bias at score 0.5825506458427048; interpretation follows the provided factor breakdown."
     },
     "market_narrative": {
       "accumulation_distribution": {
         "evidence_ids": [
-          "sess_01444865dac77c4a928092cf"
+          "sess_064258568d09fe1902055742"
         ],
         "schema_version": "1.0.0",
         "text": "Accumulation/distribution read from provided session stats."
@@ -130,28 +130,28 @@
           "factor:02:structure"
         ],
         "schema_version": "1.0.0",
-        "text": "Control read follows the bullish confluence bias."
+        "text": "Control read follows the bearish confluence bias."
       },
       "expansion_correction": {
         "evidence_ids": [
-          "swing_0113e36bf09aff688cda2020",
-          "swing_09c5d1913593cb561b7e6200"
+          "swing_0bfb2c5cc43b565582d519de",
+          "swing_214d4fd8ecdec57b512487b8"
         ],
         "schema_version": "1.0.0",
         "text": "Expansion/correction per provided trend state."
       },
       "liquidity_objectives": {
         "evidence_ids": [
-          "pool_01b755911dde359a337c47ed",
-          "pool_0235457a511e422426e1f858"
+          "pool_0235457a511e422426e1f858",
+          "pool_05e7bd153e82cbe327b97feb"
         ],
         "schema_version": "1.0.0",
         "text": "Nearest resting liquidity per provided pools."
       },
       "momentum": {
         "evidence_ids": [
-          "break_007371c3d7c2fe2b6afd5a4a",
-          "break_1ae12a0013bbcbe4a46e92ae"
+          "break_01c4728999ca6d36dfd49d9c",
+          "break_173f82506f26efcf11b591f9"
         ],
         "schema_version": "1.0.0",
         "text": "Momentum per provided legs and breaks."
@@ -188,10 +188,10 @@
       "position_size_suggestion": "reduced",
       "risk_rationale": {
         "evidence_ids": [
-          "pool_01b755911dde359a337c47ed",
           "pool_0235457a511e422426e1f858",
-          "swing_0113e36bf09aff688cda2020",
-          "swing_09c5d1913593cb561b7e6200"
+          "pool_05e7bd153e82cbe327b97feb",
+          "swing_0bfb2c5cc43b565582d519de",
+          "swing_214d4fd8ecdec57b512487b8"
         ],
         "schema_version": "1.0.0",
         "text": "Risk levels derived from provided pools, trend state, and data quality."

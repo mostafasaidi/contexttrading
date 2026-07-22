@@ -6,7 +6,6 @@ unit and regression tests assert exact engine behavior.
 
 from __future__ import annotations
 
-import math
 from datetime import UTC, datetime, timedelta
 from itertools import pairwise
 from typing import Any
@@ -220,21 +219,36 @@ def make_candle_15m(i: int, o: float, h: float, low: float, c: float, v: float =
     }
 
 
+def _triangle(i: int, period: int) -> float:
+    """Triangle wave in [-1, 1] with the given bar period.
+
+    Platform-determinism rule (docs/architecture/determinism.md): only
+    +, -, *, /, abs — all correctly rounded per IEEE 754, so results are
+    bit-identical on every platform. libm transcendentals (sin/cos/...)
+    may differ by 1 ulp between glibc and MSVC, which once flipped a
+    golden byte on Linux CI.
+    """
+    t = (i % period) / period
+    return 4.0 * abs(t - 0.5) - 1.0
+
+
 def five_day_15m_records() -> list[dict[str, Any]]:
     """Five days of 15m candles (480 bars) with a deterministic wave path.
 
-    Composite of three sine drivers plus a slow drift — no randomness, so
-    session statistics and MTF context are golden-stable. T0 is a Monday.
+    Composite of three rational triangle drivers plus a slow drift — no
+    randomness and no libm, so session statistics and MTF context are
+    golden-stable on every platform. T0 is a Monday. (Wave periods ≈ the
+    2*pi multiples of the original sine divisors.)
     """
     records = []
     price = 100.0
     for i in range(5 * 96):
-        drift = 0.03 + 0.25 * math.sin(i / 9.0) + 0.18 * math.sin(i / 41.0)
+        drift = 0.03 + 0.25 * _triangle(i, 56) + 0.18 * _triangle(i, 258)
         o = price
         c = price + drift
-        h = max(o, c) + 0.07 + 0.05 * abs(math.sin(i / 5.0))
-        low = min(o, c) - 0.07 - 0.05 * abs(math.cos(i / 7.0))
-        records.append(make_candle_15m(i, o, h, low, c, 100.0 + 20.0 * abs(math.sin(i / 3.0))))
+        h = max(o, c) + 0.07 + 0.05 * abs(_triangle(i, 31))
+        low = min(o, c) - 0.07 - 0.05 * abs(_triangle(i, 44))
+        records.append(make_candle_15m(i, o, h, low, c, 100.0 + 20.0 * abs(_triangle(i, 19))))
         price = c
     return records
 

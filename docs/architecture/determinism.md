@@ -40,6 +40,21 @@ IDs are metadata, never part of the analytical payload equality.
 - Canonical serialization rounds nothing; equality for regression tests is
   exact on serialized JSON. Any tolerance-based decision happens *inside*
   the engine before a value is emitted.
+- **Cross-platform rule (libm last-ulp hazard).** Transcendental functions
+  (`math.sin/cos/tan/exp/log/sqrt/pow`) are NOT correctly rounded by all
+  libms — glibc and MSVC results may differ by 1 ulp. Byte-exact goldens
+  compare serialized floats, so a 1-ulp difference in any value that
+  reaches an exactness boundary (`repr` into JSON, `int()`, round-then-
+  compare, `%` formatting) breaks a platform. This exact bug flipped one
+  chart-payload volume byte on Linux CI (fixture `sin` flowing raw into
+  the payload). The rule: data feeding byte-exact comparisons must be
+  built from IEEE-exact operations only (`+`, `-`, `*`, `/`, `abs`,
+  `min`, `max` — correctly rounded everywhere), the platform-independent
+  seeded `random` module, or be rounded to a safe precision BEFORE
+  crossing an exactness boundary. Applied in `tests/fixtures.py` and
+  `examples/_data.py` (rational triangle waves replace sines); guarded
+  by `tests/regression/test_fixture_determinism.py` (source scan +
+  purity checks).
 - Decimal migration is deferred; if introduced it will be a schema-version
   bump.
 

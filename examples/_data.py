@@ -16,7 +16,6 @@ Every series is a pure function of (regime, count, seed).
 
 from __future__ import annotations
 
-import math
 import random
 from datetime import UTC, datetime, timedelta
 
@@ -27,6 +26,14 @@ REGIMES: tuple[str, ...] = ("trend_up", "range", "volatile", "low_liquidity")
 _START = datetime(2024, 1, 1, tzinfo=UTC)
 
 
+def _triangle(i: int, period: int) -> float:
+    """Triangle wave in [-1, 1] — rational arithmetic only, bit-identical
+    across platforms (libm sin/cos may differ by 1 ulp; see
+    docs/architecture/determinism.md)."""
+    t = (i % period) / period
+    return 4.0 * abs(t - 0.5) - 1.0
+
+
 def regime_records(regime: str = "trend_up", count: int = 300, seed: int = 11) -> list[dict]:
     """Generate OHLCV records for one documented market regime."""
     if regime not in REGIMES:
@@ -35,7 +42,7 @@ def regime_records(regime: str = "trend_up", count: int = 300, seed: int = 11) -
     records: list[dict] = []
     price = 100.0
     for i in range(count):
-        wave = math.sin(i / 17.0)
+        wave = _triangle(i, 107)  # ≈ period of sin(i / 17.0), but platform-exact
         if regime == "trend_up":
             drift, vol = 0.11 + 0.05 * wave, 0.35
             volume = 900 + 300 * wave

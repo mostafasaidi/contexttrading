@@ -8,26 +8,26 @@
   },
   "module": "confluence",
   "payload": {
-    "agreeing_factors": 4,
-    "bearish_score": 0.2727272727272727,
-    "bias": "bullish",
-    "bullish_score": 0.627964022235904,
-    "conflicting_factors": 2,
+    "agreeing_factors": 7,
+    "bearish_score": 0.8133198766119355,
+    "bias": "bearish",
+    "bullish_score": 0.07692307692307693,
+    "conflicting_factors": 1,
     "factors": [
       {
-        "contribution": 0.6,
-        "detail": "external trend bullish (moderate)",
-        "direction": "bullish",
+        "contribution": 1.0,
+        "detail": "external trend bearish (strong)",
+        "direction": "bearish",
         "factor": "trend",
-        "raw": 0.6,
+        "raw": 1.0,
         "schema_version": "1.0.0",
         "source_id": null,
         "weight": 1.0
       },
       {
         "contribution": 1.5,
-        "detail": "mtf bias bullish (strong, share 1.000)",
-        "direction": "bullish",
+        "detail": "mtf bias bearish (strong, share 1.000)",
+        "direction": "bearish",
         "factor": "mtf",
         "raw": 1.0,
         "schema_version": "1.0.0",
@@ -36,8 +36,8 @@
       },
       {
         "contribution": 1.0,
-        "detail": "recent breaks 5 bullish / 0 bearish of 5",
-        "direction": "bullish",
+        "detail": "recent breaks 0 bullish / 5 bearish of 5",
+        "direction": "bearish",
         "factor": "structure",
         "raw": 1.0,
         "schema_version": "1.0.0",
@@ -45,23 +45,33 @@
         "weight": 1.0
       },
       {
-        "contribution": 1.0,
-        "detail": "recent sweeps 0.00 bullish / 3.00 bearish (class-weighted)",
+        "contribution": 0.5789473684210527,
+        "detail": "recent sweeps 1.60 bullish / 2.20 bearish (class-weighted)",
         "direction": "bearish",
         "factor": "liquidity",
-        "raw": 1.0,
+        "raw": 0.5789473684210527,
         "schema_version": "1.0.0",
         "source_id": null,
         "weight": 1.0
       },
       {
-        "contribution": 0.35380212229747193,
-        "detail": "price in discount of the dealing range",
-        "direction": "bullish",
+        "contribution": 0.20763182955652812,
+        "detail": "price in premium of the dealing range",
+        "direction": "bearish",
         "factor": "premium_discount",
-        "raw": 0.7076042445949439,
+        "raw": 0.41526365911305624,
         "schema_version": "1.0.0",
         "source_id": null,
+        "weight": 0.5
+      },
+      {
+        "contribution": 0.5,
+        "detail": "judas swing: asia low swept in london killzone",
+        "direction": "bullish",
+        "factor": "session",
+        "raw": 1.0,
+        "schema_version": "1.0.0",
+        "source_id": "ssweep_7444f54c2018131c7eebf2cc",
         "weight": 0.5
       },
       {
@@ -71,23 +81,32 @@
         "factor": "session",
         "raw": 1.0,
         "schema_version": "1.0.0",
-        "source_id": "ssweep_1f33675d6352e327ae96ebe1",
+        "source_id": "ssweep_a8902a12d8e98090aeac7dd0",
+        "weight": 0.5
+      },
+      {
+        "contribution": 0.5,
+        "detail": "judas swing: london high swept in new_york_am killzone",
+        "direction": "bearish",
+        "factor": "session",
+        "raw": 1.0,
+        "schema_version": "1.0.0",
+        "source_id": "ssweep_598c74c76d0974810ef02f75",
         "weight": 0.5
       }
     ],
-    "reference_price": 121.5077950723035,
+    "reference_price": 109.13574750830561,
     "schema_version": "1.0.0",
-    "score": 0.627964022235904,
+    "score": 0.8133198766119355,
     "zones": [
       {
-        "direction": "bullish",
-        "id": "conf_2273b991c4241f93cb2dc021",
+        "direction": "bearish",
+        "id": "conf_55260b604eb81342d656a577",
         "label": null,
         "layer": "default",
         "member_ids": [
-          "mb_16458b7b22b60d1440736006",
-          "ob_f4b23ae4919a4e9ea731851e",
-          "sd_8bd4206e652e424f3513f329"
+          "ob_0014d2d91530269a116425c9",
+          "sd_d5bbc784b6d301b02c30e312"
         ],
         "member_kinds": [
           "orderblock",
@@ -95,32 +114,31 @@
         ],
         "priority": 0,
         "schema_version": "1.0.0",
-        "score": 0.4671797392980798,
+        "score": 0.47847029769828225,
         "style": {
-          "color": "#22ab94",
+          "color": "#f23645",
           "fill": true,
           "layer": "confluence.zones",
           "line_style": "solid",
           "line_width": 2.0,
-          "opacity": 0.21679493482451995,
+          "opacity": 0.21961757442457058,
           "priority": 9,
           "render_type": "box",
           "schema_version": "1.0.0",
-          "tooltip": "bullish confluence zone (score 0.47)",
+          "tooltip": "bearish confluence zone (score 0.48)",
           "visible": true
         },
-        "zone_bottom": 109.45124479325594,
-        "zone_top": 109.6716743203954
+        "zone_bottom": 117.17221232256112,
+        "zone_top": 117.36597470796266
       },
       {
-        "direction": "bullish",
-        "id": "conf_ffc10200b87402e5c34e7917",
+        "direction": "bearish",
+        "id": "conf_1829e75aced989ec4f6092b2",
         "label": null,
         "layer": "default",
         "member_ids": [
-          "mb_2f0c09e873e99110732f94be",
-          "ob_5893ef62b94e7e589c3402d6",
-          "sd_15e17edb6def0b171127ff02"
+          "ob_cd0ba6c2c6fb48e6c861b071",
+          "sd_93cf3d8d7ddb3d96a4cfc60c"
         ],
         "member_kinds": [
           "orderblock",
@@ -128,55 +146,22 @@
         ],
         "priority": 0,
         "schema_version": "1.0.0",
-        "score": 0.4631280670617315,
+        "score": 0.47109295521296957,
         "style": {
-          "color": "#22ab94",
+          "color": "#f23645",
           "fill": true,
           "layer": "confluence.zones",
           "line_style": "solid",
           "line_width": 2.0,
-          "opacity": 0.21578201676543288,
+          "opacity": 0.2177732388032424,
           "priority": 9,
           "render_type": "box",
           "schema_version": "1.0.0",
-          "tooltip": "bullish confluence zone (score 0.46)",
+          "tooltip": "bearish confluence zone (score 0.47)",
           "visible": true
         },
-        "zone_bottom": 119.6943408029239,
-        "zone_top": 119.89370258637413
-      },
-      {
-        "direction": "bullish",
-        "id": "conf_3a19bc17361da9343987a6ec",
-        "label": null,
-        "layer": "default",
-        "member_ids": [
-          "mb_eb3afd833af22c919fd45de1",
-          "ob_a9958b8a61169567e5a1200a",
-          "sd_949097c548dcee0e29286b75"
-        ],
-        "member_kinds": [
-          "orderblock",
-          "supplydemand"
-        ],
-        "priority": 0,
-        "schema_version": "1.0.0",
-        "score": 0.4597510800117158,
-        "style": {
-          "color": "#22ab94",
-          "fill": true,
-          "layer": "confluence.zones",
-          "line_style": "solid",
-          "line_width": 2.0,
-          "opacity": 0.21493777000292896,
-          "priority": 9,
-          "render_type": "box",
-          "schema_version": "1.0.0",
-          "tooltip": "bullish confluence zone (score 0.46)",
-          "visible": true
-        },
-        "zone_bottom": 106.78464304273143,
-        "zone_top": 106.98289321897886
+        "zone_bottom": 111.44282241014797,
+        "zone_top": 111.65186796699172
       }
     ]
   },
