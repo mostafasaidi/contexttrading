@@ -46,3 +46,6 @@ site/
 # OS
 .DS_Store
 Thumbs.db
+
+# Example outputs
+examples/output/
