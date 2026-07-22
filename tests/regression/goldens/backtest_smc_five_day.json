@@ -15,7 +15,7 @@
     "warmup_bars": 30,
     "window_bars": 240
   },
-  "engine_version": "0.1.0",
+  "engine_version": "1.0.0",
   "equity_curve": [
     {
       "bar_index": 0,

@@ -39,7 +39,7 @@ Every arrow out of the engine carries `AnalysisResult[T]`:
 ```json
 {
   "schema_version": "1.0.0",
-  "engine_version": "0.1.0",
+  "engine_version": "1.0.0",
   "module": "fvg",
   "symbol": "ES",
   "timeframe": "15m",

@@ -4,4 +4,4 @@ Python calculates, AI explains. Every module returns structured, versioned
 JSON; identical input data yields identical output.
 """
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"

@@ -6,7 +6,7 @@
         "description": "Envelope for AI-layer reports (AnalysisResult-style).\n\nUnlike the engine envelope, the subject may be a journal/performance\nperiod rather than a market series, so ``generated_from`` is optional\nand ``subject`` carries \"SYMBOL/timeframe\" or \"journal:PERIOD\".",
         "properties": {
           "engine_version": {
-            "default": "0.1.0",
+            "default": "1.0.0",
             "description": "contexttrading version that produced this.",
             "title": "Engine Version",
             "type": "string"
@@ -98,7 +98,7 @@
         "description": "Envelope wrapping every module's payload.\n\nConsumers must check both ``schema_version`` (envelope/payload contract)\nand ``engine_version`` (computation semantics) before interpreting the\npayload.",
         "properties": {
           "engine_version": {
-            "default": "0.1.0",
+            "default": "1.0.0",
             "description": "contexttrading version that produced this.",
             "title": "Engine Version",
             "type": "string"
@@ -1265,7 +1265,7 @@
   "info": {
     "description": "Deterministic SMC analysis engine, chart payloads, and the evidence-bound AI analyst. Every response is versioned JSON; every error is an ErrorEnvelope with a CT-xxxx code.",
     "title": "ContextTrading",
-    "version": "0.1.0"
+    "version": "1.0.0"
   },
   "openapi": "3.1.0",
   "paths": {
